@@ -130,7 +130,6 @@ const Sidebar = ({
                                 </Box>
                                 {!isNonMobile && (
                                     <IconButton onClick={() => setIsSidebarOpen(!isSidebarOpen)}>
-                                        <ChevronLeft />
                                     </IconButton>
                                 )}
                             </FlexBetween>
