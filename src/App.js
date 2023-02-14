@@ -7,6 +7,8 @@ import {BrowserRouter, Navigate, Route, Routes} from "react-router-dom";
 import Dashboard from "scenes/dashboard";
 import Layout from "scenes/layout"
 import Registers from "scenes/registers";
+import Addnew from "./scenes/addnew";
+import AddNew from "./scenes/addnew";
 
 
 function App() {
@@ -22,6 +24,7 @@ function App() {
                         <Route path="/" element={<Navigate to="/dashboard" replace />} />
                         <Route path="/dashboard" element={<Dashboard />} />
                         <Route path="/registers" element={<Registers />} />
+                        <Route path="/addnew" element={<AddNew />} />
                     </Route>
                 </Routes>
             </ThemeProvider>

@@ -23,6 +23,11 @@ import FilterListIcon from '@mui/icons-material/FilterList';
 import { visuallyHidden } from '@mui/utils';
 import {themeSettings} from "../../theme";
 import {useTheme} from "@mui/material";
+import FlexBetween from "../../components/FlexBetween";
+import {useLocation, useNavigate} from "react-router-dom";
+import {useEffect, useState} from "react";
+import AddNew from "scenes/addnew"
+
 function createData(name, calories, fat, carbs, protein) {
     return {
         name,
@@ -237,6 +242,13 @@ export default function EnhancedTable() {
     const [page, setPage] = React.useState(0);
     const [dense, setDense] = React.useState(false);
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
+    const [active, setActive] = useState("");
+
+    const { pathname } = useLocation();
+    const navigate = useNavigate();
+    useEffect(() => {
+        setActive(pathname.substring(1));
+    }, [pathname]);
 
     const handleRequestSort = (event, property) => {
         const isAsc = orderBy === property && order === 'asc';
@@ -374,10 +386,20 @@ export default function EnhancedTable() {
                     onRowsPerPageChange={handleChangeRowsPerPage}
                 />
             </Paper>
-            <FormControlLabel
-                control={<Switch checked={dense} onChange={handleChangeDense} />}
-                label="Dense padding"
-            />
+            <FlexBetween>
+                <FormControlLabel
+                    control={<Switch checked={dense} onChange={handleChangeDense} />}
+                    label="Dense padding"
+                />
+                <button onClick={() => {
+                    navigate(`/addnew`);
+                    setActive(AddNew);
+                }}>
+                    add new
+
+                </button>
+            </FlexBetween>
         </Box>
+
     );
 }
