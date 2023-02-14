@@ -6,6 +6,7 @@ import {useMemo} from "react";
 import {BrowserRouter, Navigate, Route, Routes} from "react-router-dom";
 import Dashboard from "scenes/dashboard";
 import Layout from "scenes/layout"
+import Registers from "scenes/registers";
 
 
 function App() {
@@ -20,6 +21,7 @@ function App() {
                     <Route element={<Layout />}>
                         <Route path="/" element={<Navigate to="/dashboard" replace />} />
                         <Route path="/dashboard" element={<Dashboard />} />
+                        <Route path="/registers" element={<Registers />} />
                     </Route>
                 </Routes>
             </ThemeProvider>
