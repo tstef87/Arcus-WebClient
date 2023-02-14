@@ -22,11 +22,11 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import { visuallyHidden } from '@mui/utils';
 import {themeSettings} from "../../theme";
-import {useTheme} from "@mui/material";
+import {Button, useTheme} from "@mui/material";
 import FlexBetween from "../../components/FlexBetween";
 import {useLocation, useNavigate} from "react-router-dom";
 import {useEffect, useState} from "react";
-import AddNew from "scenes/addnew"
+import AddNew from "scenes/registers/addnew"
 
 function createData(name, calories, fat, carbs, protein) {
     return {
@@ -391,13 +391,16 @@ export default function EnhancedTable() {
                     control={<Switch checked={dense} onChange={handleChangeDense} />}
                     label="Dense padding"
                 />
-                <button onClick={() => {
+                <Button variant="outlined"
+                        sx={{ color: theme.palette.grey["50"] }}
+                        onClick={() => {
                     navigate(`/addnew`);
                     setActive(AddNew);
                 }}>
                     add new
+                </Button>
 
-                </button>
+
             </FlexBetween>
         </Box>
 

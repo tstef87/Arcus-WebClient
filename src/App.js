@@ -7,8 +7,8 @@ import {BrowserRouter, Navigate, Route, Routes} from "react-router-dom";
 import Dashboard from "scenes/dashboard";
 import Layout from "scenes/layout"
 import Registers from "scenes/registers";
-import Addnew from "./scenes/addnew";
-import AddNew from "./scenes/addnew";
+import AddNew from "./scenes/registers/addnew";
+import Login from "./scenes/login";
 
 
 function App() {
@@ -20,10 +20,13 @@ function App() {
             <ThemeProvider theme={theme}>
                 <CssBaseline />
                 <Routes>
+                    <Route element={<Login />}>
+                        <Route path="/" element={<Navigate to="/login" replace />} />
+                    </Route>
                     <Route element={<Layout />}>
                         <Route path="/" element={<Navigate to="/dashboard" replace />} />
                         <Route path="/dashboard" element={<Dashboard />} />
-                        <Route path="/registers" element={<Registers />} />
+                        <Route path="/registers" element={<Registers />}/>
                         <Route path="/addnew" element={<AddNew />} />
                     </Route>
                 </Routes>
