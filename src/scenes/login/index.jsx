@@ -36,7 +36,11 @@ const Login = () => {
     return (
 
 
-        <Box textAlign="center" paddingY="100px">
+        <Box textAlign="center" paddingY="100px" sx={{
+            width: "100%",
+            height: "100%",
+            backgroundImage: "linear-gradient(to bottom right, orange, purple)",
+        }}>
 
             <Box fontSize={72}>
                 Arcus
