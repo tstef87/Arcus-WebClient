@@ -1,16 +1,78 @@
-import React from 'react'
-import {Box, Icon, InputAdornment, TextField} from "@mui/material";
+import React, {useEffect, useState} from 'react'
+import {Box, Button, Icon, InputAdornment, TextField} from "@mui/material";
 import MailOutlineIcon from "@mui/icons-material/MailOutline";
+import Dashboard from "../../dashboard";
+import {initializeApp} from "firebase/app";
+import {addDoc, collection, getFirestore} from "firebase/firestore";
+import {firebaseConfig} from "../../../firebase/firebaseConfig";
+import {useLocation, useNavigate} from "react-router-dom";
+
+
+
+function writeUserData(name, num, rnum, uname, pword) {
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    addDoc(collection(db, "registers"), {
+        name: name,
+        number: num,
+        registerNumber: rnum,
+        username: uname,
+        password: pword
+    }).then(r => alert("added"));
+}
 
 const AddNew = () => {
+
+    const [active, setActive] = useState("");
+    const { pathname } = useLocation();
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        setActive(pathname.substring(1));
+    }, [pathname]);
+
+
+    const [standName, setStandName] = useState('');
+    const [standNum, setStandNum] = useState('');
+    const [registerNum, setRegisterNum] = useState('');
+    const [userName, setUserName] = useState('');
+    const [password, setPassword] = useState('');
+
+    const [updateSNAME, setUpdatedSNAME] = useState(standName);
+    const [updateSNUM, setUpdatedSNUM] = useState(standNum);
+    const [updateRN, setUpdatedRN] = useState(registerNum);
+    const [updateUN, setUpdatedUN] = useState(userName);
+    const [updatePW, setUpdatedPW] = useState(password);
+
+    const handleChangeSNAME = (event) => {
+        setStandName(event.target.value);
+    };
+    const handleChangeSNUM = (event) => {
+        setStandNum(event.target.value);
+    };
+    const handleChangeRN = (event) => {
+        setRegisterNum(event.target.value);
+    };
+    const handleChangeUN = (event) => {
+        setUserName(event.target.value);
+    };
+    const handleChangePW = (event) => {
+        setPassword(event.target.value);
+    };
+
+
     return (
         <Box paddingX="20px">
             <Box>
                 <h1>Add New Register</h1>
             </Box>
-            <Box paddingTop="10px">
+
+            <Box >
                 <TextField
-                    id="outlined-start-adornment"
+                    id="standName"
+                    name="standName"
+                    onChange={handleChangeSNAME}
+                    value={standName}
 
                     sx={{ m: 1, width: '25ch' }}
                     InputProps={{
@@ -20,12 +82,16 @@ const AddNew = () => {
                             </Icon>
                         </InputAdornment>,
                     }}
-                    label="Name"
+                    label="Stand Name"
                 />
             </Box>
+
             <Box paddingTop="10px">
                 <TextField
-                    id="outlined-start-adornment"
+                    id="standNum"
+                    name="standNum"
+                    onChange={handleChangeSNUM}
+                    value={standNum}
 
                     sx={{ m: 1, width: '25ch' }}
                     InputProps={{
@@ -35,9 +101,89 @@ const AddNew = () => {
                             </Icon>
                         </InputAdornment>,
                     }}
-                    label="Email"
+                    label="Stand Number"
                 />
             </Box>
+            <Box paddingTop="10px">
+                <TextField
+                    id="registerNum"
+                    name="registerNum"
+                    onChange={handleChangeRN}
+                    value={registerNum}
+
+                    sx={{ m: 1, width: '25ch' }}
+                    InputProps={{
+                        endAdornment: <InputAdornment position="end">
+                            <Icon>
+                                <MailOutlineIcon />
+                            </Icon>
+                        </InputAdornment>,
+                    }}
+                    label="Register number"
+                />
+            </Box>
+
+            <Box>
+                <TextField
+                    id="userName"
+                    name="userName"
+                    onChange={handleChangeUN}
+                    value={userName}
+
+                    sx={{ m: 1, width: '25ch' }}
+                    InputProps={{
+                        endAdornment: <InputAdornment position="end">
+                            <Icon>
+                                <MailOutlineIcon />
+                            </Icon>
+                        </InputAdornment>,
+                    }}
+                    label="Login User Name"
+                />
+            </Box>
+
+            <Box>
+                <TextField
+                    id="password"
+                    name="password"
+                    onChange={handleChangePW}
+                    value={password}
+
+                    sx={{ m: 1, width: '25ch' }}
+                    InputProps={{
+                        endAdornment: <InputAdornment position="end">
+                            <Icon>
+                                <MailOutlineIcon />
+                            </Icon>
+                        </InputAdornment>,
+                    }}
+                    label="Login User Name"
+                />
+            </Box>
+
+            <Box>
+                <Button variant="outlined"
+                        onClick={() => {
+                            if(standName != "" &&
+                                standNum != "" &&
+                                registerNum != "" &&
+                                userName != "" &&
+                                password != ""){
+
+                                writeUserData(standName, standNum, registerNum, userName, password);
+                                navigate("/registers");
+                                setActive(Dashboard);
+
+                            }
+                            else{
+                                alert("One or more Empty Entries")
+                            }
+                        }}>
+                    Add New
+
+                </Button>
+            </Box>
+
         </Box>
     )
 }

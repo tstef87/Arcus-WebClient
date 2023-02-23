@@ -35,7 +35,6 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 
-
 function writeUserData(email, password) {
     const db = getFirestore(app);
     addDoc(collection(db, "cities"), {
