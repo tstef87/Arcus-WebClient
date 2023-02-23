@@ -2,8 +2,9 @@ import React, {useEffect, useState} from 'react'
 import AddNew from "../registers/addnew";
 import MailOutlineIcon from '@mui/icons-material/MailOutline';
 import {
+    Backdrop,
     Box,
-    Button, Chip,
+    Button, Chip, CircularProgress,
     FormControl, Icon,
     IconButton,
     InputAdornment,
@@ -14,10 +15,15 @@ import {
 import {useLocation, useNavigate} from "react-router-dom";
 import Dashboard from "../dashboard";
 import {Visibility, VisibilityOff} from "@mui/icons-material";
+
+function testing(){
+    console.log("test");
+}
+
+
 const Login = () => {
 
     const [active, setActive] = useState("");
-
     const { pathname } = useLocation();
     const navigate = useNavigate();
     useEffect(() => {
@@ -94,7 +100,14 @@ const Login = () => {
                             setActive(Dashboard);
                         }}>
                     Login
+                    <Backdrop
+                        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+
+                    >
+                        <CircularProgress color="inherit" />
+                    </Backdrop>
                 </Button>
+
             </Box>
         </Box>
     )

@@ -11,9 +11,12 @@ import AddNew from "./scenes/registers/addnew";
 import Login from "./scenes/login";
 
 
+
+
 function App() {
     const mode = useSelector((state) => state.global.mode);
     const theme = useMemo(() => createTheme(themeSettings(mode)), [mode]);
+    const tf = false;
     return (
     <div className="app">
         <BrowserRouter>
@@ -29,6 +32,7 @@ function App() {
                         <Route path="/registers" element={<Registers />}/>
                         <Route path="/addnew" element={<AddNew />} />
                     </Route>
+
                 </Routes>
             </ThemeProvider>
         </BrowserRouter>
