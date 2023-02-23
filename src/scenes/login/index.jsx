@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react'
-import AddNew from "../registers/addnew";
 import MailOutlineIcon from '@mui/icons-material/MailOutline';
 import {
+    Alert, AlertTitle,
     Backdrop,
     Box,
     Button, Chip, CircularProgress,
@@ -15,25 +15,46 @@ import {
 import {useLocation, useNavigate} from "react-router-dom";
 import Dashboard from "../dashboard";
 import {Visibility, VisibilityOff} from "@mui/icons-material";
+import {initializeApp} from "firebase/app";
+import {getFirestore} from "firebase/firestore";
+import { collection, addDoc } from "firebase/firestore";
 
 
-function ifEmpty(email){
-    if(email == ""){
-        return(
-            <TextField
-                error
-                id="outlined-error"
-                label="Error"
-                defaultValue="Hello World"
-            />
-        )
-    }
+// Your web app's Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+    apiKey: "AIzaSyDz-hK8oO_OEhTsd0ly9Zqwj3jKapp0Vw8",
+    authDomain: "arcus-43b7c.firebaseapp.com",
+    projectId: "arcus-43b7c",
+    storageBucket: "arcus-43b7c.appspot.com",
+    messagingSenderId: "901347999337",
+    appId: "1:901347999337:web:7ce80300b3bcfba612acf8",
+    measurementId: "G-P9Q49KHFVX"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+
+
+function writeUserData(email, password) {
+    const db = getFirestore(app);
+    addDoc(collection(db, "cities"), {
+        email: email,
+        country: password
+    }).then(r => alert("added"));
 }
 
-
-
-
 const Login = () => {
+    function ifValid(email, password){
+        if(email == "tstefano87@gmail.com" && password == "Troy654321!"){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+
+
     const [active, setActive] = useState("");
     const { pathname } = useLocation();
     const navigate = useNavigate();
@@ -63,15 +84,7 @@ const Login = () => {
         setPassword(event.target.value);
     };
 
-    const handleClick = () => {
-        // "message" stores input field value
-        setUpdated(email);
-    };
-
-
     return (
-
-
         <Box textAlign="center" paddingY="100px" sx={{
             width: "100%",
             height: "100%",
@@ -134,10 +147,19 @@ const Login = () => {
                 <Button variant="outlined"
                         onClick={() => {
                             //handleClick();
-                            console.log(email);
-                            console.log(password);
-                            //navigate("/dashboard");
-                            //setActive(Dashboard);
+                            //console.log(email);
+                            //console.log(password);
+                            if(ifValid(email, password)){
+                                writeUserData(email, password)
+                                navigate("/dashboard");
+                                setActive(Dashboard);
+                            }
+                            else{
+                                return(
+                                    alert("Invalid Login Credentials")
+                                );
+                            }
+
                         }}>
                     Login
 
@@ -147,5 +169,4 @@ const Login = () => {
         </Box>
     )
 }
-
 export default Login;
