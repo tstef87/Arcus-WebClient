@@ -1,28 +1,25 @@
-import React, {useEffect, useState} from 'react'
+import {initializeApp} from "firebase/app";
+import {firebaseConfig} from "../../../firebase/firebaseConfig";
+import {addDoc, collection, getFirestore} from "firebase/firestore";
+import React, {useEffect, useState} from "react";
+import {useLocation, useNavigate} from "react-router-dom";
 import {Box, Button, Icon, InputAdornment, TextField} from "@mui/material";
 import MailOutlineIcon from "@mui/icons-material/MailOutline";
 import Dashboard from "../../dashboard";
-import {initializeApp} from "firebase/app";
-import {addDoc, collection, getFirestore} from "firebase/firestore";
-import {firebaseConfig} from "../../../firebase/firebaseConfig";
-import {useLocation, useNavigate} from "react-router-dom";
 
-
-
-function addRegister(name, num, rnum, uname, pword) {
+function addRegister(fname, lname, email, pword) {
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
-    addDoc(collection(db, "registers"), {
-        name: name,
-        number: num,
-        registerNumber: rnum,
-        username: uname,
+    addDoc(collection(db, "employee"), {
+        fname: fname,
+        lname: lname,
+        email: email,
         password: pword
     }).then(r => alert("added"));
 }
 
-const AddNewRegister = () => {
 
+const AddNewEmployee = () => {
     const [active, setActive] = useState("");
     const { pathname } = useLocation();
     const navigate = useNavigate();
@@ -31,48 +28,41 @@ const AddNewRegister = () => {
         setActive(pathname.substring(1));
     }, [pathname]);
 
-
-    const [standName, setStandName] = useState('');
-    const [standNum, setStandNum] = useState('');
-    const [registerNum, setRegisterNum] = useState('');
-    const [userName, setUserName] = useState('');
+    const [fName, setfName] = useState('');
+    const [lName, setlName] = useState('');
+    const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
-    const [updateSNAME, setUpdatedSNAME] = useState(standName);
-    const [updateSNUM, setUpdatedSNUM] = useState(standNum);
-    const [updateRN, setUpdatedRN] = useState(registerNum);
-    const [updateUN, setUpdatedUN] = useState(userName);
+    const [updatefName, setUpdatedfName] = useState(fName);
+    const [updatelName, setUpdatedlName] = useState(lName);
+    const [updateEM, setUpdatedEM] = useState(email);
     const [updatePW, setUpdatedPW] = useState(password);
 
-    const handleChangeSNAME = (event) => {
-        setStandName(event.target.value);
+    const handleChangefNAME = (event) => {
+        setfName(event.target.value);
     };
-    const handleChangeSNUM = (event) => {
-        setStandNum(event.target.value);
+    const handleChangelNAME = (event) => {
+        setlName(event.target.value);
     };
-    const handleChangeRN = (event) => {
-        setRegisterNum(event.target.value);
-    };
-    const handleChangeUN = (event) => {
-        setUserName(event.target.value);
+    const handleChangeEM = (event) => {
+        setEmail(event.target.value);
     };
     const handleChangePW = (event) => {
         setPassword(event.target.value);
     };
 
-
-    return (
+    return(
         <Box paddingX="20px">
             <Box>
-                <h1>Add New Register</h1>
+                <h1>Add New Employee</h1>
             </Box>
 
             <Box >
                 <TextField
-                    id="standName"
-                    name="standName"
-                    onChange={handleChangeSNAME}
-                    value={standName}
+                    id="fName"
+                    name="fName"
+                    onChange={handleChangefNAME}
+                    value={fName}
 
                     sx={{ m: 1, width: '25ch' }}
                     InputProps={{
@@ -82,16 +72,16 @@ const AddNewRegister = () => {
                             </Icon>
                         </InputAdornment>,
                     }}
-                    label="Stand Name"
+                    label="First Name"
                 />
             </Box>
 
             <Box paddingTop="10px">
                 <TextField
-                    id="standNum"
-                    name="standNum"
-                    onChange={handleChangeSNUM}
-                    value={standNum}
+                    id="lName"
+                    name="lName"
+                    onChange={handleChangelNAME}
+                    value={lName}
 
                     sx={{ m: 1, width: '25ch' }}
                     InputProps={{
@@ -101,15 +91,15 @@ const AddNewRegister = () => {
                             </Icon>
                         </InputAdornment>,
                     }}
-                    label="Stand Number"
+                    label="Last Name"
                 />
             </Box>
             <Box paddingTop="10px">
                 <TextField
-                    id="registerNum"
-                    name="registerNum"
-                    onChange={handleChangeRN}
-                    value={registerNum}
+                    id="email"
+                    name="email"
+                    onChange={handleChangeEM}
+                    value={email}
 
                     sx={{ m: 1, width: '25ch' }}
                     InputProps={{
@@ -119,28 +109,10 @@ const AddNewRegister = () => {
                             </Icon>
                         </InputAdornment>,
                     }}
-                    label="Register number"
+                    label="Email"
                 />
             </Box>
 
-            <Box>
-                <TextField
-                    id="userName"
-                    name="userName"
-                    onChange={handleChangeUN}
-                    value={userName}
-
-                    sx={{ m: 1, width: '25ch' }}
-                    InputProps={{
-                        endAdornment: <InputAdornment position="end">
-                            <Icon>
-                                <MailOutlineIcon />
-                            </Icon>
-                        </InputAdornment>,
-                    }}
-                    label="Login User Name"
-                />
-            </Box>
 
             <Box>
                 <TextField
@@ -157,21 +129,20 @@ const AddNewRegister = () => {
                             </Icon>
                         </InputAdornment>,
                     }}
-                    label="Login User Name"
+                    label="Password"
                 />
             </Box>
 
             <Box>
                 <Button variant="outlined"
                         onClick={() => {
-                            if(standName !== "" &&
-                                standNum !== "" &&
-                                registerNum !== "" &&
-                                userName !== "" &&
+                            if(fName !== "" &&
+                                lName !== "" &&
+                                email !== "" &&
                                 password !== ""){
 
-                                addRegister(standName, standNum, registerNum, userName, password);
-                                navigate("/registers");
+                                addRegister(fName, lName, email, password);
+                                navigate("/employees");
                                 setActive(Dashboard);
 
                             }
@@ -186,6 +157,7 @@ const AddNewRegister = () => {
 
         </Box>
     )
+
 }
 
-export default AddNewRegister;
+export default AddNewEmployee;

@@ -149,7 +149,7 @@ const Login = () => {
                             //console.log(email);
                             //console.log(password);
                             if(ifValid(email, password)){
-                                writeUserData(email, password)
+                                //writeUserData(email, password)
                                 navigate("/dashboard");
                                 setActive(Dashboard);
                             }

@@ -68,7 +68,7 @@ const navItems = [
         icon: <Groups2Outlined />,
     },
     {
-        text: "Menu Items",
+        text: "Employees",
         icon: <PointOfSaleOutlined />
     },
     {

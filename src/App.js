@@ -9,6 +9,9 @@ import Layout from "scenes/layout"
 import Registers from "scenes/registers";
 import AddNew from "./scenes/registers/addnew";
 import Login from "./scenes/login";
+import AddNewRegister from "./scenes/registers/addnew";
+import AddNewEmployee from "./scenes/employees/addnew";
+import Employees from "./scenes/employees";
 
 
 
@@ -30,7 +33,9 @@ function App() {
                         <Route path="/" element={<Navigate to="/dashboard" replace />} />
                         <Route path="/dashboard" element={<Dashboard />} />
                         <Route path="/registers" element={<Registers />}/>
-                        <Route path="/addnew" element={<AddNew />} />
+                        <Route path="/addnewregiater" element={<AddNewRegister />} />
+                        <Route path="/employees3" element={<Employees />}/>
+                        <Route path="/employees" element={<AddNewEmployee />} />
                     </Route>
 
                 </Routes>
