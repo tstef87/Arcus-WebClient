@@ -12,6 +12,8 @@ import Login from "./scenes/login";
 import AddNewRegister from "./scenes/registers/addnew";
 import AddNewEmployee from "./scenes/employees/addnew";
 import Employees from "./scenes/employees";
+import Firestore from "./scenes/testing";
+import Read from "./scenes/testingt";
 
 
 
@@ -34,8 +36,12 @@ function App() {
                         <Route path="/dashboard" element={<Dashboard />} />
                         <Route path="/registers" element={<Registers />}/>
                         <Route path="/addnewregiater" element={<AddNewRegister />} />
-                        <Route path="/employees3" element={<Employees />}/>
-                        <Route path="/employees" element={<AddNewEmployee />} />
+                        <Route path="/employees" element={<Employees />}/>
+                        <Route path="/newemployee" element={<AddNewEmployee />} />
+                        <Route path="/testing" element={<Firestore />} />
+                        <Route path="/testingt" element={<Read />} />
+
+
                     </Route>
 
                 </Routes>

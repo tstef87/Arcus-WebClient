@@ -29,46 +29,17 @@ import {useEffect, useState} from "react";
 import AddNew from "scenes/registers/addnew"
 import {collection, query, where, getDocs, getFirestore, doc, setDoc, getDoc} from "firebase/firestore";
 import {initializeApp} from "firebase/app";
-import {firebaseConfig} from "../../firebase/firebaseConfig";
+import {db, firebaseConfig} from "../../firebase/firebaseConfig";
 import Dashboard from "../dashboard";
 
-function createData(id, name, number, registerNumber) {
-    return {
-        id,
-        name,
-        number,
-        registerNumber
-    };
+function createData(name, calories, fat, carbs, protein) {
+    return { name, calories, fat, carbs, protein };
 }
 
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-
-const citiesRef = collection(db, "cities");
+const rows = [];
 
 
-function add(){
-    setDoc(doc(citiesRef, "SF"), {
-        name: "San Francisco", state: "CA", country: "USA",
-        capital: false, population: 860000,
-        regions: ["west_coast", "norcal"] });
-    setDoc(doc(citiesRef, "LA"), {
-        name: "Los Angeles", state: "CA", country: "USA",
-        capital: false, population: 3900000,
-        regions: ["west_coast", "socal"] });
-    setDoc(doc(citiesRef, "DC"), {
-        name: "Washington, D.C.", state: null, country: "USA",
-        capital: true, population: 680000,
-        regions: ["east_coast"] });
-    setDoc(doc(citiesRef, "TOK"), {
-        name: "Tokyo", state: null, country: "Japan",
-        capital: true, population: 9000000,
-        regions: ["kanto", "honshu"] });
-    setDoc(doc(citiesRef, "BJ"), {
-        name: "Beijing", state: null, country: "China",
-        capital: true, population: 21500000,
-        regions: ["linguini", "hebei"] });
-};
+
 
 
 
@@ -77,26 +48,55 @@ function add(){
 
 const Register = () => {
 
-    const docRef = doc(db, "cities", "SF");
-    const docSnap = getDoc(docRef);
+    const [users, setUsers] = useState([]);
+    const userCollectionRef = collection(db, "Users")
+    useEffect(() => {
+        const getUserList = async () => {
+            try {
+                const data = await getDocs(userCollectionRef);
+                const filteredData = data.docs.map((doc) => ({
+                    ...doc.data(),
+                    id: doc.id
+                }));
+                setUsers(filteredData);
+                console.log(filteredData);
+            }catch (e) {
+                console.error(e);
+            }
+        };
+        getUserList().then(r => console.log("done"));
+    }, []);
 
-    if (docSnap.exists()) {
-        console.log("Document data:", docSnap.data());
-    } else {
-        // doc.data() will be undefined in this case
-        console.log("No such document!");
-    }
+
+
 
     return (
-        <Button variant="outlined"
-                onClick={() => {
-                    console.log("troy");
-
-                }}>
-            Login
-
-        </Button>
-    )
+        <TableContainer component={Paper}>
+            <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                <TableHead>
+                    <TableRow>
+                        <TableCell>ID</TableCell>
+                        <TableCell align="right">First Name</TableCell>
+                        <TableCell align="right">Last Name</TableCell>
+                        <TableCell align="right">Email</TableCell>
+                    </TableRow>
+                </TableHead>
+                <TableBody>
+                    {users.map((user) => (
+                        <TableRow
+                            key={user.id}
+                            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                        >
+                            <TableCell component="th" scope="row">{user.id}</TableCell>
+                            <TableCell align="right">{user.fname}</TableCell>
+                            <TableCell align="right">{user.lname}</TableCell>
+                            <TableCell align="right">{user.email}</TableCell>
+                        </TableRow>
+                    ))}
+                </TableBody>
+            </Table>
+        </TableContainer>
+    );
 }
 
 export default Register;

@@ -1,5 +1,5 @@
 import {initializeApp} from "firebase/app";
-import {firebaseConfig} from "../../../firebase/firebaseConfig";
+import {db, firebaseConfig} from "../../../firebase/firebaseConfig";
 import {addDoc, collection, getFirestore} from "firebase/firestore";
 import React, {useEffect, useState} from "react";
 import {useLocation, useNavigate} from "react-router-dom";
@@ -8,8 +8,7 @@ import MailOutlineIcon from "@mui/icons-material/MailOutline";
 import Dashboard from "../../dashboard";
 
 function addRegister(fname, lname, email, pword) {
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
+
     addDoc(collection(db, "employee"), {
         fname: fname,
         lname: lname,

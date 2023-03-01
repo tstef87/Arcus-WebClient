@@ -44,11 +44,11 @@ const navItems = [
     },
 
     {
-        text: "Overview",
+        text: "testing",
         icon: <PointOfSaleOutlined />,
     },
     {
-        text: "Transactions",
+        text: "testingt",
         icon: <ReceiptLongOutlined />,
     },
     {

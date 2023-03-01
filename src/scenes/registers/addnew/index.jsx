@@ -4,14 +4,13 @@ import MailOutlineIcon from "@mui/icons-material/MailOutline";
 import Dashboard from "../../dashboard";
 import {initializeApp} from "firebase/app";
 import {addDoc, collection, getFirestore} from "firebase/firestore";
-import {firebaseConfig} from "../../../firebase/firebaseConfig";
+import {db, firebaseConfig} from "../../../firebase/firebaseConfig";
 import {useLocation, useNavigate} from "react-router-dom";
 
 
 
 function addRegister(name, num, rnum, uname, pword) {
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
+
     addDoc(collection(db, "registers"), {
         name: name,
         number: num,
@@ -37,12 +36,6 @@ const AddNewRegister = () => {
     const [registerNum, setRegisterNum] = useState('');
     const [userName, setUserName] = useState('');
     const [password, setPassword] = useState('');
-
-    const [updateSNAME, setUpdatedSNAME] = useState(standName);
-    const [updateSNUM, setUpdatedSNUM] = useState(standNum);
-    const [updateRN, setUpdatedRN] = useState(registerNum);
-    const [updateUN, setUpdatedUN] = useState(userName);
-    const [updatePW, setUpdatedPW] = useState(password);
 
     const handleChangeSNAME = (event) => {
         setStandName(event.target.value);
