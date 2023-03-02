@@ -12,16 +12,14 @@ import Login from "./scenes/login";
 import AddNewRegister from "./scenes/registers/addnew";
 import AddNewEmployee from "./scenes/employees/addnew";
 import Employees from "./scenes/employees";
-import Firestore from "./scenes/testing";
-import Read from "./scenes/testingt";
-
-
+import Register from "./scenes/registers/register";
+import Employee from "./scenes/employees/employee";
+import Addnewitem from "./scenes/registers/register/addnewitem";
 
 
 function App() {
     const mode = useSelector((state) => state.global.mode);
     const theme = useMemo(() => createTheme(themeSettings(mode)), [mode]);
-    const tf = false;
     return (
     <div className="app">
         <BrowserRouter>
@@ -34,14 +32,15 @@ function App() {
                     <Route element={<Layout />}>
                         <Route path="/" element={<Navigate to="/dashboard" replace />} />
                         <Route path="/dashboard" element={<Dashboard />} />
+
                         <Route path="/registers" element={<Registers />}/>
-                        <Route path="/addnewregiater" element={<AddNewRegister />} />
+                        <Route path="/registers/register" element={<Register />}/>
+                        <Route path="/registers/register/additem" element={<Addnewitem />} />
+                        <Route path="/addnewregister" element={<AddNewRegister />} />
+
                         <Route path="/employees" element={<Employees />}/>
+                        <Route path="/employees/employee" element={<Employee />}/>
                         <Route path="/newemployee" element={<AddNewEmployee />} />
-                        <Route path="/testing" element={<Firestore />} />
-                        <Route path="/testingt" element={<Read />} />
-
-
                     </Route>
 
                 </Routes>

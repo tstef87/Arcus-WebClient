@@ -48,54 +48,77 @@ const rows = [];
 
 const Register = () => {
 
-    const [users, setUsers] = useState([]);
-    const userCollectionRef = collection(db, "Users")
+    const [active, setActive] = useState("");
+    const { pathname } = useLocation();
+    const navigate = useNavigate();
+
     useEffect(() => {
-        const getUserList = async () => {
+        setActive(pathname.substring(1));
+    }, [pathname]);
+
+    const [registers, setRegisters] = useState([]);
+    const registersCollectionRef = collection(db, "registers")
+    useEffect(() => {
+        const getRegistersList = async () => {
             try {
-                const data = await getDocs(userCollectionRef);
+                const data = await getDocs(registersCollectionRef);
                 const filteredData = data.docs.map((doc) => ({
                     ...doc.data(),
                     id: doc.id
                 }));
-                setUsers(filteredData);
+                setRegisters(filteredData);
                 console.log(filteredData);
             }catch (e) {
                 console.error(e);
             }
         };
-        getUserList().then(r => console.log("done"));
+        getRegistersList().then(r => console.log("done"));
     }, []);
 
 
 
 
     return (
-        <TableContainer component={Paper}>
-            <Table sx={{ minWidth: 650 }} aria-label="simple table">
-                <TableHead>
-                    <TableRow>
-                        <TableCell>ID</TableCell>
-                        <TableCell align="right">First Name</TableCell>
-                        <TableCell align="right">Last Name</TableCell>
-                        <TableCell align="right">Email</TableCell>
-                    </TableRow>
-                </TableHead>
-                <TableBody>
-                    {users.map((user) => (
-                        <TableRow
-                            key={user.id}
-                            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                        >
-                            <TableCell component="th" scope="row">{user.id}</TableCell>
-                            <TableCell align="right">{user.fname}</TableCell>
-                            <TableCell align="right">{user.lname}</TableCell>
-                            <TableCell align="right">{user.email}</TableCell>
+        <Box padding="20px">
+            <TableContainer component={Paper}>
+                <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                    <TableHead>
+                        <TableRow>
+                            <TableCell>ID</TableCell>
+                            <TableCell align="right">Stand Name</TableCell>
+                            <TableCell align="right">Stand Number</TableCell>
+                            <TableCell align="right">Register Number</TableCell>
                         </TableRow>
-                    ))}
-                </TableBody>
-            </Table>
-        </TableContainer>
+                    </TableHead>
+                    <TableBody>
+                        {registers.map((register) => (
+                            <TableRow
+                                onClick={ () => {
+                                    navigate("/registers/register", {state: register.id});
+                                    setActive(Dashboard);
+                                }}
+                                key={register.id}
+                                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                            >
+                                <TableCell component="th" scope="row">{register.id}</TableCell>
+                                <TableCell align="right">{register.name}</TableCell>
+                                <TableCell align="right">{register.number}</TableCell>
+                                <TableCell align="right">{register.registerNumber}</TableCell>
+                            </TableRow>
+                        ))}
+                    </TableBody>
+                </Table>
+            </TableContainer>
+            <Box paddingY="20px">
+                <Button variant="contained"
+                        onClick={() => {
+                                navigate("/addnewregister");
+                                setActive(Dashboard);
+
+                            }}>
+                    Add New</Button>
+            </Box>
+        </Box>
     );
 }
 
