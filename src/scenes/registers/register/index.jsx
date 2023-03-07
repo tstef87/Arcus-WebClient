@@ -1,15 +1,21 @@
 import {useLocation, useNavigate} from "react-router-dom";
-import {collection, doc, getDoc, getDocs, deleteDoc} from "firebase/firestore";
+import { doc, getDoc, getDocs, deleteDoc} from "firebase/firestore";
 import {db} from "../../../firebase/firebaseConfig";
 import {useEffect, useState} from "react";
 import {Box, Button} from "@mui/material";
 import FlexBetween from "../../../components/FlexBetween";
 import Dashboard from "../../dashboard";
+import Paper from "@mui/material/Paper";
+import Table from "@mui/material/Table";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
+import TableCell from "@mui/material/TableCell";
+import TableBody from "@mui/material/TableBody";
+import TableContainer from "@mui/material/TableContainer";
 
 async function del(id) {
     await deleteDoc(doc(db, "registers", id));
 }
-
 
 const Register = () =>{
 
@@ -25,6 +31,8 @@ const Register = () =>{
     const id = state;
 
     const [registers, setRegisters] = useState([]);
+    const [items, setItems] = useState([]);
+
     const registersCollectionRef = doc(db, "registers", id)
 
 
@@ -33,20 +41,27 @@ const Register = () =>{
             try {
                 const docSnap = await getDoc(registersCollectionRef);
                 const filteredData = docSnap.data((doc) => ({
-                    ...doc.data(),
-                    id: doc.id
+                    ...doc.get(),
+                    id: doc.id,
+
                 }));
+
                 setRegisters(filteredData);
-                console.log(filteredData);
+                setItems(docSnap.data().item);
+
+
             }catch (e) {
                 console.error(e);
             }
         };
-        getRegistersList().then(r => console.log("done"));
+        getRegistersList().then(r => console.log("Loaded"));
+
     }, []);
 
 
-     // Read values passed on state
+
+
+        // Read values passed on state
 
     return(
         <Box padding="20px">
@@ -60,9 +75,43 @@ const Register = () =>{
                     <h1>Login Info</h1>
                     <h3>Username: {registers.username}</h3>
                     <h3>Password: {registers.password}</h3>
+                    <h3>path: {items[1]}</h3>
                 </Box>
                 <Box>
-                    <h1>Items</h1>
+
+                    {/*<TableContainer component={Paper}>*/}
+                    {/*    <Table sx={{ minWidth: 650 }} aria-label="simple table">*/}
+                    {/*        <TableHead>*/}
+                    {/*            <TableRow>*/}
+                    {/*                <TableCell>ID</TableCell>*/}
+                    {/*                <TableCell align="right">Item Name</TableCell>*/}
+                    {/*                <TableCell align="right">Item Price</TableCell>*/}
+                    {/*                <TableCell align="right">Item Type</TableCell>*/}
+                    {/*            </TableRow>*/}
+                    {/*        </TableHead>*/}
+                    {/*        <TableBody>*/}
+                    {/*            {items.map((item) => (*/}
+                    {/*                <TableRow*/}
+                    {/*                    onClick={ () => {*/}
+                    {/*                        navigate("/registers/register", {state: item.id});*/}
+                    {/*                        setActive(Dashboard);*/}
+                    {/*                    }}*/}
+                    {/*                    key={item.id}*/}
+                    {/*                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}*/}
+                    {/*                >*/}
+                    {/*                    <TableCell component="th" scope="row">{item.id}</TableCell>*/}
+                    {/*                    <TableCell align="right">{item.name}</TableCell>*/}
+                    {/*                    <TableCell align="right">{item.price}</TableCell>*/}
+                    {/*                    <TableCell align="right">{item.type}</TableCell>*/}
+                    {/*                </TableRow>*/}
+                    {/*            ))}*/}
+                    {/*        </TableBody>*/}
+                    {/*    </Table>*/}
+                    {/*</TableContainer>*/}
+
+
+
+
                 </Box>
             </FlexBetween>
             <Box>

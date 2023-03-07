@@ -66,6 +66,9 @@ const Register = () => {
                     ...doc.data(),
                     id: doc.id
                 }));
+
+
+                //registers.push(filteredData)
                 setRegisters(filteredData);
                 console.log(filteredData);
             }catch (e) {

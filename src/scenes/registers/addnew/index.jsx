@@ -10,13 +10,14 @@ import {useLocation, useNavigate} from "react-router-dom";
 
 
 function addRegister(name, num, rnum, uname, pword) {
-
+    const list = []
     addDoc(collection(db, "registers"), {
         name: name,
         number: num,
         registerNumber: rnum,
         username: uname,
-        password: pword
+        password: pword,
+        items: list
     }).then(r => alert("added"));
 }
 

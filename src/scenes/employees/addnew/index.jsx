@@ -7,7 +7,7 @@ import {Box, Button, Icon, InputAdornment, TextField} from "@mui/material";
 import MailOutlineIcon from "@mui/icons-material/MailOutline";
 import Dashboard from "../../dashboard";
 
-function addRegister(fname, lname, email, pword) {
+function addEmployee(fname, lname, email, pword) {
 
     addDoc(collection(db, "employee"), {
         fname: fname,
@@ -15,6 +15,8 @@ function addRegister(fname, lname, email, pword) {
         email: email,
         password: pword
     }).then(r => alert("added"));
+
+
 }
 
 
@@ -140,7 +142,7 @@ const AddNewEmployee = () => {
                                 email !== "" &&
                                 password !== ""){
 
-                                addRegister(fName, lName, email, password);
+                                addEmployee(fName, lName, email, password);
                                 navigate("/employees");
                                 setActive(Dashboard);
 

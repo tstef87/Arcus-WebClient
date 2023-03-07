@@ -44,7 +44,7 @@ const Employees = () => {
     }, [pathname]);
 
     const [users, setUsers] = useState([]);
-    const userCollectionRef = collection(db, "Users")
+    const userCollectionRef = collection(db, "employee")
     useEffect(() => {
         const getUserList = async () => {
             try {

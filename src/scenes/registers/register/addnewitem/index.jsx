@@ -8,7 +8,7 @@ import FlexBetween from "../../../../components/FlexBetween";
 import MailOutlineIcon from "@mui/icons-material/MailOutline";
 
 
-function addItem(id, name, p, t, rid, items) {
+function addItem(name, p, t, rid, items) {
 
     const pid = name.toLowerCase().replace(/\s/g, '');
     setDoc(doc(db, "Items", pid), {
@@ -17,7 +17,7 @@ function addItem(id, name, p, t, rid, items) {
         type: t
     }).then(r => console.log("added"));
 
-    items.push("Items/" + pid)
+    items.push(pid)
 
     updateDoc(doc(db, "registers", rid), {
         item: items
@@ -144,11 +144,11 @@ const Addnewitem = () => {
                 <FlexBetween >
                     <Button
                         onClick={ () => {
-                            if(itemID !== "" &&
+                            if(type !== "" &&
                                 itemName !== "" &&
                                 price !== ""){
 
-                                addItem(itemID, itemName, price, type, id, registers.item);
+                                addItem(itemName, price, type, id, registers.item);
                                 navigate("/registers/register", {state: id});
                                 setActive(Dashboard);
 
