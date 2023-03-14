@@ -3,22 +3,29 @@ import {Box, Button, Icon, InputAdornment, TextField} from "@mui/material";
 import MailOutlineIcon from "@mui/icons-material/MailOutline";
 import Dashboard from "../../dashboard";
 import {initializeApp} from "firebase/app";
-import {addDoc, collection, getFirestore} from "firebase/firestore";
+import {addDoc, collection, doc, getFirestore, setDoc} from "firebase/firestore";
 import {db, firebaseConfig} from "../../../firebase/firebaseConfig";
 import {useLocation, useNavigate} from "react-router-dom";
 
 
 
 function addRegister(name, num, rnum, uname, pword) {
-    const list = []
-    addDoc(collection(db, "registers"), {
+
+
+    const pid = uname+num+rnum;
+
+    setDoc(doc(db, "registers", pid.toLowerCase()), {
         name: name,
         number: num,
         registerNumber: rnum,
         username: uname,
         password: pword,
-        items: list
-    }).then(r => alert("added"));
+    }).then(r => (
+        setDoc(doc(db, "registers", pid.toLowerCase()+"/items/testpenny"), {
+            name: "Test Penny",
+            price: 0.01,
+            type: "Test"
+        }).then(r => console.log("Added"))));
 }
 
 const AddNewRegister = () => {

@@ -8,7 +8,7 @@ import FlexBetween from "../../../../components/FlexBetween";
 import MailOutlineIcon from "@mui/icons-material/MailOutline";
 
 
-function addItem(name, p, t, rid, items) {
+function addItem(name, p, t, rid, item) {
 
     const pid = name.toLowerCase().replace(/\s/g, '');
     setDoc(doc(db, "Items", pid), {
@@ -17,10 +17,11 @@ function addItem(name, p, t, rid, items) {
         type: t
     }).then(r => console.log("added"));
 
-    items.push(pid)
 
-    updateDoc(doc(db, "registers", rid), {
-        item: items
+    setDoc(doc(db, "registers", rid+"/items/"+pid), {
+        name: name,
+        price: p,
+        type: t
     }).then(r => alert("added"));
 }
 

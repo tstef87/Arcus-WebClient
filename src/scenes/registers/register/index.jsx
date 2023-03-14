@@ -1,5 +1,5 @@
 import {useLocation, useNavigate} from "react-router-dom";
-import { doc, getDoc, getDocs, deleteDoc} from "firebase/firestore";
+import {doc, getDoc, getDocs, deleteDoc, collection, where, query} from "firebase/firestore";
 import {db} from "../../../firebase/firebaseConfig";
 import {useEffect, useState} from "react";
 import {Box, Button} from "@mui/material";
@@ -32,36 +32,60 @@ const Register = () =>{
 
     const [registers, setRegisters] = useState([]);
     const [items, setItems] = useState([]);
+    const [itemList, setItemList] = useState([]);
 
-    const registersCollectionRef = doc(db, "registers", id)
-
+    const registersCollectionRef = doc(db, "registers", id);
 
     useEffect(() => {
+
+
+    }, []);
+
+
+    // const itemsCollectionRef = collection(db, "Items")
+    // useEffect(() => {
+    //     const getItemList = async () => {
+    //         try {
+    //             const data = await getDocs(itemsCollectionRef);
+    //             const filteredData = data.docs.map((doc) => ({
+    //                 ...doc.data(),
+    //                 id: doc.id
+    //             }));
+    //
+    //
+    //             //registers.push(filteredData)
+    //             setItemList(filteredData);
+    //             console.log(filteredData);
+    //         }catch (e) {
+    //             console.error(e);
+    //         }
+    //     };
+    //     getItemList().then(r => console.log("done"));
+    // }, []);
+
+    useEffect(() => {
+
         const getRegistersList = async () => {
             try {
                 const docSnap = await getDoc(registersCollectionRef);
-                const filteredData = docSnap.data((doc) => ({
+                const filteredRegData = docSnap.data((doc) => ({
                     ...doc.get(),
                     id: doc.id,
 
                 }));
 
-                setRegisters(filteredData);
-                setItems(docSnap.data().item);
-
-
+                const filteredItemData = docSnap.data((doc) => ({
+                    ...doc.item
+                }));
+                setRegisters(filteredRegData);
+                setItems(filteredItemData);
             }catch (e) {
                 console.error(e);
             }
         };
-        getRegistersList().then(r => console.log("Loaded"));
-
     }, []);
 
 
-
-
-        // Read values passed on state
 
     return(
         <Box padding="20px">
@@ -76,41 +100,39 @@ const Register = () =>{
                     <h3>Username: {registers.username}</h3>
                     <h3>Password: {registers.password}</h3>
                     <h3>path: {items[1]}</h3>
+
                 </Box>
                 <Box>
 
-                    {/*<TableContainer component={Paper}>*/}
-                    {/*    <Table sx={{ minWidth: 650 }} aria-label="simple table">*/}
-                    {/*        <TableHead>*/}
-                    {/*            <TableRow>*/}
-                    {/*                <TableCell>ID</TableCell>*/}
-                    {/*                <TableCell align="right">Item Name</TableCell>*/}
-                    {/*                <TableCell align="right">Item Price</TableCell>*/}
-                    {/*                <TableCell align="right">Item Type</TableCell>*/}
-                    {/*            </TableRow>*/}
-                    {/*        </TableHead>*/}
-                    {/*        <TableBody>*/}
-                    {/*            {items.map((item) => (*/}
-                    {/*                <TableRow*/}
-                    {/*                    onClick={ () => {*/}
-                    {/*                        navigate("/registers/register", {state: item.id});*/}
-                    {/*                        setActive(Dashboard);*/}
-                    {/*                    }}*/}
-                    {/*                    key={item.id}*/}
-                    {/*                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}*/}
-                    {/*                >*/}
-                    {/*                    <TableCell component="th" scope="row">{item.id}</TableCell>*/}
-                    {/*                    <TableCell align="right">{item.name}</TableCell>*/}
-                    {/*                    <TableCell align="right">{item.price}</TableCell>*/}
-                    {/*                    <TableCell align="right">{item.type}</TableCell>*/}
-                    {/*                </TableRow>*/}
-                    {/*            ))}*/}
-                    {/*        </TableBody>*/}
-                    {/*    </Table>*/}
-                    {/*</TableContainer>*/}
-
-
-
+                    <TableContainer component={Paper}>
+                        <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                            <TableHead>
+                                <TableRow>
+                                    <TableCell>ID</TableCell>
+                                    <TableCell align="right">Item Name</TableCell>
+                                    <TableCell align="right">Item Price</TableCell>
+                                    <TableCell align="right">Item Type</TableCell>
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                { itemList.map((iteme) => (
+                                    <TableRow
+                                        onClick={ () => {
+                                            navigate("/registers/register", {state: id});
+                                            setActive(Dashboard);
+                                        }}
+                                        key={itemList.id}
+                                        sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                    >
+                                        <TableCell component="th" scope="row">{ iteme.id}</TableCell>
+                                        <TableCell align="right">{iteme.name}</TableCell>
+                                        <TableCell align="right">{iteme.price}</TableCell>
+                                        <TableCell align="right">{iteme.type}</TableCell>
+                                    </TableRow>
+                                ) ? items.includes(iteme.id) : null )}
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
 
                 </Box>
             </FlexBetween>
