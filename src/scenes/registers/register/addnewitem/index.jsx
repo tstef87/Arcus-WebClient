@@ -6,6 +6,12 @@ import {addDoc, collection, doc, getDoc, setDoc, updateDoc} from "firebase/fires
 import {db} from "../../../../firebase/firebaseConfig";
 import FlexBetween from "../../../../components/FlexBetween";
 import MailOutlineIcon from "@mui/icons-material/MailOutline";
+import BasicSelect from "../../../../components/select";
+import FormControl from "@mui/material/FormControl";
+import InputLabel from "@mui/material/InputLabel";
+import Select from "@mui/material/Select";
+import MenuItem from "@mui/material/MenuItem";
+import * as React from "react";
 
 
 function addItem(name, p, t, rid, item) {
@@ -78,8 +84,8 @@ const Addnewitem = () => {
     }, []);
 
     return(
-        <Box>
-            <Box padding="20px">
+        <Box paddingY="40px" paddingX="70px">
+            <Box>
                 <Box>
                     <h1>Add New Item</h1>
                 </Box>
@@ -123,22 +129,23 @@ const Addnewitem = () => {
                 </Box>
 
                 <Box>
-                    <TextField
-                        id="type"
-                        name="type"
-                        onChange={handleChangeType}
-                        value={type}
+                    <FormControl fullWidth>
+                        <InputLabel id="demo-simple-select-label">Type</InputLabel>
+                        <Select
+                            labelId="select type"
+                            id="type"
+                            value={type}
+                            label="Type"
+                            onChange={handleChangeType}
+                            sx={{ m: 1, width: '25ch' }}
+                        >
+                            <MenuItem value={"Food"}>Food</MenuItem>
+                            <MenuItem value={"Non-Alcoholic Beverage" }>Non-Alcoholic Beverage</MenuItem>
+                            <MenuItem value={"Alcoholic Beverage"}>Alcoholic Beverage</MenuItem>
+                            <MenuItem value={"Test"}>Test</MenuItem>
 
-                        sx={{ m: 1, width: '25ch' }}
-                        InputProps={{
-                            endAdornment: <InputAdornment position="end">
-                                <Icon>
-                                    <MailOutlineIcon />
-                                </Icon>
-                            </InputAdornment>,
-                        }}
-                        label="Type"
-                    />
+                        </Select>
+                    </FormControl>
                 </Box>
             </Box>
             <Box>

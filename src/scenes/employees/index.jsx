@@ -66,7 +66,7 @@ const Employees = () => {
 
 
     return (
-        <Box padding="20px">
+        <Box paddingY="40px" paddingX="70px">
             <TableContainer component={Paper}>
                 <Table sx={{ minWidth: 650 }} aria-label="simple table">
                     <TableHead>

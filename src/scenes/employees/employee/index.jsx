@@ -1,4 +1,5 @@
 import {useLocation} from "react-router-dom";
+import Box from "@mui/material/Box";
 
 
 const Employee = () =>{
@@ -7,7 +8,9 @@ const Employee = () =>{
     const id = state; // Read values passed on state
 
     return(
-        <h1>{id}</h1>
+        <Box paddingY="40px" paddingX="70px">
+            <h1>{id}</h1>
+        </Box>
     )
 
 }

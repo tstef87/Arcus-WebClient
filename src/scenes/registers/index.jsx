@@ -32,19 +32,6 @@ import {initializeApp} from "firebase/app";
 import {db, firebaseConfig} from "../../firebase/firebaseConfig";
 import Dashboard from "../dashboard";
 
-function createData(name, calories, fat, carbs, protein) {
-    return { name, calories, fat, carbs, protein };
-}
-
-const rows = [];
-
-
-
-
-
-
-
-
 
 const Register = () => {
 
@@ -67,8 +54,6 @@ const Register = () => {
                     id: doc.id
                 }));
 
-
-                //registers.push(filteredData)
                 setRegisters(filteredData);
                 console.log(filteredData);
             }catch (e) {
@@ -79,10 +64,8 @@ const Register = () => {
     }, []);
 
 
-
-
     return (
-        <Box padding="20px">
+        <Box paddingY="40px" paddingX="70px">
             <TableContainer component={Paper}>
                 <Table sx={{ minWidth: 650 }} aria-label="simple table">
                     <TableHead>

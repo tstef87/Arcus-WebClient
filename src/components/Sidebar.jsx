@@ -76,11 +76,11 @@ const navItems = [
         icon: <PointOfSaleOutlined />
     },
     {
-        text: "Calender",
+        text: "Items",
         icon: <CalendarMonthOutlined />,
     },
     {
-        text: "Performance",
+        text: "Sales",
         icon: <TrendingUpOutlined />,
     }
 ];

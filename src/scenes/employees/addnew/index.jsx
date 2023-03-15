@@ -53,7 +53,7 @@ const AddNewEmployee = () => {
     };
 
     return(
-        <Box paddingX="20px">
+        <Box paddingY="40px" paddingX="70px">
             <Box>
                 <h1>Add New Employee</h1>
             </Box>

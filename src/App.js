@@ -15,6 +15,8 @@ import Employees from "./scenes/employees";
 import Register from "./scenes/registers/register";
 import Employee from "./scenes/employees/employee";
 import Addnewitem from "./scenes/registers/register/addnewitem";
+import Items from "./scenes/items";
+import Sales from "./scenes/sales";
 
 
 function App() {
@@ -41,6 +43,15 @@ function App() {
                         <Route path="/employees" element={<Employees />}/>
                         <Route path="/employees/employee" element={<Employee />}/>
                         <Route path="/newemployee" element={<AddNewEmployee />} />
+
+                        <Route path="/items" element={<Items />}/>
+
+                        <Route path="/sales" element={<Sales />}/>
+
+
+
+
+
                     </Route>
 
                 </Routes>
