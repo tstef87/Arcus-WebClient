@@ -182,6 +182,25 @@ const Register = () =>{
                                 </Box>
                             </Box>
                         </FlexBetween>
+                        <Box>
+                            <FlexBetween paddingY="10px">
+                                <Button variant="contained" align="center"
+                                        onClick= { () => {
+                                            del(id).then(r => alert("Deleted"))
+                                            navigate("/registers");
+                                            setActive(Dashboard);
+                                        }}
+                                >
+                                    Delete
+                                </Button>
+
+                                <Button variant="contained" align="center"
+                                >
+                                    Edit
+                                </Button>
+                            </FlexBetween>
+
+                        </Box>
                     </TabPanel>
 
                     <TabPanel value={value} index={1} dir={theme.direction}>
@@ -229,26 +248,6 @@ const Register = () =>{
                         Sales
                     </TabPanel>
                 </SwipeableViews>
-            </Box>
-
-            <Box>
-                <FlexBetween paddingY="10px">
-                    <Button variant="contained" align="center"
-                        onClick= { () => {
-                            del(id).then(r => alert("Deleted"))
-                            navigate("/registers");
-                            setActive(Dashboard);
-                        }}
-                    >
-                        Delete
-                    </Button>
-
-                    <Button variant="contained" align="center"
-                    >
-                        edit
-                    </Button>
-                </FlexBetween>
-
             </Box>
         </Box>
     )
