@@ -1,6 +1,6 @@
 import {useLocation, useNavigate} from "react-router-dom";
 import {doc, getDoc, getDocs, deleteDoc, collection, where, query} from "firebase/firestore";
-import {db} from "../../../firebase/firebaseConfig";
+import {db} from "../../../fs/firebaseConfig";
 import {useEffect, useState} from "react";
 import {Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle} from "@mui/material";
 import FlexBetween from "../../../components/FlexBetween";

@@ -12,7 +12,7 @@ import * as React from "react";
 import {useEffect, useState} from "react";
 import {useLocation, useNavigate} from "react-router-dom";
 import {collection, getDocs} from "firebase/firestore";
-import {db} from "../../firebase/firebaseConfig";
+import {db} from "../../fs/firebaseConfig";
 
 const Items = () => {
 

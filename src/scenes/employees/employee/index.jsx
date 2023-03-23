@@ -2,7 +2,7 @@ import {useLocation, useNavigate} from "react-router-dom";
 import Box from "@mui/material/Box";
 import {Button, Divider, List, ListItem, ListItemButton, ListItemIcon, ListItemText} from "@mui/material";
 import {deleteDoc, doc, getDoc} from "firebase/firestore";
-import {db} from "../../../firebase/firebaseConfig";
+import {db} from "../../../fs/firebaseConfig";
 import {useEffect, useState} from "react";
 import Dashboard from "../../dashboard";
 import * as React from "react";
