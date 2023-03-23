@@ -4,7 +4,7 @@ import MailOutlineIcon from "@mui/icons-material/MailOutline";
 import Dashboard from "../../dashboard";
 import {initializeApp} from "firebase/app";
 import {addDoc, collection, doc, getFirestore, setDoc} from "firebase/firestore";
-import {db, firebaseConfig} from "../../../../firebaseConfig";
+import {db, firebaseConfig} from "../../../fs/firebaseConfig";
 import {useLocation, useNavigate} from "react-router-dom";
 
 
