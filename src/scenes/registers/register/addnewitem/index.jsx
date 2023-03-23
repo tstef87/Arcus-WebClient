@@ -3,7 +3,7 @@ import {useEffect, useState} from "react";
 import {Autocomplete, Box, Button, Icon, InputAdornment, TextField} from "@mui/material";
 import Dashboard from "../../../dashboard";
 import {addDoc, collection, doc, getDoc, setDoc, updateDoc} from "firebase/firestore";
-import {db} from "../../../../fs/firebaseConfig";
+import {db} from "../../../../../firebaseConfig";
 import FlexBetween from "../../../../components/FlexBetween";
 import MailOutlineIcon from "@mui/icons-material/MailOutline";
 import BasicSelect from "../../../../components/select";

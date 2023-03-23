@@ -29,7 +29,7 @@ import {useEffect, useState} from "react";
 import AddNew from "scenes/registers/addnew"
 import {collection, query, where, getDocs, getFirestore, doc, setDoc, getDoc} from "firebase/firestore";
 import {initializeApp} from "firebase/app";
-import {db, firebaseConfig} from "../../fs/firebaseConfig";
+import {db, firebaseConfig} from "../../../firebaseConfig";
 import Dashboard from "../dashboard";
 
 
