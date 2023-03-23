@@ -6,6 +6,7 @@ import {db} from "../../../firebase/firebaseConfig";
 import {useEffect, useState} from "react";
 import Dashboard from "../../dashboard";
 import * as React from "react";
+import FlexBetween from "../../../components/FlexBetween";
 
 async function del(id) {
     await deleteDoc(doc(db, "employee", id));
@@ -70,6 +71,30 @@ const Employee = () =>{
                             <ListItemText primary={id} secondary="ID"/>
                         </ListItem>
                         <Divider/>
+
+                        <ListItem>
+                            <ListItemText primary={emp.status} secondary="Status"/>
+                        </ListItem>
+                        <Divider/>
+                    </List>
+                </nav>
+            </Box>
+
+            <Box padding="5px"/>
+
+            <Box paddingX="15px" paddingY="10px" sx={{ bgcolor: 'background.paper', borderRadius: '16px' }}>
+                <h3>Contact info</h3>
+                <Divider/>
+                <nav aria-label="Contact info">
+                    <List>
+                        <ListItem>
+                            <ListItemText secondary="email" primary={emp.email} />
+                        </ListItem>
+                        <Divider/>
+                        <ListItem>
+                            <ListItemText primary={emp.phoneNumber} secondary="Phone Number"/>
+                        </ListItem>
+                        <Divider/>
                     </List>
                 </nav>
             </Box>
@@ -93,17 +118,29 @@ const Employee = () =>{
                 </nav>
             </Box>
 
-            <Box paddingTop="20px">
-                <Button  variant="contained"
-                         onClick={ () =>{
-                             del(id);
-                             navigate("/employees");
-                             setActive(Dashboard);
-                         }}
-                >
-                    Delete
-                </Button>
-            </Box>
+            <FlexBetween sx={{paddingTop: "10px"}}>
+                <Box>
+                    <Button variant="contained"
+                            onClick={() => {
+                                navigate("/employees");
+                                setActive(Dashboard);
+                            }}>
+                        Back
+                    </Button>
+                </Box>
+
+                <Box>
+                    <Button  variant="contained"
+                             onClick={ () =>{
+                                 del(id);
+                                 navigate("/employees");
+                                 setActive(Dashboard);
+                             }}
+                    >
+                        Delete
+                    </Button>
+                </Box>
+            </FlexBetween>
 
         </Box>
     )

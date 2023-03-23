@@ -61,7 +61,7 @@ async function del(id) {
     await deleteDoc(doc(db, "registers", id));
 }
 
-const Register = () =>{
+const RegisterInfo = () =>{
 
     const theme = useTheme();
     const [value, setValue] = React.useState(0);
@@ -249,8 +249,17 @@ const Register = () =>{
                     </TabPanel>
                 </SwipeableViews>
             </Box>
+            <Box paddingTop="10px">
+                <Button variant="contained"
+                        onClick={() => {
+                            navigate("/registers");
+                            setActive(Dashboard);
+                        }}>
+                    Back
+                </Button>
+            </Box>
         </Box>
     )
 }
 
-export default Register;
+export default RegisterInfo;

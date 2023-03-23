@@ -12,7 +12,7 @@ import Login from "./scenes/login";
 import AddNewRegister from "./scenes/registers/addnew";
 import AddNewEmployee from "./scenes/employees/addnew";
 import Employees from "./scenes/employees";
-import Register from "./scenes/registers/register";
+import RegisterInfo from "./scenes/registers/register";
 import Employee from "./scenes/employees/employee";
 import Addnewitem from "./scenes/registers/register/addnewitem";
 import Items from "./scenes/items";
@@ -36,7 +36,7 @@ function App() {
                         <Route path="/dashboard" element={<Dashboard />} />
 
                         <Route path="/registers" element={<Registers />}/>
-                        <Route path="/registers/register" element={<Register />}/>
+                        <Route path="/registers/register" element={<RegisterInfo />}/>
                         <Route path="/registers/register/additem" element={<Addnewitem />} />
                         <Route path="/addnewregister" element={<AddNewRegister />} />
 
