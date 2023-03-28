@@ -2,7 +2,16 @@ import {useLocation, useNavigate} from "react-router-dom";
 import {doc, getDoc, getDocs, deleteDoc, collection, where, query} from "firebase/firestore";
 import {db} from "../../../fs/firebaseConfig";
 import {useEffect, useState} from "react";
-import {Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle} from "@mui/material";
+import {
+    Button,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogContentText,
+    DialogTitle,
+    Divider,
+    List, ListItem, ListItemText
+} from "@mui/material";
 import FlexBetween from "../../../components/FlexBetween";
 import Dashboard from "../../dashboard";
 import Paper from "@mui/material/Paper";
@@ -164,24 +173,49 @@ const RegisterInfo = () =>{
                     onChangeIndex={handleChangeIndex}
                 >
                     <TabPanel value={value} index={0} dir={theme.direction}>
-                        <FlexBetween>
-                            <Box marginLeft="25%">
-                                <h1>Register Info:</h1>
-                                <Box paddingX="5px">
-                                    <h3>ID: {id}</h3>
-                                    <h3>Stand Name: {registers.name}</h3>
-                                    <h3>Stand Number: {registers.number}</h3>
-                                    <h3>Register Number: {registers.registerNumber}</h3>
-                                </Box>
+                        <Box>
+                            <Box paddingX="15px" paddingY="10px" sx={{ bgcolor: 'background.paper', borderRadius: '16px' }}>
+                                <h3>Register Info</h3>
+                                <Divider/>
+                                <nav aria-label="Login info">
+                                    <List>
+                                        <ListItem>
+                                            <ListItemText secondary="ID" primary={id} />
+                                        </ListItem>
+                                        <Divider/>
+                                        <ListItem>
+                                            <ListItemText primary={registers.name} secondary="Stand Name"/>
+                                        </ListItem>
+                                        <Divider/>
+                                        <ListItem>
+                                            <ListItemText primary={registers.number} secondary="Stand Number"/>
+                                        </ListItem>
+                                        <Divider/>
+                                        <ListItem>
+                                            <ListItemText primary={registers.registerNumber} secondary="Register Number"/>
+                                        </ListItem>
+                                        <Divider/>
+                                    </List>
+                                </nav>
                             </Box>
-                            <Box marginRight="25%">
-                                <h1>Login Info</h1>
-                                <Box paddingX="5px">
-                                    <h3>Username: {registers.username}</h3>
-                                    <h3>Password: {registers.password}</h3>
-                                </Box>
+
+                            <Box paddingX="15px" paddingY="10px" sx={{ bgcolor: 'background.paper', borderRadius: '16px' }}>
+                                <h3>Login Info</h3>
+                                <Divider/>
+                                <nav aria-label="Login info">
+                                    <List>
+                                        <ListItem>
+                                            <ListItemText secondary="Username" primary={id} />
+                                        </ListItem>
+                                        <Divider/>
+                                        <ListItem>
+                                            <ListItemText primary={registers.password} secondary="Password"/>
+                                        </ListItem>
+                                        <Divider/>
+                                    </List>
+                                </nav>
                             </Box>
-                        </FlexBetween>
+                        </Box>
                         <Box>
                             <FlexBetween paddingY="10px">
                                 <Button variant="contained" align="center"

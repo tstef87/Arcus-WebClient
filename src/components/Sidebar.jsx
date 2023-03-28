@@ -107,7 +107,7 @@ const Sidebar = ({
                     sx={{
                         width: drawerWidth,
                         "& .MuiDrawer-paper": {
-                            color: theme.palette.secondary[200],
+                            color: theme.palette.secondary[300],
                             backgroundColor: theme.palette.background.alt,
                             boxSixing: "border-box",
                             borderWidth: isNonMobile ? 0 : "0px",
@@ -151,12 +151,12 @@ const Sidebar = ({
                                             sx={{
                                                 backgroundColor:
                                                     active === lcText
-                                                        ? theme.palette.secondary[700]
+                                                        ? theme.palette.secondary[300]
                                                         : "transparent",
                                                 color:
                                                     active === lcText
                                                         ? theme.palette.primary[600]
-                                                        : theme.palette.secondary[100],
+                                                        : theme.palette.grey[300],
                                             }}
                                         >
                                             <ListItemIcon
@@ -165,7 +165,7 @@ const Sidebar = ({
                                                     color:
                                                         active === lcText
                                                             ? theme.palette.primary[600]
-                                                            : theme.palette.secondary[200],
+                                                            : theme.palette.secondary[300],
                                                 }}
                                             >
                                                 {icon}

@@ -10,13 +10,18 @@ import {
     InputAdornment,
     InputLabel,
     OutlinedInput,
-    TextField
+    TextField,
+    useTheme
 } from "@mui/material";
 import {useLocation, useNavigate} from "react-router-dom";
 import Dashboard from "../dashboard";
 import {Visibility, VisibilityOff} from "@mui/icons-material";
 
 const Login = () => {
+
+    const theme = useTheme();
+
+
     function ifValid(email, password){
         if(email == "tstefano87@gmail.com" && password == "Troy654321!"){
             return true;
@@ -117,7 +122,10 @@ const Login = () => {
                 </FormControl>
             </Box>
             <Box >
-                <Button variant="outlined"
+                <Button variant="elevated"
+                        sx={{
+                            color: theme.palette.grey[200]
+                        }}
                         onClick={() => {
 
                             if(ifValid(email, password)){

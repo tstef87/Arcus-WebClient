@@ -1,9 +1,21 @@
-import React, {useState} from "react";
-import {LightModeOutlined, DarkModeOutlined, Menu as MenuIcon, Search, SettingsOutlined, ArrowDropDownOutlined} from "@mui/icons-material";
+import React, {useEffect, useState} from "react";
+import {LightModeOutlined, DarkModeOutlined, Menu as MenuIcon, Search, SettingsOutlined} from "@mui/icons-material";
 import FlexBetween from "./FlexBetween";
 import {useDispatch} from "react-redux";
 import {setMode} from "../state";
-import {AppBar, Box, IconButton, InputBase, Toolbar, useTheme} from "@mui/material";
+import {
+    AppBar,
+    Box,
+    Button,
+    IconButton,
+    InputBase,
+    Menu, MenuItem,
+    Toolbar,
+    useTheme
+} from "@mui/material";
+import {useLocation, useNavigate} from "react-router-dom";
+import Dashboard from "../scenes/dashboard";
+import Login from "../scenes/login";
 
 const Navbar = ({
                     isSidebarOpen,
@@ -12,6 +24,23 @@ const Navbar = ({
     const dispatch = useDispatch();
     const theme = useTheme();
 
+    const [active, setActive] = useState("");
+    const { pathname } = useLocation();
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        setActive(pathname.substring(1));
+    }, [pathname]);
+
+
+    const [anchorEl, setAnchorEl] = React.useState(null);
+    const open = Boolean(anchorEl);
+    const handleClick = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
+    const handleClose = () => {
+        setAnchorEl(null);
+    };
 
     return (
         <AppBar
@@ -49,9 +78,41 @@ const Navbar = ({
                             <LightModeOutlined sx={{ fontSize: "25px"}} />
                         )}
                     </IconButton>
-                    <IconButton>
-                        <SettingsOutlined sx={{ fontSize: "25px" }} />
-                    </IconButton>
+
+
+                    <Box >
+                        <Button
+                            id="settings"
+                            aria-controls={open ? 'basic-menu' : undefined}
+                            aria-haspopup="true"
+                            aria-expanded={open ? 'true' : undefined}
+                            onClick={handleClick}
+                            sx={{color: theme.palette.grey[200]}}
+                        >
+                            <SettingsOutlined sx={{ fontSize: "25px" }} />
+                        </Button>
+                        <Menu
+                            id="basic-menu"
+                            anchorEl={anchorEl}
+                            open={open}
+                            onClose={handleClose}
+                            MenuListProps={{
+                                'aria-labelledby': 'basic-button',
+                            }}
+                        >
+                            <MenuItem onClick={handleClose}>Profile</MenuItem>
+                            <MenuItem onClick={handleClose}>My account</MenuItem>
+                            <MenuItem onClick={ () =>{
+                                navigate("/")
+                                setActive(Login)
+                            }}>
+                                Logout
+                            </MenuItem>
+                        </Menu>
+
+                    </Box>
+
+
                 </FlexBetween>
             </Toolbar>
         </AppBar>
