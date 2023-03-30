@@ -19,14 +19,14 @@ function addItem(name, p, t, rid, item) {
     const pid = name.toLowerCase().replace(/\s/g, '');
     setDoc(doc(db, "Items", pid), {
         name: name,
-        price: p,
+        price: parseFloat(p),
         type: t
     }).then(r => console.log("added"));
 
 
     setDoc(doc(db, "registers", rid+"/items/"+pid), {
         name: name,
-        price: p,
+        price: parseFloat(p),
         type: t
     }).then(r => alert("added"));
 }
@@ -46,7 +46,7 @@ const Addnewitem = () => {
 
     const [itemID, setItemID] = useState('');
     const [itemName, setItemName] = useState('');
-    const [price, setPrice] = useState('');
+    const [price, setPrice] = useState(0.0);
     const [type, setType] = useState([]);
 
     const handleChangeID = (event) => {
@@ -154,7 +154,7 @@ const Addnewitem = () => {
                         onClick={ () => {
                             if(type !== "" &&
                                 itemName !== "" &&
-                                price !== ""){
+                                price !== 0.00){
 
                                 addItem(itemName, price, type, id, registers.item);
                                 navigate("/registers/register", {state: id});

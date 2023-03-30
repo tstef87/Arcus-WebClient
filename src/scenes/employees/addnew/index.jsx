@@ -25,9 +25,12 @@ import { MuiTelInput } from 'mui-tel-input'
 import FlexBetween from "../../../components/FlexBetween";
 import Typography from "@mui/material/Typography";
 import Select from "@mui/material/Select";
+import LocalPhoneOutlinedIcon from '@mui/icons-material/LocalPhoneOutlined';
+import EnhancedEncryptionOutlinedIcon from '@mui/icons-material/EnhancedEncryptionOutlined';
+import BadgeOutlinedIcon from '@mui/icons-material/BadgeOutlined';
 
 
-function addEmployee(fname, lname, email, pword, ramp, rampDate, phone, status) {
+function addEmployee(fname, lname, email, pword, ramp, phone, status) {
     if(ramp)
         addDoc(collection(db, "employee"), {
             fname: fname,
@@ -35,7 +38,7 @@ function addEmployee(fname, lname, email, pword, ramp, rampDate, phone, status) 
             email: email,
             password: pword,
             RAMP: true,
-            RAMPDate: rampDate,
+            //RAMPDate: rampDate,
             phoneNumber: phone,
             status: status
         }).then(r => alert("added"));
@@ -46,7 +49,7 @@ function addEmployee(fname, lname, email, pword, ramp, rampDate, phone, status) 
             email: email,
             password: pword,
             RAMP: false,
-            RAMPDate: "NA",
+            //RAMPDate: "NA",
             phoneNumber: phone,
             status: status
         }).then(r => alert("added"));
@@ -67,7 +70,6 @@ const AddNewEmployee = () => {
     const [lName, setlName] = useState('');
     const [status, setStatus] = useState('');
     const [ramp, setRamp] = useState(false);
-    const [rampDate, setRampDate] = useState(new Date());
     const [phone, setPhone] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -93,9 +95,9 @@ const AddNewEmployee = () => {
     const handleChangeRAMPF = () => {
         setRamp(false);
     };
-    const handleChangeRAMPDate = (date) => {
-        setRampDate(date);
-    };
+    // const handleChangeRAMPDate = (event) => {
+    //     setRampDate(event.target.value);
+    // };
 
     const handleChangePhoneNumber = (newPhone) => {
         setPhone(newPhone);
@@ -128,13 +130,6 @@ const AddNewEmployee = () => {
                             value={fName}
 
                             sx={{ m: 1, width: '35ch' }}
-                            InputProps={{
-                                endAdornment: <InputAdornment position="end">
-                                    <Icon>
-                                        <MailOutlineIcon />
-                                    </Icon>
-                                </InputAdornment>,
-                            }}
                             label="First Name"
                         />
                     </Box>
@@ -149,7 +144,7 @@ const AddNewEmployee = () => {
                             InputProps={{
                                 endAdornment: <InputAdornment position="end">
                                     <Icon>
-                                        <MailOutlineIcon />
+                                        <BadgeOutlinedIcon />
                                     </Icon>
                                 </InputAdornment>,
                             }}
@@ -189,7 +184,7 @@ const AddNewEmployee = () => {
                             InputProps={{
                                 endAdornment: <InputAdornment position="end">
                                     <Icon>
-                                        <MailOutlineIcon />
+                                        <EnhancedEncryptionOutlinedIcon />
                                     </Icon>
                                 </InputAdornment>,
                             }}
@@ -228,7 +223,7 @@ const AddNewEmployee = () => {
                                 InputProps={{
                                     endAdornment: <InputAdornment position="end">
                                         <Icon>
-                                            <MailOutlineIcon />
+                                            <LocalPhoneOutlinedIcon />
                                         </Icon>
                                     </InputAdornment>,
                                 }}
@@ -254,22 +249,22 @@ const AddNewEmployee = () => {
                                 <FormControlLabel value= {false} control={<Radio />} label="No" onChange={handleChangeRAMPF} sx={{ m: 1 }}/>
                             </RadioGroup>
 
-                            {ramp ?
-                                <Box>
-                                    <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                        <DatePicker label="RAMP Certification Date"
+                            {/*{ramp ?*/}
+                            {/*    <Box>*/}
+                            {/*        <LocalizationProvider dateAdapter={AdapterDayjs}>*/}
+                            {/*            <DatePicker label="RAMP Certification Date"*/}
 
-                                                    defaultValue={today}
-                                                    onChange={handleChangeRAMPDate}
+                            {/*                        value={today}*/}
+                            {/*                        onChange={(newValue) => setRampDate(newValue)}*/}
 
-                                            //disableFuture
-                                            //minDate={(dayjs().subtract(2, 'years'))}
-                                            //views={['year', 'month', 'day']}
-                                                    sx={{ m: 1 }}
-                                        />
-                                    </LocalizationProvider>
+                            {/*                //disableFuture*/}
+                            {/*                //minDate={(dayjs().subtract(2, 'years'))}*/}
+                            {/*                //views={['year', 'month', 'day']}*/}
+                            {/*                        sx={{ m: 1 }}*/}
+                            {/*            />*/}
+                            {/*        </LocalizationProvider>*/}
 
-                                </Box>: ''}
+                            {/*    </Box>: ''}*/}
                         </FormControl>
                     </Box>
                 </Box>
@@ -277,7 +272,7 @@ const AddNewEmployee = () => {
 
             <FlexBetween sx={{ marginLeft: "17.5%",  marginRight:"17.5%"}}>
                 <Box>
-                    <Button variant="outlined"
+                    <Button variant="contained"
                             onClick={() => {
                                 navigate("/employees");
                                 setActive(Dashboard);
@@ -287,7 +282,7 @@ const AddNewEmployee = () => {
                 </Box>
 
                 <Box>
-                    <Button variant="outlined"
+                    <Button variant="contained"
                             onClick={() => {
                                 if(fName !== "" &&
                                     lName !== "" &&
@@ -296,7 +291,7 @@ const AddNewEmployee = () => {
                                     phone !== "" &&
                                     status !== ""){
 
-                                    addEmployee(fName, lName, email, password, ramp, rampDate, phone, status);
+                                    addEmployee(fName, lName, email, password, ramp, phone, status);
                                     navigate("/employees");
                                     setActive(Dashboard);
 

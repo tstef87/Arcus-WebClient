@@ -13,21 +13,15 @@ import {
     useTheme
 } from "@mui/material";
 import {
-    SettingsOutlined,
-    ChevronLeft,
-    ChevronLeftOutlined,
     HomeOutlined,
-    ShoppingCartOutlined,
-    Groups2Outlined,
-    ReceiptLongOutlined,
-    PublicOutlined,
     PointOfSaleOutlined,
-    TodayOutlined,
     CalendarMonthOutlined,
-    AdminPanelSettingsOutlined,
     TrendingUpOutlined,
-    PieChartOutline, ChevronRightOutlined, PieChartOutlined
+    ChevronRightOutlined
 } from "@mui/icons-material";
+
+import FastfoodOutlinedIcon from '@mui/icons-material/FastfoodOutlined';
+import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined';
 import {useEffect, useState} from "react";
 import {useLocation, useNavigate} from "react-router-dom";
 import FlexBetween from "./FlexBetween";
@@ -38,34 +32,14 @@ const navItems = [
         icon: <HomeOutlined />,
     },
 
-
-    {
-        text: "testing",
-        icon: <PointOfSaleOutlined />,
-    },
-    {
-        text: "testingt",
-        icon: <ReceiptLongOutlined />,
-    },
-    {
-        text: "Breakdown",
-        icon: <PieChartOutlined />,
-    },
     {
         text: "Management",
         icon: null,
     },
-    {
-        text: "Admin",
-        icon: <AdminPanelSettingsOutlined />,
-    },
-    {
-        text: "Supervisors",
-        icon: <Groups2Outlined />,
-    },
+
     {
         text: "Employees",
-        icon: <PointOfSaleOutlined />
+        icon: <PersonOutlineOutlinedIcon />
     },
     {
         text: "Registers",
@@ -73,7 +47,7 @@ const navItems = [
     },
     {
         text: "Items",
-        icon: <CalendarMonthOutlined />,
+        icon: <FastfoodOutlinedIcon />,
     },
     {
         text: "Sales",

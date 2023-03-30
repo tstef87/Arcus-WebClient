@@ -2,11 +2,14 @@ import React, {useEffect, useState} from 'react'
 import {Box, Button, Icon, InputAdornment, TextField} from "@mui/material";
 import MailOutlineIcon from "@mui/icons-material/MailOutline";
 import Dashboard from "../../dashboard";
-import {initializeApp} from "firebase/app";
-import {addDoc, collection, doc, getFirestore, setDoc} from "firebase/firestore";
-import {db, firebaseConfig} from "../../../fs/firebaseConfig";
+import {doc, setDoc} from "firebase/firestore";
+import {db} from "../../../fs/firebaseConfig";
 import {useLocation, useNavigate} from "react-router-dom";
-
+import NumbersOutlinedIcon from '@mui/icons-material/NumbersOutlined';
+import PointOfSaleOutlinedIcon from '@mui/icons-material/PointOfSaleOutlined';
+import StoreOutlinedIcon from '@mui/icons-material/StoreOutlined';
+import EnhancedEncryptionOutlinedIcon from '@mui/icons-material/EnhancedEncryptionOutlined';
+import FlexBetween from "../../../components/FlexBetween";
 
 
 function addRegister(name, num, rnum, uname, pword) {
@@ -79,7 +82,7 @@ const AddNewRegister = () => {
                     InputProps={{
                         endAdornment: <InputAdornment position="end">
                             <Icon>
-                                <MailOutlineIcon />
+                                <StoreOutlinedIcon />
                             </Icon>
                         </InputAdornment>,
                     }}
@@ -98,7 +101,7 @@ const AddNewRegister = () => {
                     InputProps={{
                         endAdornment: <InputAdornment position="end">
                             <Icon>
-                                <MailOutlineIcon />
+                                <NumbersOutlinedIcon />
                             </Icon>
                         </InputAdornment>,
                     }}
@@ -116,7 +119,7 @@ const AddNewRegister = () => {
                     InputProps={{
                         endAdornment: <InputAdornment position="end">
                             <Icon>
-                                <MailOutlineIcon />
+                                <PointOfSaleOutlinedIcon />
                             </Icon>
                         </InputAdornment>,
                     }}
@@ -154,7 +157,7 @@ const AddNewRegister = () => {
                     InputProps={{
                         endAdornment: <InputAdornment position="end">
                             <Icon>
-                                <MailOutlineIcon />
+                                <EnhancedEncryptionOutlinedIcon />
                             </Icon>
                         </InputAdornment>,
                     }}
@@ -163,26 +166,38 @@ const AddNewRegister = () => {
             </Box>
 
             <Box>
-                <Button variant="outlined"
-                        onClick={() => {
-                            if(standName !== "" &&
-                                standNum !== "" &&
-                                registerNum !== "" &&
-                                userName !== "" &&
-                                password !== ""){
+                <FlexBetween>
+                    <Button variant="contained"
+                            onClick={() => {
+                                if(standName !== "" &&
+                                    standNum !== "" &&
+                                    registerNum !== "" &&
+                                    userName !== "" &&
+                                    password !== ""){
 
-                                addRegister(standName, standNum, registerNum, userName, password);
+                                    addRegister(standName, standNum, registerNum, userName, password);
+                                    navigate("/registers");
+                                    setActive(Dashboard);
+
+                                }
+                                else{
+                                    alert("One or more Empty Entries")
+                                }
+                            }}>
+                        Add New
+
+                    </Button>
+
+                    <Button variant="contained"
+                            onClick={ () => {
                                 navigate("/registers");
                                 setActive(Dashboard);
+                            }}
+                    >
+                        Back
+                    </Button>
 
-                            }
-                            else{
-                                alert("One or more Empty Entries")
-                            }
-                        }}>
-                    Add New
-
-                </Button>
+                </FlexBetween>
             </Box>
 
         </Box>
