@@ -16,51 +16,62 @@ import {
 import {useLocation, useNavigate} from "react-router-dom";
 import Dashboard from "../dashboard";
 import {Visibility, VisibilityOff} from "@mui/icons-material";
+import CheckDocumentExistence from "./check";
+import useDocumentExistence from "./check";
+import {db} from "../../fs/firebaseConfig";
+import {collection, query, where, doc, getDoc, getDocs} from "firebase/firestore";
+
+
 
 const Login = () => {
-
-    const theme = useTheme();
-
-
-    function ifValid(email, password){
-        if(email == "tstefano87@gmail.com" && password == "Troy654321!"){
-            return true;
-        }
-        else{
-            return false;
-        }
-    }
-
-
     const [active, setActive] = useState("");
     const { pathname } = useLocation();
     const navigate = useNavigate();
+
+    const [docExists, setDocExists] = useState(false);
+    const [emp, setEmp] = useState([]);
+
+    const [showPassword, setShowPassword] = React.useState(false);
+    const handleClickShowPassword = () => setShowPassword((show) => !show);
+
 
     useEffect(() => {
         setActive(pathname.substring(1));
     }, [pathname]);
 
-    const [showPassword, setShowPassword] = React.useState(false);
 
-    const handleClickShowPassword = () => setShowPassword((show) => !show);
 
     const handleMouseDownPassword = (event) => {
         event.preventDefault();
     };
 
     const [email, setEmail] = useState('');
+    const [pin, setPin] = useState('');
     const [password, setPassword] = useState('');
 
     const [update, setUpdated] = useState(email);
     const [updateP, setUpdatedP] = useState(password);
 
-
     const handleChangeEmail = (event) => {
         setEmail(event.target.value);
+    };
+    const handleChangePin = (event) => {
+        setPin(event.target.value);
     };
     const handleChangePassword = (event) => {
         setPassword(event.target.value);
     };
+
+
+    async function check(e, p) {
+        let g = 0;
+        const q = query(collection(db, 'employee'), where('email', '==', e), where('password', '==', p));
+        const querySnapshot = await getDocs(q);
+        querySnapshot.forEach((doc) => {
+            g++;
+            console.log(doc.id, ' => ', doc.data());
+        });
+    }
 
     return (
         <Box textAlign="center" paddingY="100px" sx={{
@@ -95,6 +106,7 @@ const Login = () => {
                 />
             </Box>
 
+
             <Box>
                 <FormControl sx={{ m: 1, width: '25ch' }} variant="outlined">
                     <InputLabel htmlFor="password">Password</InputLabel>
@@ -123,24 +135,18 @@ const Login = () => {
             </Box>
             <Box >
                 <Button variant="elevated"
-                        sx={{
-                            color: theme.palette.grey[200]
-                        }}
+
                         onClick={() => {
-
-                            if(ifValid(email, password)){
+                            //if(check(email, password)){
+                            if(check(email, password) >= 1){
                                 navigate("/dashboard");
-                                setActive(Dashboard);
                             }
-                            else{
-                                return(
-                                    alert("Invalid Login Credentials")
-                                );
-                            }
-
+                            //
+                            //} else {
+                              //  alert("Invalid Login Credentials");
+                            //}
                         }}>
                     Login
-
                 </Button>
 
             </Box>

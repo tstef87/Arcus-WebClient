@@ -22,7 +22,7 @@ import TableCell from "@mui/material/TableCell";
 import TableBody from "@mui/material/TableBody";
 import TableContainer from "@mui/material/TableContainer";
 
-import PropTypes from 'prop-types';
+import PropTypes, {number} from 'prop-types';
 import SwipeableViews from 'react-swipeable-views';
 import { useTheme } from '@mui/material/styles';
 import AppBar from '@mui/material/AppBar';
@@ -96,10 +96,30 @@ const RegisterInfo = () =>{
 
     const [registers, setRegisters] = useState([]);
     const [itemList, setItemList] = useState([]);
+    const [sales, setSales] = useState([]);
+
 
     const registersCollectionRef = doc(db, "registers", id);
     const itemsCollectionRef = collection(db, "registers/"+id+"/items")
+    const salesCollectionRef = collection(db, "registers/"+id+"/Sales")
 
+    useEffect(() => {
+        const getRegistersList = async () => {
+            try {
+                const docSnap = await getDoc(registersCollectionRef);
+                const filteredRegData = docSnap.data((doc) => ({
+                    ...doc.get(),
+                    id: doc.id,
+
+                }));
+
+                setRegisters(filteredRegData);
+            }catch (e) {
+                console.error(e);
+            }
+        };
+        getRegistersList().then(r => console.log("Got Register List"));
+    }, []);
 
     useEffect(() => {
         const getItemList = async () => {
@@ -120,23 +140,23 @@ const RegisterInfo = () =>{
         getItemList().then(r => console.log("Got Item List"));
     }, []);
 
-
     useEffect(() => {
-        const getRegistersList = async () => {
+        const getSales = async () => {
             try {
-                const docSnap = await getDoc(registersCollectionRef);
-                const filteredRegData = docSnap.data((doc) => ({
-                    ...doc.get(),
-                    id: doc.id,
-
+                const data = await getDocs(salesCollectionRef);
+                const filteredData = data.docs.map((doc) => ({
+                    ...doc.data(),
+                    id: doc.id
                 }));
 
-                setRegisters(filteredRegData);
+                setSales(filteredData);
+                console.log("Sales");
+                console.log(filteredData);
             }catch (e) {
                 console.error(e);
             }
         };
-        getRegistersList().then(r => console.log("Got Register List"));
+        getSales().then(r => console.log("Got Sales"));
     }, []);
 
     const [open, setOpen] = useState(false);
@@ -175,7 +195,7 @@ const RegisterInfo = () =>{
                     <TabPanel value={value} index={0} dir={theme.direction}>
                         <Box>
                             <Box paddingX="15px" paddingY="10px" sx={{ bgcolor: 'background.paper', borderRadius: '16px' }}>
-                                <h3>Register Info</h3>
+                                <h1>Register Info:</h1>
                                 <Divider/>
                                 <nav aria-label="Login info">
                                     <List>
@@ -279,7 +299,40 @@ const RegisterInfo = () =>{
                     </TabPanel>
 
                     <TabPanel value={value} index={2} dir={theme.direction}>
-                        Sales
+
+                        <h1>Sales:</h1>
+                        <TableContainer component={Paper}>
+                            <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                                <TableHead>
+                                    <TableRow>
+                                        <TableCell>ID</TableCell>
+                                        <TableCell align="right">Price</TableCell>
+                                        <TableCell align="right">Tax</TableCell>
+                                        <TableCell align="right">gratuity</TableCell>
+                                        <TableCell align="right">Subtotal</TableCell>
+                                        <TableCell align="right">Time of Transaction</TableCell>
+                                    </TableRow>
+                                </TableHead>
+                                <TableBody>
+                                    { sales.map((sale) => (
+                                        <TableRow
+                                            key={sales.id}
+                                            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                        >
+                                            <TableCell component="th" scope="row">{ sale.id}</TableCell>
+                                            <TableCell align="right">{"$" + sale.Price}</TableCell>
+                                            <TableCell align="right">{"$" + sale.Tax}</TableCell>
+                                            <TableCell align="right">{"$" + sale.Tip}</TableCell>
+                                            <TableCell align="right">{"$" + sale.Subtotal}</TableCell>
+                                            <TableCell align="right">{sale.Time}</TableCell>
+                                        </TableRow>
+                                    ))}
+                                </TableBody>
+                            </Table>
+                        </TableContainer>
+
+
+
                     </TabPanel>
                 </SwipeableViews>
             </Box>

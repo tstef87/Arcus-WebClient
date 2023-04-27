@@ -66,12 +66,6 @@ const Employee = () =>{
                             <ListItemText primary={emp.fname + " " + emp.lname} secondary="Name"/>
                         </ListItem>
                         <Divider/>
-
-                        <ListItem>
-                            <ListItemText primary={id} secondary="ID"/>
-                        </ListItem>
-                        <Divider/>
-
                         <ListItem>
                             <ListItemText primary={emp.status} secondary="Status"/>
                         </ListItem>
@@ -112,6 +106,10 @@ const Employee = () =>{
                         <Divider/>
                         <ListItem>
                             <ListItemText primary={emp.password} secondary="Password"/>
+                        </ListItem>
+                        <Divider/>
+                        <ListItem>
+                            <ListItemText primary={id} secondary="Pin"/>
                         </ListItem>
                         <Divider/>
                     </List>

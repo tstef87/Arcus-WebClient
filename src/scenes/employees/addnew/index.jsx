@@ -1,5 +1,5 @@
 import {db} from "../../../fs/firebaseConfig";
-import {addDoc, collection, getFirestore} from "firebase/firestore";
+import {addDoc, collection, doc, getFirestore, setDoc} from "firebase/firestore";
 import React, {useEffect, useState} from "react";
 import {useLocation, useNavigate} from "react-router-dom";
 import {
@@ -30,9 +30,9 @@ import EnhancedEncryptionOutlinedIcon from '@mui/icons-material/EnhancedEncrypti
 import BadgeOutlinedIcon from '@mui/icons-material/BadgeOutlined';
 
 
-function addEmployee(fname, lname, email, pword, ramp, phone, status) {
+function addEmployee(fname, lname, email, pword, ramp, phone, status, pin) {
     if(ramp)
-        addDoc(collection(db, "employee"), {
+        setDoc(doc(db, "employee", pin), {
             fname: fname,
             lname: lname,
             email: email,
@@ -40,10 +40,11 @@ function addEmployee(fname, lname, email, pword, ramp, phone, status) {
             RAMP: true,
             //RAMPDate: rampDate,
             phoneNumber: phone,
-            status: status
+            status: status,
+            pin: pin
         }).then(r => alert("added"));
     else{
-        addDoc(collection(db, "employee"), {
+        setDoc(doc(db, "employee", pin), {
             fname: fname,
             lname: lname,
             email: email,
@@ -73,6 +74,8 @@ const AddNewEmployee = () => {
     const [phone, setPhone] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [pin, setPin] = useState('');
+
 
     const today = dayjs();
     //const yesterday = dayjs().subtract(1, 'day');
@@ -101,6 +104,10 @@ const AddNewEmployee = () => {
 
     const handleChangePhoneNumber = (newPhone) => {
         setPhone(newPhone);
+    };
+
+    const handleChangePin = (event) => {
+        setPin(event.target.value);
     };
 
 
@@ -192,24 +199,46 @@ const AddNewEmployee = () => {
                         />
                     </Box>
                 </FlexBetween>
+                <FlexBetween sx={{ marginLeft: "17.5%",  marginRight:"17.5%"}}>
+                    <Box>
+                        <Typography>Status:</Typography>
+                        <FormControl sx={{ m: 1, width: '35ch' }}>
+                            <InputLabel id="select">Status</InputLabel>
+                            <Select
+                                labelId="status-select"
+                                id="status-select"
+                                value={status}
+                                label="Status"
+                                onChange={handleChangeStatus}
+                            >
+                                <MenuItem value={"Cashier"}>Cashier</MenuItem>
+                                <MenuItem value={"Supervisor"}>Supervisor</MenuItem>
+                                <MenuItem value={"Super User"}>Super User</MenuItem>
+                            </Select>
+                        </FormControl>
+                    </Box>
 
-                <Box sx={{marginLeft: "17.5%"}}>
-                    <Typography>Status:</Typography>
-                    <FormControl sx={{ m: 1, width: '35ch' }}>
-                        <InputLabel id="select">Status</InputLabel>
-                        <Select
-                            labelId="status-select"
-                            id="status-select"
-                            value={status}
-                            label="Status"
-                            onChange={handleChangeStatus}
-                        >
-                            <MenuItem value={"Cashier"}>Cashier</MenuItem>
-                            <MenuItem value={"Supervisor"}>Supervisor</MenuItem>
-                            <MenuItem value={"Super User"}>Super User</MenuItem>
-                        </Select>
-                    </FormControl>
-                </Box>
+                    <Box>
+                        <TextField
+                            id="pin"
+                            name="pin"
+                            onChange={handleChangePin}
+                            value={pin}
+
+                            sx={{ m: 1, width: '35ch' }}
+                            InputProps={{
+                                endAdornment: <InputAdornment position="end">
+                                    <Icon>
+                                        <EnhancedEncryptionOutlinedIcon />
+                                    </Icon>
+                                </InputAdornment>,
+                            }}
+                            label="Pin"
+                        />
+                    </Box>
+
+
+                </FlexBetween>
 
                 <Box sx={{marginLeft: "17.5%"}}>
                     <Typography>Phone Number:</Typography>
@@ -248,23 +277,6 @@ const AddNewEmployee = () => {
                                 <FormControlLabel value= {true} control={<Radio />} label="Yes"  onChange={handleChangeRAMPT} sx={{ m: 1 }}/>
                                 <FormControlLabel value= {false} control={<Radio />} label="No" onChange={handleChangeRAMPF} sx={{ m: 1 }}/>
                             </RadioGroup>
-
-                            {/*{ramp ?*/}
-                            {/*    <Box>*/}
-                            {/*        <LocalizationProvider dateAdapter={AdapterDayjs}>*/}
-                            {/*            <DatePicker label="RAMP Certification Date"*/}
-
-                            {/*                        value={today}*/}
-                            {/*                        onChange={(newValue) => setRampDate(newValue)}*/}
-
-                            {/*                //disableFuture*/}
-                            {/*                //minDate={(dayjs().subtract(2, 'years'))}*/}
-                            {/*                //views={['year', 'month', 'day']}*/}
-                            {/*                        sx={{ m: 1 }}*/}
-                            {/*            />*/}
-                            {/*        </LocalizationProvider>*/}
-
-                            {/*    </Box>: ''}*/}
                         </FormControl>
                     </Box>
                 </Box>
@@ -289,9 +301,12 @@ const AddNewEmployee = () => {
                                     email !== "" &&
                                     password !== "" &&
                                     phone !== "" &&
-                                    status !== ""){
+                                    status !== "" &&
+                                    pin !== "" &&
+                                    pin.length < 5 &&
+                                    pin.length >= 4){
 
-                                    addEmployee(fName, lName, email, password, ramp, phone, status);
+                                    addEmployee(fName, lName, email, password, ramp, phone, status, pin);
                                     navigate("/employees");
                                     setActive(Dashboard);
 

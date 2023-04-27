@@ -1,20 +1,17 @@
-import React, { useState } from 'react';
-import Calendar from 'react-calendar';
-import 'react-calendar/dist/Calendar.css';
+import React, {useEffect, useRef, useState} from 'react';
+import MyResponsivePie from "./pie";
+import Box from "@mui/material/Box";
+import FlexBetween from "../../components/FlexBetween";
+import MyResponsiveCalendar from "./cal";
+
+
 
 const Dashboard = () => {
 
-    const [date, setDate] = useState(new Date());
 
-    function onChange(date) {
-        setDate(date);
-    }
 
     return (
-        <div>
-            <h1>My Calendar</h1>
-            <Calendar onChange={onChange} value={date} />
-        </div>
+        <MyResponsiveCalendar />
     );
 }
 
