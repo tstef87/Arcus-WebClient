@@ -1,5 +1,5 @@
 import {useLocation, useNavigate} from "react-router-dom";
-import {doc, getDoc, getDocs, deleteDoc, collection} from "firebase/firestore";
+import {doc, getDoc, getDocs, deleteDoc, collection, query, where} from "firebase/firestore";
 import {db} from "../../../fs/firebaseConfig";
 import {useEffect, useState} from "react";
 import {
@@ -96,9 +96,37 @@ const RegisterInfo = () =>{
 
 
     const registersCollectionRef = doc(db, "Registers", id);
-    const salesCollectionRef = collection(db, "Registers/"+ id +"/Sales");
-    const itemsCollectionRef = collection(db, "RevenueCenter/"+ rc +"/ItemList");
 
+
+    useEffect(() => {
+        const getSales = async () => {
+            try {
+                const salesCollectionRef = collection(db, "Sales");
+                const q = query(salesCollectionRef, where("rc", "==", rc));
+
+                const querySnapshot = await getDocs(q);
+
+                const filteredData = querySnapshot.docs.map((doc) => ({
+                    Price: doc.get("Price"),
+                    Tax: doc.get("Tax"),
+                    Tip: doc.get("Tip"),
+                    Time: doc.get("Time"),
+                    Subtotal: doc.get("Subtotal"),
+                    id: doc.id,
+                }));
+
+                setSales(filteredData);
+                console.log(filteredData);
+            }catch (e) {
+                console.error(e);
+            }
+        };
+        getSales().then(r => console.log("Got Sales"));
+    }, []);
+
+
+
+    const itemsCollectionRef = collection(db, "RevenueCenter/"+ rc +"/ItemList");
 
 
     useEffect(() => {
@@ -118,10 +146,6 @@ const RegisterInfo = () =>{
         getRegistersList().then(r => console.log("Got Register List"));
     }, []);
 
-
-
-
-
     useEffect(() => {
         const getItemList = async () => {
             try {
@@ -140,24 +164,7 @@ const RegisterInfo = () =>{
         getItemList().then(r => console.log("Got Item List"));
     }, []);
 
-    useEffect(() => {
-        const getSales = async () => {
-            try {
-                const data = await getDocs(salesCollectionRef);
-                const filteredData = data.docs.map((doc) => ({
-                    ...doc.data(),
-                    id: doc.id
-                }));
 
-                setSales(filteredData);
-                console.log("Sales");
-                console.log(filteredData);
-            }catch (e) {
-                console.error(e);
-            }
-        };
-        getSales().then(r => console.log("Got Sales"));
-    }, []);
 
     const [open, setOpen] = useState(false);
 
@@ -169,8 +176,7 @@ const RegisterInfo = () =>{
         setOpen(false);
     };
 
-    function viewSales(){
-    }
+
 
     return(
         <Box paddingY="40px" paddingX="70px">
@@ -347,7 +353,7 @@ const RegisterInfo = () =>{
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
-                                    { sales.map((sale) => (
+                                    {  sales.map((sale) => (
                                         <TableRow
                                             key={sales.id}
                                             sx={{ '&:last-child td, &:last-child th': { border: 0 } }}

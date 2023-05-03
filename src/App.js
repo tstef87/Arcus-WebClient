@@ -17,6 +17,8 @@ import Employee from "./scenes/employees/employee";
 import Addnewitem from "./scenes/registers/register/addnewitem";
 import Items from "./scenes/items";
 import Sales from "./scenes/sales";
+import Viewsale from "./scenes/sales/viewsale";
+import ViewSale from "./scenes/sales/viewsale";
 
 
 function App() {
@@ -47,6 +49,8 @@ function App() {
                         <Route path="/items" element={<Items />}/>
 
                         <Route path="/sales" element={<Sales />}/>
+                        <Route path="/sales/viewsale" element={<ViewSale />}/>
+
 
 
 
