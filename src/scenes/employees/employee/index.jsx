@@ -56,9 +56,9 @@ const Employee = () =>{
 
     return(
         <Box paddingY="40px" paddingX="70px"  >
-            <h1>Account Information</h1>
+            <h1>Account Information:</h1>
             <Box paddingX="15px" paddingY="10px" sx={{ bgcolor: 'background.paper', borderRadius: '16px' }}>
-                <h3>General info</h3>
+                <h3>General Info:</h3>
                 <Divider/>
                 <nav aria-label="personal info">
                     <List>
@@ -69,7 +69,7 @@ const Employee = () =>{
                         <ListItem>
                             <ListItemText primary={emp.status} secondary="Status"/>
                         </ListItem>
-                        <Divider/>
+                        <Divider />
                     </List>
                 </nav>
             </Box>
@@ -77,7 +77,33 @@ const Employee = () =>{
             <Box padding="5px"/>
 
             <Box paddingX="15px" paddingY="10px" sx={{ bgcolor: 'background.paper', borderRadius: '16px' }}>
-                <h3>Contact info</h3>
+                <h3>Sales Info:</h3>
+                <Divider/>
+                <nav aria-label="Sales info">
+                    <List>
+                        <ListItem>
+                            <ListItemText secondary="Total Sales" primary= "TODO" />
+                        </ListItem>
+                        <Divider/>
+                        <ListItem>
+                            <ListItemText primary="Gratuity" secondary="Gratuity"/>
+                        </ListItem>
+                        <Divider/>
+
+                        <Button onClick={ () => {
+                            // TODO
+                        }
+                        }>
+                            View Sales
+                        </Button>
+                    </List>
+                </nav>
+            </Box>
+
+            <Box padding="5px"/>
+
+            <Box paddingX="15px" paddingY="10px" sx={{ bgcolor: 'background.paper', borderRadius: '16px' }}>
+                <h3>Contact Info:</h3>
                 <Divider/>
                 <nav aria-label="Contact info">
                     <List>
@@ -96,7 +122,7 @@ const Employee = () =>{
             <Box padding="5px"/>
 
             <Box paddingX="15px" paddingY="10px" sx={{ bgcolor: 'background.paper', borderRadius: '16px' }}>
-                <h3>Login info</h3>
+                <h3>Login Info:</h3>
                 <Divider/>
                 <nav aria-label="Login info">
                     <List>
@@ -116,7 +142,7 @@ const Employee = () =>{
                 </nav>
             </Box>
 
-            <FlexBetween sx={{paddingTop: "10px"}}>
+            <FlexBetween sx={{paddingTop: "20px"}}>
                 <Box>
                     <Button variant="contained"
                             onClick={() => {
@@ -139,7 +165,6 @@ const Employee = () =>{
                     </Button>
                 </Box>
             </FlexBetween>
-
         </Box>
     )
 

@@ -4,11 +4,6 @@ import {db} from "../../../fs/firebaseConfig";
 import {useEffect, useState} from "react";
 import {
     Button,
-    Dialog,
-    DialogActions,
-    DialogContent,
-    DialogContentText,
-    DialogTitle,
     Divider,
     List, ListItem, ListItemText
 } from "@mui/material";
@@ -99,9 +94,8 @@ const RegisterInfo = () =>{
     const [sales, setSales] = useState([]);
 
 
-    const registersCollectionRef = doc(db, "registers", id);
-    const itemsCollectionRef = collection(db, "registers/"+id+"/items")
-    const salesCollectionRef = collection(db, "registers/"+id+"/Sales")
+    const registersCollectionRef = doc(db, "Registers", id);
+    const salesCollectionRef = collection(db, "Registers/"+id+"/Sales")
 
     useEffect(() => {
         const getRegistersList = async () => {
@@ -121,18 +115,18 @@ const RegisterInfo = () =>{
         getRegistersList().then(r => console.log("Got Register List"));
     }, []);
 
+    const itemsCollectionRef = collection(db, "RevenueCenter/test999/ItemList")
     useEffect(() => {
         const getItemList = async () => {
             try {
-                const data = await getDocs(itemsCollectionRef);
-                const filteredData = data.docs.map((doc) => ({
-                    ...doc.data(),
-                    id: doc.id
+                const ds = await getDocs(itemsCollectionRef);
+                const filteredData = ds.docs.map((d) => ({
+                    ...d.data(),
+                    id: d.id
                 }));
 
                 setItemList(filteredData);
-                console.log("items");
-                console.log(filteredData);
+
             }catch (e) {
                 console.error(e);
             }
@@ -172,7 +166,7 @@ const RegisterInfo = () =>{
     return(
         <Box paddingY="40px" paddingX="70px">
 
-            <Box sx={{ bgcolor: 'background.paper'}}>
+            <Box sx={{ bgcolor: '#383838'}}>
                 <AppBar position="static">
                     <Tabs
                         value={value}
@@ -194,7 +188,7 @@ const RegisterInfo = () =>{
                 >
                     <TabPanel value={value} index={0} dir={theme.direction}>
                         <Box>
-                            <Box paddingX="15px" paddingY="10px" sx={{ bgcolor: 'background.paper', borderRadius: '16px' }}>
+                            <Box paddingX="15px" paddingY="10px" sx={{ bgcolor: '#252525', borderRadius: '16px' }}>
                                 <h1>Register Info:</h1>
                                 <Divider/>
                                 <nav aria-label="Login info">
@@ -219,7 +213,9 @@ const RegisterInfo = () =>{
                                 </nav>
                             </Box>
 
-                            <Box paddingX="15px" paddingY="10px" sx={{ bgcolor: 'background.paper', borderRadius: '16px' }}>
+                            <Box padding="5px" />
+
+                            <Box paddingX="15px" paddingY="10px" sx={{ bgcolor: '#252525', borderRadius: '16px' }}>
                                 <h3>Login Info</h3>
                                 <Divider/>
                                 <nav aria-label="Login info">
@@ -237,7 +233,7 @@ const RegisterInfo = () =>{
                             </Box>
                         </Box>
                         <Box>
-                            <FlexBetween paddingY="10px">
+                            <FlexBetween paddingTop="20px">
                                 <Button variant="contained" align="center"
                                         onClick= { () => {
                                             del(id).then(r => alert("Deleted"))
@@ -261,7 +257,7 @@ const RegisterInfo = () =>{
 
                         <h1>Register Items:</h1>
                         <TableContainer component={Paper}>
-                            <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                            <Table sx={{ minWidth: 650 }} aria-label="simple table" bgcolor="#252525">
                                 <TableHead>
                                     <TableRow>
                                         <TableCell>ID</TableCell>
@@ -273,7 +269,7 @@ const RegisterInfo = () =>{
                                 <TableBody>
                                     { itemList.map((item) => (
                                         <TableRow
-                                            key={itemList.id}
+                                            key={item.id}
                                             sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                                         >
                                             <TableCell component="th" scope="row">{ item.id}</TableCell>
@@ -302,7 +298,7 @@ const RegisterInfo = () =>{
 
                         <h1>Sales:</h1>
                         <TableContainer component={Paper}>
-                            <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                            <Table sx={{ minWidth: 650 }} aria-label="simple table" bgcolor="#252525">
                                 <TableHead>
                                     <TableRow>
                                         <TableCell>ID</TableCell>

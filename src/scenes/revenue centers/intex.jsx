@@ -1,20 +1,21 @@
 import * as React from 'react';
-
+import PropTypes from 'prop-types';
+import { alpha } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
-
 import TableRow from '@mui/material/TableRow';
 
 import Paper from '@mui/material/Paper';
+
 import {Button, useTheme} from "@mui/material";
 import {useLocation, useNavigate} from "react-router-dom";
 import {useEffect, useState} from "react";
-import {collection,getDocs} from "firebase/firestore";
-import {db} from "../../fs/firebaseConfig";
+import {collection, getDocs, } from "firebase/firestore";
+import {db, firebaseConfig} from "../../fs/firebaseConfig";
 import Dashboard from "../dashboard";
 
 
@@ -29,7 +30,7 @@ const Register = () => {
     }, [pathname]);
 
     const [registers, setRegisters] = useState([]);
-    const registersCollectionRef = collection(db, "Registers")
+    const registersCollectionRef = collection(db, "registers")
     useEffect(() => {
         const getRegistersList = async () => {
             try {
@@ -59,8 +60,6 @@ const Register = () => {
                             <TableCell align="right">Stand Name</TableCell>
                             <TableCell align="right">Stand Number</TableCell>
                             <TableCell align="right">Register Number</TableCell>
-                            <TableCell align="right">RevenueCenter</TableCell>
-
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -77,8 +76,6 @@ const Register = () => {
                                 <TableCell align="right">{register.name}</TableCell>
                                 <TableCell align="right">{register.number}</TableCell>
                                 <TableCell align="right">{register.registerNumber}</TableCell>
-                                <TableCell align="right">{register.revenueCenter}</TableCell>
-
                             </TableRow>
                         ))}
                     </TableBody>
@@ -87,10 +84,10 @@ const Register = () => {
             <Box paddingY="20px">
                 <Button variant="contained"
                         onClick={() => {
-                                navigate("/addnewregister");
-                                setActive(Dashboard);
+                            navigate("/addnewregister");
+                            setActive(Dashboard);
 
-                            }}>
+                        }}>
                     Add New</Button>
             </Box>
         </Box>

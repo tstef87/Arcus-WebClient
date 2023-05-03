@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react'
 import {Box, Button, Icon, InputAdornment, TextField} from "@mui/material";
 import MailOutlineIcon from "@mui/icons-material/MailOutline";
 import Dashboard from "../../dashboard";
-import {doc, setDoc} from "firebase/firestore";
+import {collection, doc, getDoc, setDoc} from "firebase/firestore";
 import {db} from "../../../fs/firebaseConfig";
 import {useLocation, useNavigate} from "react-router-dom";
 import NumbersOutlinedIcon from '@mui/icons-material/NumbersOutlined';
@@ -12,23 +12,43 @@ import EnhancedEncryptionOutlinedIcon from '@mui/icons-material/EnhancedEncrypti
 import FlexBetween from "../../../components/FlexBetween";
 
 
-function addRegister(name, num, rnum, uname, pword) {
 
+async function addRegister(name, num, rnum, uname, pword, rc) {
+    const pid = uname + num + rnum;
 
-    const pid = uname+num+rnum;
-
-    setDoc(doc(db, "registers", pid.toLowerCase()), {
-        name: name,
-        number: num,
-        registerNumber: rnum,
-        username: uname,
-        password: pword,
-    }).then(r => (
-        setDoc(doc(db, "registers", pid.toLowerCase()+"/items/testpenny"), {
-            name: "Test Penny",
-            price: 0.01,
-            type: "Test"
-        }).then(r => console.log("Added"))));
+    try {
+        const docRef = doc(db, "RevenueCenter", rc);
+        const docSnap = await getDoc(docRef);
+        if(docSnap.exists()){
+            setDoc(doc(db, "Registers", pid.toLowerCase()), {
+                name: name,
+                number: num,
+                registerNumber: rnum,
+                username: uname,
+                password: pword,
+                revenueCenter: rc
+            }).then(r => (
+                console.log("Added chechc")));
+        }
+        else{
+            setDoc(doc(db, "Registers", pid.toLowerCase()), {
+                name: name,
+                number: num,
+                registerNumber: rnum,
+                username: uname,
+                password: pword,
+                revenueCenter: rc
+            }).then(r => (
+                setDoc(doc( db, "RevenueCenter", rc+"/ItemList/testpenny"), {
+                    name: "Test Penny",
+                    price: 0.01,
+                    type: "Test"
+                }).then(r => console.log("Added"))));
+        }
+    } catch (error) {
+        console.error('Error checking document existence:', error);
+        return false;
+    }
 }
 
 const AddNewRegister = () => {
@@ -169,13 +189,14 @@ const AddNewRegister = () => {
                 <FlexBetween>
                     <Button variant="contained"
                             onClick={() => {
+                                let rc = userName + "" + standNum;
                                 if(standName !== "" &&
                                     standNum !== "" &&
                                     registerNum !== "" &&
                                     userName !== "" &&
                                     password !== ""){
 
-                                    addRegister(standName, standNum, registerNum, userName, password);
+                                    addRegister(standName, standNum, registerNum, userName, password, rc);
                                     navigate("/registers");
                                     setActive(Dashboard);
 

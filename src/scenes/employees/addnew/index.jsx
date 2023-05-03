@@ -1,5 +1,5 @@
 import {db} from "../../../fs/firebaseConfig";
-import {addDoc, collection, doc, getFirestore, setDoc} from "firebase/firestore";
+import {doc, setDoc} from "firebase/firestore";
 import React, {useEffect, useState} from "react";
 import {useLocation, useNavigate} from "react-router-dom";
 import {
@@ -17,9 +17,6 @@ import {
 import MailOutlineIcon from "@mui/icons-material/MailOutline";
 import Dashboard from "../../dashboard";
 import FormControlLabel from "@mui/material/FormControlLabel";
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs from 'dayjs';
 import { MuiTelInput } from 'mui-tel-input'
 import FlexBetween from "../../../components/FlexBetween";
@@ -42,7 +39,7 @@ function addEmployee(fname, lname, email, pword, ramp, phone, status, pin) {
             phoneNumber: phone,
             status: status,
             pin: pin
-        }).then(r => alert("added"));
+        }).then(() => alert("added"));
     else{
         setDoc(doc(db, "employee", pin), {
             fname: fname,
@@ -53,7 +50,7 @@ function addEmployee(fname, lname, email, pword, ramp, phone, status, pin) {
             //RAMPDate: "NA",
             phoneNumber: phone,
             status: status
-        }).then(r => alert("added"));
+        }).then(() => alert("added"));
     }
 }
 
@@ -75,60 +72,27 @@ const AddNewEmployee = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [pin, setPin] = useState('');
-
-
-    const today = dayjs();
-    //const yesterday = dayjs().subtract(1, 'day');
-    //const todayStartOfTheDay = today.startOf('day');
-
-
-    const handleChangefNAME = (event) => {
-        setfName(event.target.value);
-    };
-    const handleChangelNAME = (event) => {
-        setlName(event.target.value);
-    };
-
-    const handleChangeStatus = (event) => {
-        setStatus(event.target.value);
-    };
-    const handleChangeRAMPT = () => {
-        setRamp(true);
-    };
-    const handleChangeRAMPF = () => {
-        setRamp(false);
-    };
-    // const handleChangeRAMPDate = (event) => {
-    //     setRampDate(event.target.value);
-    // };
-
-    const handleChangePhoneNumber = (newPhone) => {
-        setPhone(newPhone);
-    };
-
-    const handleChangePin = (event) => {
-        setPin(event.target.value);
-    };
-
-
-
-    const handleChangeEM = (event) => {
-        setEmail(event.target.value);
-    };
-    const handleChangePW = (event) => {
-        setPassword(event.target.value);
-    };
+    dayjs();
+    const handleChangefNAME = (event) => { setfName(event.target.value); };
+    const handleChangelNAME = (event) => { setlName(event.target.value); };
+    const handleChangeStatus = (event) => { setStatus(event.target.value); };
+    const handleChangeRAMPT = () => { setRamp(true); };
+    const handleChangeRAMPF = () => { setRamp(false); };
+    const handleChangePhoneNumber = (newPhone) => { setPhone(newPhone); };
+    const handleChangePin = (event) => { setPin(event.target.value); };
+    const handleChangeEM = (event) => { setEmail(event.target.value); };
+    const handleChangePW = (event) => { setPassword(event.target.value); };
 
     return(
-        <Box paddingY="40px" paddingX="70px">
+        <Box paddingY="30px" paddingX="70px">
             <Box>
-                <h1>Add New Employee</h1>
+                <h1 >Add New Employee:</h1>
             </Box>
 
 
-            <Box>
-                <Typography sx={{ marginLeft: "17.5%"}}>Name:</Typography>
-                <FlexBetween sx={{ marginLeft: "17.5%",  marginRight:"17.5%"}}>
+            <Box sx={{background: "#181818", marginLeft: "12.5%",  marginRight:"12.5%"}}>
+                <Typography sx={{marginLeft: "50px", paddingTop: "20px"}}>Name:</Typography>
+                <FlexBetween sx={{marginLeft: "50px",  marginRight:"50px"}}>
                     <Box>
                         <TextField
                             id="fName"
@@ -160,8 +124,8 @@ const AddNewEmployee = () => {
                     </Box>
                 </FlexBetween>
 
-                <Typography sx={{marginLeft: "17.5%"}}>Login Info:</Typography>
-                <FlexBetween sx={{ marginLeft: "17.5%",  marginRight:"17.5%"}}>
+                <Typography sx={{marginLeft: "50px"}}>Login Info:</Typography>
+                <FlexBetween sx={{marginLeft: "50px",  marginRight:"50px"}}>
                     <Box>
                         <TextField
                             id="email"
@@ -199,7 +163,7 @@ const AddNewEmployee = () => {
                         />
                     </Box>
                 </FlexBetween>
-                <FlexBetween sx={{ marginLeft: "17.5%",  marginRight:"17.5%"}}>
+                <FlexBetween sx={{marginLeft: "50px",  marginRight:"50px"}}>
                     <Box>
                         <Typography>Status:</Typography>
                         <FormControl sx={{ m: 1, width: '35ch' }}>
@@ -219,6 +183,7 @@ const AddNewEmployee = () => {
                     </Box>
 
                     <Box>
+                        <Typography>Pin:</Typography>
                         <TextField
                             id="pin"
                             name="pin"
@@ -240,7 +205,7 @@ const AddNewEmployee = () => {
 
                 </FlexBetween>
 
-                <Box sx={{marginLeft: "17.5%"}}>
+                <Box sx={{marginLeft: "50px"}}>
                     <Typography>Phone Number:</Typography>
                     <Box paddingTop="10px">
                         <FormControl>
@@ -263,11 +228,11 @@ const AddNewEmployee = () => {
                     </Box>
                 </Box>
 
-                <Box sx={{marginLeft: "17.5%"}}>
-                    <Typography>RAMP:</Typography>
+                <Box sx={{marginLeft: "50px"}}>
+                    <Typography>RAMP Certified:</Typography>
                     <Box>
                         <FormControl>
-                            <FormLabel id="rampCert"  sx={{ m: 1 }}>RAMP Certified</FormLabel>
+                            <FormLabel id="rampCert"  ></FormLabel>
                             <RadioGroup
                                 row
                                 aria-labelledby="rampCert"
@@ -282,7 +247,7 @@ const AddNewEmployee = () => {
                 </Box>
             </Box>
 
-            <FlexBetween sx={{ marginLeft: "17.5%",  marginRight:"17.5%"}}>
+            <FlexBetween sx={{ marginLeft: "17.5%",  marginRight:"17.5%", paddingTop: "20px"}}>
                 <Box>
                     <Button variant="contained"
                             onClick={() => {
