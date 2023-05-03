@@ -26,7 +26,8 @@ async function addRegister(name, num, rnum, uname, pword, rc) {
                 registerNumber: rnum,
                 username: uname,
                 password: pword,
-                revenueCenter: rc
+                revenueCenter: rc,
+                revenue: 0
             }).then(r => (
                 console.log("Added chechc")));
         }
@@ -37,7 +38,9 @@ async function addRegister(name, num, rnum, uname, pword, rc) {
                 registerNumber: rnum,
                 username: uname,
                 password: pword,
-                revenueCenter: rc
+                revenueCenter: rc,
+                revenue: 0,
+                salesTotal: 0
             }).then(r => (
                 setDoc(doc( db, "RevenueCenter", rc+"/ItemList/testpenny"), {
                     name: "Test Penny",

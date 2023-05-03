@@ -10,7 +10,7 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 
 import Paper from '@mui/material/Paper';
-import {Button, useTheme} from "@mui/material";
+import {Button, Typography, useTheme} from "@mui/material";
 import {useLocation, useNavigate} from "react-router-dom";
 import {useEffect, useState} from "react";
 import {collection,getDocs} from "firebase/firestore";
@@ -53,6 +53,15 @@ const Register = () => {
     return (
         <Box paddingY="40px" paddingX="70px">
             <TableContainer component={Paper}>
+                <Typography
+                    sx={{ flex: '1 1 100%'}}
+                    paddingTop="10px"
+                    paddingLeft="10px"
+                    variant="h3"
+                    id="tableTitle"
+                >
+                    Registers
+                </Typography>
                 <Table sx={{ minWidth: 650 }} aria-label="simple table" bgcolor="#252525">
                     <TableHead>
                         <TableRow>

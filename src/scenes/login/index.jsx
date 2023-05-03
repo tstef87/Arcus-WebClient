@@ -21,6 +21,20 @@ import useDocumentExistence from "./check";
 import {db} from "../../fs/firebaseConfig";
 import {collection, query, where, doc, getDoc, getDocs} from "firebase/firestore";
 
+import {
+    GradientDarkgreenGreen,
+    GradientLightgreenGreen,
+    GradientOrangeRed,
+    GradientPinkBlue,
+    GradientPinkRed,
+    GradientPurpleOrange,
+    GradientPurpleRed,
+    GradientTealBlue,
+    RadialGradient,
+    LinearGradient,
+} from '@visx/gradient'
+import {index} from "d3-array";
+
 
 
 const Login = () => {

@@ -9,7 +9,7 @@ import * as React from "react";
 import FlexBetween from "../../../components/FlexBetween";
 
 async function del(id) {
-    await deleteDoc(doc(db, "employee", id));
+    await deleteDoc(doc(db, "Employee", id));
 }
 
 
@@ -28,7 +28,7 @@ const Employee = () =>{
 
     const [emp, setEmp] = useState([]);
 
-    const empCollectionRef = doc(db, "employee", id);
+    const empCollectionRef = doc(db, "Employee", id);
 
     const [active, setActive] = useState("");
     const { pathname } = useLocation();
@@ -82,11 +82,11 @@ const Employee = () =>{
                 <nav aria-label="Sales info">
                     <List>
                         <ListItem>
-                            <ListItemText secondary="Total Sales" primary= "TODO" />
+                            <ListItemText secondary="Total Sales" primary= {emp.totalSales} />
                         </ListItem>
                         <Divider/>
                         <ListItem>
-                            <ListItemText primary="Gratuity" secondary="Gratuity"/>
+                            <ListItemText primary={"$ " + emp.tips} secondary="Gratuity"/>
                         </ListItem>
                         <Divider/>
 

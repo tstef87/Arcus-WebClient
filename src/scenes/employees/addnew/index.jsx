@@ -29,7 +29,7 @@ import BadgeOutlinedIcon from '@mui/icons-material/BadgeOutlined';
 
 function addEmployee(fname, lname, email, pword, ramp, phone, status, pin) {
     if(ramp)
-        setDoc(doc(db, "employee", pin), {
+        setDoc(doc(db, "Employee", pin), {
             fname: fname,
             lname: lname,
             email: email,
@@ -38,18 +38,22 @@ function addEmployee(fname, lname, email, pword, ramp, phone, status, pin) {
             //RAMPDate: rampDate,
             phoneNumber: phone,
             status: status,
-            pin: pin
+            pin: pin,
+            totalSales: 0,
+            tips: 0.00
         }).then(() => alert("added"));
     else{
-        setDoc(doc(db, "employee", pin), {
+        setDoc(doc(db, "Employee", pin), {
             fname: fname,
             lname: lname,
             email: email,
             password: pword,
             RAMP: false,
-            //RAMPDate: "NA",
             phoneNumber: phone,
-            status: status
+            status: status,
+            pin: pin,
+            totalSales: 0,
+            tips: 0.00
         }).then(() => alert("added"));
     }
 }

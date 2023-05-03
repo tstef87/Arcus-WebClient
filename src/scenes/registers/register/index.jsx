@@ -26,6 +26,7 @@ import Tab from '@mui/material/Tab';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import * as React from "react";
+import {Diversity1} from "@mui/icons-material";
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -62,7 +63,7 @@ function a11yProps(index) {
 
 
 async function del(id) {
-    await deleteDoc(doc(db, "registers", id));
+    await deleteDoc(doc(db, "Registers", id));
 }
 
 const RegisterInfo = () =>{
@@ -168,6 +169,9 @@ const RegisterInfo = () =>{
         setOpen(false);
     };
 
+    function viewSales(){
+    }
+
     return(
         <Box paddingY="40px" paddingX="70px">
 
@@ -225,7 +229,31 @@ const RegisterInfo = () =>{
                             <Box padding="5px" />
 
                             <Box paddingX="15px" paddingY="10px" sx={{ bgcolor: '#252525', borderRadius: '16px' }}>
-                                <h3>Login Info</h3>
+                                <h3>Sales Info:</h3>
+                                <Divider/>
+                                <nav aria-label="Login info">
+                                    <List>
+                                        <ListItem>
+                                            <ListItemText secondary="Number of Sales" primary={registers.salesTotal} />
+                                        </ListItem>
+                                        <Divider/>
+                                        <ListItem>
+                                            <ListItemText primary={registers.revenue} secondary="Total Revenue"/>
+                                        </ListItem>
+                                        <Divider/>
+
+                                        <Button >
+                                            View Sales
+                                        </Button>
+                                    </List>
+                                </nav>
+                            </Box>
+
+                            <Box padding="5px" />
+
+
+                            <Box paddingX="15px" paddingY="10px" sx={{ bgcolor: '#252525', borderRadius: '16px' }}>
+                                <h3>Login Info:</h3>
                                 <Divider/>
                                 <nav aria-label="Login info">
                                     <List>
