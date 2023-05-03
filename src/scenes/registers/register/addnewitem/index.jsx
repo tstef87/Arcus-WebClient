@@ -14,7 +14,7 @@ import MenuItem from "@mui/material/MenuItem";
 import * as React from "react";
 
 
-function addItem(name, p, t, rid, item) {
+function addItem(name, p, t, rc) {
 
     const pid = name.toLowerCase().replace(/\s/g, '');
     setDoc(doc(db, "Items", pid), {
@@ -24,7 +24,7 @@ function addItem(name, p, t, rid, item) {
     }).then(r => console.log("added"));
 
 
-    setDoc(doc(db, "registers", rid+"/items/"+pid), {
+    setDoc(doc(db, "RevenueCenter", rc+"/ItemList/"+pid), {
         name: name,
         price: parseFloat(p),
         type: t
@@ -42,7 +42,7 @@ const Addnewitem = () => {
     }, [pathname]);
 
     const {state} = useLocation();
-    const id = state;
+    const {id, rc} = state;
 
     const [itemID, setItemID] = useState('');
     const [itemName, setItemName] = useState('');
@@ -156,8 +156,8 @@ const Addnewitem = () => {
                                 itemName !== "" &&
                                 price !== 0.00){
 
-                                addItem(itemName, price, type, id, registers.item);
-                                navigate("/registers/register", {state: id});
+                                addItem(itemName, price, type, rc);
+                                navigate("/registers/register", {state: {id: id, rc: rc}});
                                 setActive(Dashboard);
 
                             }
@@ -170,7 +170,7 @@ const Addnewitem = () => {
                     </Button>
                     <Button
                         onClick={ () => {
-                            navigate("/registers/register", {state: id});
+                            navigate("/registers/register", {state: {id: id, rc: rc}});
                             setActive(Dashboard);
                         }}
                     >

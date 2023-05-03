@@ -1,5 +1,5 @@
 import {useLocation, useNavigate} from "react-router-dom";
-import {doc, getDoc, getDocs, deleteDoc, collection, where, query} from "firebase/firestore";
+import {doc, getDoc, getDocs, deleteDoc, collection} from "firebase/firestore";
 import {db} from "../../../fs/firebaseConfig";
 import {useEffect, useState} from "react";
 import {
@@ -87,7 +87,7 @@ const RegisterInfo = () =>{
     }, [pathname]);
 
     const {state} = useLocation();
-    const id = state;
+    const {id, rc} = state;
 
     const [registers, setRegisters] = useState([]);
     const [itemList, setItemList] = useState([]);
@@ -95,7 +95,10 @@ const RegisterInfo = () =>{
 
 
     const registersCollectionRef = doc(db, "Registers", id);
-    const salesCollectionRef = collection(db, "Registers/"+id+"/Sales")
+    const salesCollectionRef = collection(db, "Registers/"+ id +"/Sales");
+    const itemsCollectionRef = collection(db, "RevenueCenter/"+ rc +"/ItemList");
+
+
 
     useEffect(() => {
         const getRegistersList = async () => {
@@ -104,7 +107,6 @@ const RegisterInfo = () =>{
                 const filteredRegData = docSnap.data((doc) => ({
                     ...doc.get(),
                     id: doc.id,
-
                 }));
 
                 setRegisters(filteredRegData);
@@ -115,7 +117,10 @@ const RegisterInfo = () =>{
         getRegistersList().then(r => console.log("Got Register List"));
     }, []);
 
-    const itemsCollectionRef = collection(db, "RevenueCenter/test999/ItemList")
+
+
+
+
     useEffect(() => {
         const getItemList = async () => {
             try {
@@ -189,12 +194,16 @@ const RegisterInfo = () =>{
                     <TabPanel value={value} index={0} dir={theme.direction}>
                         <Box>
                             <Box paddingX="15px" paddingY="10px" sx={{ bgcolor: '#252525', borderRadius: '16px' }}>
-                                <h1>Register Info:</h1>
+                                <h3>Register Info:</h3>
                                 <Divider/>
-                                <nav aria-label="Login info">
+                                <nav aria-label="Register info">
                                     <List>
                                         <ListItem>
                                             <ListItemText secondary="ID" primary={id} />
+                                        </ListItem>
+                                        <Divider/>
+                                        <ListItem>
+                                            <ListItemText secondary="Revenue Center" primary={rc} />
                                         </ListItem>
                                         <Divider/>
                                         <ListItem>
@@ -274,7 +283,7 @@ const RegisterInfo = () =>{
                                         >
                                             <TableCell component="th" scope="row">{ item.id}</TableCell>
                                             <TableCell align="right">{item.name}</TableCell>
-                                            <TableCell align="right">{item.price}</TableCell>
+                                            <TableCell align="right">{"$ "+item.price.toFixed(2)}</TableCell>
                                             <TableCell align="right">{item.type}</TableCell>
                                         </TableRow>
                                     ))}
@@ -285,7 +294,7 @@ const RegisterInfo = () =>{
                         <Box paddingTop="20px">
                             <Button  variant="contained"
                                     onClick={ () =>{
-                                        navigate("/registers/register/additem", {state: id});
+                                        navigate("/registers/register/additem", {state: {id: id, rc: rc}});
                                         setActive(Dashboard);
                                     }}
                             >

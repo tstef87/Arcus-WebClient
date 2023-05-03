@@ -16,6 +16,7 @@ import {useEffect, useState} from "react";
 import {collection,getDocs} from "firebase/firestore";
 import {db} from "../../fs/firebaseConfig";
 import Dashboard from "../dashboard";
+import state from "../../state";
 
 
 const Register = () => {
@@ -67,7 +68,10 @@ const Register = () => {
                         {registers.map((register) => (
                             <TableRow
                                 onClick={ () => {
-                                    navigate("/registers/register", {state: register.id});
+                                    navigate("/registers/register", {state: {
+                                        id: register.id,
+                                        rc: register.revenueCenter
+                                    }});
                                     setActive(Dashboard);
                                 }}
                                 key={register.id}
