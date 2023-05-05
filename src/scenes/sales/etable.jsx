@@ -158,7 +158,7 @@ export default function EnhancedSalesTable() {
     const [selected, setSelected] = React.useState([]);
     const [page, setPage] = React.useState(0);
     const [dense, setDense] = React.useState(false);
-    const [rowsPerPage, setRowsPerPage] = React.useState(5);
+    const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
 
     const [salesList, setSales] = React.useState([]);
@@ -245,7 +245,6 @@ export default function EnhancedSalesTable() {
         setDense(event.target.checked);
     };
 
-    const isSelected = (name) => selected.indexOf(name) !== -1;
 
     // Avoid a layout jump when reaching the last page with empty rows.
     const emptyRows =
@@ -274,13 +273,11 @@ export default function EnhancedSalesTable() {
                             numSelected={selected.length}
                             order={order}
                             orderBy={orderBy}
-                            //onSelectAllClick={handleSelectAllClick}
                             onRequestSort={handleRequestSort}
                             rowCount={rows.length}
                         />
                         <TableBody>
                             {visibleRows.map((row, index) => {
-                                //const isItemSelected = isSelected(row.id);
                                 const labelId = `enhanced-table-checkbox-${index}`;
 
                                 return (

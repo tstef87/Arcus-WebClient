@@ -95,9 +95,6 @@ const RegisterInfo = () =>{
     const [sales, setSales] = useState([]);
 
 
-    const registersCollectionRef = doc(db, "Registers", id);
-
-
     useEffect(() => {
         const getSales = async () => {
             try {
@@ -125,9 +122,7 @@ const RegisterInfo = () =>{
     }, []);
 
 
-
-    const itemsCollectionRef = collection(db, "RevenueCenter/"+ rc +"/ItemList");
-
+    const registersCollectionRef = doc(db, "Registers", id);
 
     useEffect(() => {
         const getRegistersList = async () => {
@@ -146,16 +141,29 @@ const RegisterInfo = () =>{
         getRegistersList().then(r => console.log("Got Register List"));
     }, []);
 
+
+    const itemsCollectionRef = doc(db, "RevenueCenter", rc);
+    const itemListRef = collection(db, "Items");
+
     useEffect(() => {
         const getItemList = async () => {
             try {
-                const ds = await getDocs(itemsCollectionRef);
-                const filteredData = ds.docs.map((d) => ({
-                    ...d.data(),
-                    id: d.id
+                const docSnap = await getDoc(itemsCollectionRef)
+                const itemArr = docSnap.get("items");
+
+                const q = query(itemListRef, where('idCall', 'in', itemArr));
+                const querySnapshot = await getDocs(q);
+                const filteredData = querySnapshot.docs.map((doc) => ({
+                    idCall: doc.get("idCall"),
+                    name: doc.get("name"),
+                    price: doc.get("price"),
+                    type: doc.get("type"),
+                    id: doc.id,
                 }));
 
                 setItemList(filteredData);
+                console.log(filteredData);
+
 
             }catch (e) {
                 console.error(e);
@@ -317,7 +325,7 @@ const RegisterInfo = () =>{
                                         >
                                             <TableCell component="th" scope="row">{ item.id}</TableCell>
                                             <TableCell align="right">{item.name}</TableCell>
-                                            <TableCell align="right">{"$ "+item.price.toFixed(2)}</TableCell>
+                                            <TableCell align="right">{"$ "+item.price?.toFixed(2)}</TableCell>
                                             <TableCell align="right">{item.type}</TableCell>
                                         </TableRow>
                                     ))}

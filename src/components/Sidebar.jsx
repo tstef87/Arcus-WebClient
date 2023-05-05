@@ -46,6 +46,10 @@ const navItems = [
         icon: <PointOfSaleOutlined />
     },
     {
+        text:"Revenue Centers",
+        icon: <FastfoodOutlinedIcon />
+    },
+    {
         text: "Items",
         icon: <FastfoodOutlinedIcon />,
     },
@@ -113,7 +117,7 @@ const Sidebar = ({
                                         </Typography>
                                     );
                                 }
-                                const lcText = text.toLowerCase();
+                                const lcText = text.toLowerCase().replace(/ /g, '');
 
                                 return (
                                     <ListItem key={text} disablePadding>

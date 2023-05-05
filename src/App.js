@@ -19,6 +19,7 @@ import Items from "./scenes/items";
 import Sales from "./scenes/sales";
 import Viewsale from "./scenes/sales/viewsale";
 import ViewSale from "./scenes/sales/viewsale";
+import RevenueCenter from "./scenes/revenue centers";
 
 
 function App() {
@@ -50,6 +51,8 @@ function App() {
 
                         <Route path="/sales" element={<Sales />}/>
                         <Route path="/sales/viewsale" element={<ViewSale />}/>
+
+                        <Route path="/revenuecenters" element={<RevenueCenter/>}/>
 
 
 

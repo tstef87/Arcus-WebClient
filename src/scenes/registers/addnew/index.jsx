@@ -41,12 +41,13 @@ async function addRegister(name, num, rnum, uname, pword, rc) {
                 revenueCenter: rc,
                 revenue: 0,
                 salesTotal: 0
-            }).then(r => (
-                setDoc(doc( db, "RevenueCenter", rc+"/ItemList/testpenny"), {
-                    name: "Test Penny",
-                    price: 0.01,
-                    type: "Test"
-                }).then(r => console.log("Added"))));
+            }).then(r => console.log("Added"));
+
+            setDoc(doc(db, "RevenueCenter", rc), {
+                sales: 0,
+                revenue: 0.00,
+                items: ['testpenny']
+            }).then(r => console.error("ADDED"))
         }
     } catch (error) {
         console.error('Error checking document existence:', error);
@@ -165,7 +166,7 @@ const AddNewRegister = () => {
                             </Icon>
                         </InputAdornment>,
                     }}
-                    label="Login User Name"
+                    label="Login Password"
                 />
             </Box>
 
