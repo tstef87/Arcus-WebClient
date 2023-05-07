@@ -19,7 +19,9 @@ import Items from "./scenes/items";
 import Sales from "./scenes/sales";
 import Viewsale from "./scenes/sales/viewsale";
 import ViewSale from "./scenes/sales/viewsale";
-import RevenueCenter from "./scenes/revenue centers";
+import RevenueCenter from "./scenes/revenue_centers";
+import ViewRC from "./scenes/revenue_centers/viewRC";
+import ViewRCNew from "./scenes/revenue_centers/viewRC/add_item_dialogs/itemTab";
 
 
 function App() {
@@ -53,6 +55,7 @@ function App() {
                         <Route path="/sales/viewsale" element={<ViewSale />}/>
 
                         <Route path="/revenuecenters" element={<RevenueCenter/>}/>
+                        <Route path="/revenuecenters/revenuecenter" element={<ViewRC/>}/>
 
 
 

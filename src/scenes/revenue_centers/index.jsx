@@ -70,11 +70,11 @@ const RevenueCenter = () => {
                             <TableRow
                                 onClick={ () => {
                                     navigate("/revenuecenters/revenuecenter", {state: {
-                                            id: revcen.id,
+                                            rc: revcen.id,
                                         }});
                                     setActive(Dashboard);
                                 }}
-                                key={rc.id}
+                                key={revcen.id}
                                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                             >
                                 <TableCell component="th" scope="row">{revcen.id}</TableCell>

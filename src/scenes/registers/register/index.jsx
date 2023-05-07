@@ -363,7 +363,7 @@ const RegisterInfo = () =>{
                                 <TableBody>
                                     {  sales.map((sale) => (
                                         <TableRow
-                                            key={sales.id}
+                                            key={sale.id}
                                             sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                                         >
                                             <TableCell component="th" scope="row">{ sale.id}</TableCell>

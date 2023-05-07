@@ -26,6 +26,7 @@ import {db} from "../../fs/firebaseConfig";
 import {useEffect, useState} from "react";
 import {useLocation, useNavigate} from "react-router-dom";
 import Dashboard from "../dashboard";
+import {Skeleton} from "@mui/material";
 
 function createData(id, stot, tip, rc, time, emp) {
     return {
@@ -37,6 +38,8 @@ function createData(id, stot, tip, rc, time, emp) {
         emp
     };
 }
+
+
 
 function descendingComparator(a, b, orderBy) {
     if (b[orderBy] < a[orderBy]) {
@@ -154,7 +157,7 @@ EnhancedTableHead.propTypes = {
 
 export default function EnhancedSalesTable() {
     const [order, setOrder] = React.useState('asc');
-    const [orderBy, setOrderBy] = React.useState('id');
+    const [orderBy, setOrderBy] = React.useState('price');
     const [selected, setSelected] = React.useState([]);
     const [page, setPage] = React.useState(0);
     const [dense, setDense] = React.useState(false);
@@ -172,10 +175,10 @@ export default function EnhancedSalesTable() {
         setActive(pathname.substring(1));
     }, [pathname]);
 
-
+    const [loaded, setLoaded] = React.useState(false);
 
     useEffect(() => {
-        const getItemList = async () => {
+        const getSalesList = async () => {
             try {
                 const data = await getDocs(salesCollectionRef);
                 const filteredData = data.docs.map((doc) => ({
@@ -188,13 +191,15 @@ export default function EnhancedSalesTable() {
                 console.error(e);
             }
         };
-        getItemList().then(r => console.log("done"));
+        getSalesList().then(r => {
+            setSales( salesList.map((sales) => (
+                createData(sales.id, sales.Price, sales.Tip, sales.rc, sales.Time, sales.emp)
+            )));
+
+            setLoaded(true);
+        });
     }, []);
 
-
-    const rows = salesList.map((sales) => (
-        createData(sales.id, sales.Price, sales.Tip, sales.rc, sales.Time, sales.emp)
-    ));
 
 
     const handleRequestSort = (event, property) => {
@@ -205,7 +210,7 @@ export default function EnhancedSalesTable() {
 
     const handleSelectAllClick = (event) => {
         if (event.target.checked) {
-            const newSelected = rows.map((n) => n.name);
+            const newSelected = salesList.map((n) => n.name);
             setSelected(newSelected);
             return;
         }
@@ -248,11 +253,11 @@ export default function EnhancedSalesTable() {
 
     // Avoid a layout jump when reaching the last page with empty rows.
     const emptyRows =
-        page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
+        page > 0 ? Math.max(0, (1 + page) * rowsPerPage - salesList.length) : 0;
 
     const visibleRows = React.useMemo(
         () =>
-            stableSort(rows, getComparator(order, orderBy)).slice(
+            stableSort(salesList, getComparator(order, orderBy)).slice(
                 page * rowsPerPage,
                 page * rowsPerPage + rowsPerPage,
             ),
@@ -261,70 +266,75 @@ export default function EnhancedSalesTable() {
 
     return (
         <Box sx={{ width: '100%' }}>
-            <Paper sx={{ width: '100%', mb: 2 }}>
-                {/*<EnhancedTableToolbar numSelected={selected.length} />*/}
-                <TableContainer>
-                    <Table
-                        sx={{ minWidth: 750 }}
-                        aria-labelledby="tableTitle"
-                        size={dense ? 'small' : 'medium'}
-                    >
-                        <EnhancedTableHead
-                            numSelected={selected.length}
-                            order={order}
-                            orderBy={orderBy}
-                            onRequestSort={handleRequestSort}
-                            rowCount={rows.length}
-                        />
-                        <TableBody>
-                            {visibleRows.map((row, index) => {
-                                const labelId = `enhanced-table-checkbox-${index}`;
+            {loaded ?
+                (<Paper sx={{ width: '100%', mb: 2 }}>
+                    {/*<EnhancedTableToolbar numSelected={selected.length} />*/}
+                    <TableContainer>
+                        <Table
+                            sx={{ minWidth: 750 }}
+                            aria-labelledby="tableTitle"
+                            size={dense ? 'small' : 'medium'}
+                        >
+                            <EnhancedTableHead
+                                numSelected={selected.length}
+                                order={order}
+                                orderBy={orderBy}
+                                onRequestSort={handleRequestSort}
+                                rowCount={salesList.length}
+                            />
+                            <TableBody>
+                                {visibleRows.map((row, index) => {
+                                    const labelId = `enhanced-table-checkbox-${index}`;
 
-                                return (
+                                    return (
 
-                                    <TableRow onClick={ () => {
-                                        navigate("/sales/viewsale", {state: {id: row.id, emp: row.emp}});
-                                        setActive(Dashboard);
+                                        <TableRow
+                                            key={salesList.id}
+                                            onClick={ () => {
+                                            navigate("/sales/viewsale", {state: {id: row.id, emp: row.emp}});
+                                            setActive(Dashboard);
 
-                                    }}>
-                                        <TableCell
-                                            component="th"
-                                            id={labelId}
-                                            scope="row"
-                                            align="left"
-                                        >
-                                            {row.id}
-                                        </TableCell>
-                                        <TableCell align="right">{row.stot}</TableCell>
-                                        <TableCell align="right">{row.tip}</TableCell>
-                                        <TableCell align="right">{row.rc}</TableCell>
-                                        <TableCell align="right">{row.time}</TableCell>
+                                        }}>
+                                            <TableCell
+                                                component="th"
+                                                id={labelId}
+                                                scope="row"
+                                                align="left"
+                                            >
+                                                {row.id}
+                                            </TableCell>
+                                            <TableCell align="right">{row.stot}</TableCell>
+                                            <TableCell align="right">{row.tip}</TableCell>
+                                            <TableCell align="right">{row.rc}</TableCell>
+                                            <TableCell align="right">{row.time}</TableCell>
 
+                                        </TableRow>
+                                    );
+                                })}
+                                {emptyRows > 0 && (
+                                    <TableRow
+                                        style={{
+                                            height: (dense ? 33 : 53) * emptyRows,
+                                        }}
+                                    >
+                                        <TableCell colSpan={6} />
                                     </TableRow>
-                                );
-                            })}
-                            {emptyRows > 0 && (
-                                <TableRow
-                                    style={{
-                                        height: (dense ? 33 : 53) * emptyRows,
-                                    }}
-                                >
-                                    <TableCell colSpan={6} />
-                                </TableRow>
-                            )}
-                        </TableBody>
-                    </Table>
-                </TableContainer>
-                <TablePagination
-                    rowsPerPageOptions={[5, 10, 25]}
-                    component="div"
-                    count={rows.length}
-                    rowsPerPage={rowsPerPage}
-                    page={page}
-                    onPageChange={handleChangePage}
-                    onRowsPerPageChange={handleChangeRowsPerPage}
-                />
-            </Paper>
+                                )}
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
+                    <TablePagination
+                        rowsPerPageOptions={[5, 10, 25]}
+                        component="div"
+                        count={salesList.length}
+                        rowsPerPage={rowsPerPage}
+                        page={page}
+                        onPageChange={handleChangePage}
+                        onRowsPerPageChange={handleChangeRowsPerPage}
+                    />
+                </Paper>) : (<Skeleton variant="rectangular" width={210} height={118} />)
+
+            }
         </Box>
     );
 }
