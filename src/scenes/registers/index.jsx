@@ -17,6 +17,7 @@ import {collection,getDocs} from "firebase/firestore";
 import {db} from "../../fs/firebaseConfig";
 import Dashboard from "../dashboard";
 import state from "../../state";
+import AddNewRegister from "./addnew";
 
 
 const Register = () => {
@@ -98,13 +99,7 @@ const Register = () => {
                 </Table>
             </TableContainer>
             <Box paddingY="20px">
-                <Button variant="contained"
-                        onClick={() => {
-                                navigate("/addnewregister");
-                                setActive(Dashboard);
-
-                            }}>
-                    Add New</Button>
+                <AddNewRegister />
             </Box>
         </Box>
     );

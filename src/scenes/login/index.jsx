@@ -16,25 +16,8 @@ import {
 import {useLocation, useNavigate} from "react-router-dom";
 import Dashboard from "../dashboard";
 import {Visibility, VisibilityOff} from "@mui/icons-material";
-import CheckDocumentExistence from "./check";
-import useDocumentExistence from "./check";
+import {collection, getDocs, query, where} from "firebase/firestore";
 import {db} from "../../fs/firebaseConfig";
-import {collection, query, where, doc, getDoc, getDocs} from "firebase/firestore";
-
-import {
-    GradientDarkgreenGreen,
-    GradientLightgreenGreen,
-    GradientOrangeRed,
-    GradientPinkBlue,
-    GradientPinkRed,
-    GradientPurpleOrange,
-    GradientPurpleRed,
-    GradientTealBlue,
-    RadialGradient,
-    LinearGradient,
-} from '@visx/gradient'
-import {index} from "d3-array";
-
 
 
 const Login = () => {
@@ -63,8 +46,7 @@ const Login = () => {
     const [pin, setPin] = useState('');
     const [password, setPassword] = useState('');
 
-    const [update, setUpdated] = useState(email);
-    const [updateP, setUpdatedP] = useState(password);
+    const [valid, setValid] = useState(false);
 
     const handleChangeEmail = (event) => {
         setEmail(event.target.value);
@@ -77,15 +59,21 @@ const Login = () => {
     };
 
 
-    async function check(e, p) {
-        let g = 0;
-        const q = query(collection(db, 'employee'), where('email', '==', e), where('password', '==', p));
+    async function check(e, p){
+
+        const q = query(collection(db, 'Employee'), where('email', '==', e), where('password', '==', p));
         const querySnapshot = await getDocs(q);
-        querySnapshot.forEach((doc) => {
+
+        let g =0;
+
+        querySnapshot.forEach(() =>{
             g++;
-            console.log(doc.id, ' => ', doc.data());
+            navigate("/dashboard");
         });
+
+
     }
+
 
     return (
         <Box textAlign="center" paddingY="100px" sx={{
@@ -150,15 +138,12 @@ const Login = () => {
             <Box >
                 <Button variant="elevated"
 
-                        onClick={() => {
-                            //if(check(email, password)){
-                            if(check(email, password) >= 1){
-                                navigate("/dashboard");
-                            }
-                            //
-                            //} else {
-                              //  alert("Invalid Login Credentials");
-                            //}
+                        onClick={ () => {
+                            check(email, password).then(r => {
+                                if (valid) {
+                                    navigate("/dashboard");
+                                }
+                            });
                         }}>
                     Login
                 </Button>

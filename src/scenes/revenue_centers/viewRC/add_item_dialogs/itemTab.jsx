@@ -25,11 +25,18 @@ import Dashboard from "../../../dashboard";
 import DialogActions from "@mui/material/DialogActions";
 import SwipeableViews from 'react-swipeable-views';
 import ExistingItems from "./existingItem";
+import FlexBetween from "../../../../components/FlexBetween";
 
 
-async function del(id) {
-    await deleteDoc(doc(db, "Registers", id));
+async function del(id, rc, itemArr) {
+
+    const filteredArray = itemArr.filter(item => item !== id);
+    await updateDoc(doc(db, "RevenueCenter", rc), {
+        items: [...filteredArray]
+    });
 }
+
+
 
 async function addItem(name, p, t, itemArr, rc, pid) {
     const ph = pid;
@@ -44,7 +51,7 @@ async function addItem(name, p, t, itemArr, rc, pid) {
     }).then(r => console.log("added"));
 
     await updateDoc(doc(db, "RevenueCenter", rc), {
-        items: [...itemArr]
+        items: [...itemArr, pid]
     });
 
 }
@@ -99,6 +106,7 @@ export default function ItemList(){
     useEffect(() => {
         const getItemList = async () => {
             try {
+
                 const docSnap = await getDoc(itemsCollectionRef)
                 const itemArrTemp = docSnap.get("items");
                 setItemArr(itemArrTemp);
@@ -134,6 +142,10 @@ export default function ItemList(){
         setOpen(false);
     };
 
+    function handleRefresh() {
+        window.location.reload();
+    }
+
 
     return (
         <Box>
@@ -146,6 +158,7 @@ export default function ItemList(){
                             <TableCell align="right">Item Name</TableCell>
                             <TableCell align="right">Item Price</TableCell>
                             <TableCell align="right">Item Type</TableCell>
+                            <TableCell align="right"></TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -158,6 +171,14 @@ export default function ItemList(){
                                 <TableCell align="right">{item.name}</TableCell>
                                 <TableCell align="right">{"$ "+item.price?.toFixed(2)}</TableCell>
                                 <TableCell align="right">{item.type}</TableCell>
+                                <TableCell align="right">
+                                    <Button onClick={ () => {
+                                        del(item.id, rc, itemArr).then(r => handleRefresh());
+                                    }
+                                    }>
+                                        X
+                                    </Button>
+                                </TableCell>
                             </TableRow>
                         ))}
                     </TableBody>
@@ -165,93 +186,95 @@ export default function ItemList(){
             </TableContainer>
 
             <Box paddingTop="20px">
-                <Box>
-                    <Button variant="outlined" onClick={handleClickOpen}>
-                        Add New Item
-                    </Button>
-                    <Dialog open={open} onClose={handleClose}>
-                        <DialogTitle>Add new Item</DialogTitle>
-                        <DialogContent>
-
-                            <Box paddingTop="10px">
-                                <TextField
-                                    id="name"
-                                    name="name"
-                                    onChange={handleChangeName}
-                                    value={itemName}
-
-                                    sx={{ m: 1, width: '25ch' }}
-                                    InputProps={{
-                                        endAdornment: <InputAdornment position="end">
-                                            <Icon>
-                                                <MailOutlineIcon />
-                                            </Icon>
-                                        </InputAdornment>,
-                                    }}
-                                    label="Item Name"
-                                />
-                            </Box>
-                            <Box paddingTop="10px">
-                                <TextField
-                                    id="price"
-                                    name="price"
-                                    onChange={handleChangePrice}
-                                    value={price}
-
-                                    sx={{ m: 1, width: '25ch' }}
-                                    InputProps={{
-                                        endAdornment: <InputAdornment position="end">
-                                            <Icon>
-                                                <MailOutlineIcon />
-                                            </Icon>
-                                        </InputAdornment>,
-                                    }}
-                                    label="Item Price"
-                                />
-                            </Box>
-
-                            <Box>
-                                <FormControl fullWidth>
-                                    <InputLabel id="demo-simple-select-label">Type</InputLabel>
-                                    <Select
-                                        labelId="select type"
-                                        id="type"
-                                        value={type}
-                                        label="Type"
-                                        onChange={handleChangeType}
-                                        sx={{ m: 1, width: '25ch' }}
-                                    >
-                                        <MenuItem value={"Food"}>Food</MenuItem>
-                                        <MenuItem value={"Non-Alcoholic Beverage" }>Non-Alcoholic Beverage</MenuItem>
-                                        <MenuItem value={"Alcoholic Beverage"}>Alcoholic Beverage</MenuItem>
-                                        <MenuItem value={"Test"}>Test</MenuItem>
-
-                                    </Select>
-                                </FormControl>
-                            </Box>
-                        </DialogContent>
-                        <Button
-                            onClick={ () => {
-                                if(type !== "" &&
-                                    itemName !== "" &&
-                                    price !== 0.00){
-                                    itemArr.push(itemName.toLowerCase().replace(/\s/g, ''));
-                                    addItem(itemName, price, type, itemArr, rc, itemName.toLowerCase().replace(/\s/g, '')).then(r => console.error("Done"));
-                                    navigate("/revenuecenters");
-                                    setActive(Dashboard);
-
-                                }
-                                else{
-                                    alert("One or more Empty Entries")
-                                }
-                            }}
-                        >
-                            Add Item
+                <FlexBetween>
+                    <Box>
+                        <Button variant="outlined" onClick={handleClickOpen}>
+                            Add New Item
                         </Button>
-                    </Dialog>
-                </Box>
-                <Box>
-                </Box>
+                        <Dialog open={open} onClose={handleClose}>
+                            <DialogTitle>Add new Item</DialogTitle>
+                            <DialogContent>
+
+                                <Box paddingTop="10px">
+                                    <TextField
+                                        id="name"
+                                        name="name"
+                                        onChange={handleChangeName}
+                                        value={itemName}
+
+                                        sx={{ m: 1, width: '25ch' }}
+                                        InputProps={{
+                                            endAdornment: <InputAdornment position="end">
+                                                <Icon>
+                                                    <MailOutlineIcon />
+                                                </Icon>
+                                            </InputAdornment>,
+                                        }}
+                                        label="Item Name"
+                                    />
+                                </Box>
+                                <Box paddingTop="10px">
+                                    <TextField
+                                        id="price"
+                                        name="price"
+                                        onChange={handleChangePrice}
+                                        value={price}
+
+                                        sx={{ m: 1, width: '25ch' }}
+                                        InputProps={{
+                                            endAdornment: <InputAdornment position="end">
+                                                <Icon>
+                                                    <MailOutlineIcon />
+                                                </Icon>
+                                            </InputAdornment>,
+                                        }}
+                                        label="Item Price"
+                                    />
+                                </Box>
+
+                                <Box>
+                                    <FormControl fullWidth>
+                                        <InputLabel id="demo-simple-select-label">Type</InputLabel>
+                                        <Select
+                                            labelId="select type"
+                                            id="type"
+                                            value={type}
+                                            label="Type"
+                                            onChange={handleChangeType}
+                                            sx={{ m: 1, width: '25ch' }}
+                                        >
+                                            <MenuItem value={"Food"}>Food</MenuItem>
+                                            <MenuItem value={"Non-Alcoholic Beverage" }>Non-Alcoholic Beverage</MenuItem>
+                                            <MenuItem value={"Alcoholic Beverage"}>Alcoholic Beverage</MenuItem>
+                                            <MenuItem value={"Test"}>Test</MenuItem>
+
+                                        </Select>
+                                    </FormControl>
+                                </Box>
+                            </DialogContent>
+                            <Button
+                                onClick={ () => {
+                                    if(type !== "" &&
+                                        itemName !== "" &&
+                                        price !== 0.00){
+                                        addItem(itemName, price, type, itemArr, rc, itemName.toLowerCase().replace(/\s/g, '')).then(r => console.error("Done"));
+                                        navigate("/revenuecenters");
+                                        setActive(Dashboard);
+
+                                    }
+                                    else{
+                                        alert("One or more Empty Entries")
+                                    }
+                                }}
+                            >
+                                Add Item
+                            </Button>
+                        </Dialog>
+                    </Box>
+                    <Box>
+                        <ExistingItems />
+                    </Box>
+                </FlexBetween>
             </Box>
         </Box>
     );

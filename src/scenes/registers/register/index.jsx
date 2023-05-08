@@ -332,17 +332,6 @@ const RegisterInfo = () =>{
                                 </TableBody>
                             </Table>
                         </TableContainer>
-
-                        <Box paddingTop="20px">
-                            <Button  variant="contained"
-                                    onClick={ () =>{
-                                        navigate("/registers/register/additem", {state: {id: id, rc: rc}});
-                                        setActive(Dashboard);
-                                    }}
-                            >
-                                Add Item
-                            </Button>
-                        </Box>
                     </TabPanel>
 
                     <TabPanel value={value} index={2} dir={theme.direction}>

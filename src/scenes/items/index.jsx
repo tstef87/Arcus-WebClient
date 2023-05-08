@@ -13,6 +13,8 @@ import {useEffect, useState} from "react";
 import {useLocation, useNavigate} from "react-router-dom";
 import {collection, getDocs} from "firebase/firestore";
 import {db} from "../../fs/firebaseConfig";
+import Addnewitem from "../registers/register/addnewitem";
+import AddNewItem from "./addNewItem";
 
 const Items = () => {
 
@@ -77,16 +79,10 @@ const Items = () => {
                     </TableBody>
                 </Table>
             </TableContainer>
-
-            <Box paddingY="20px">
-                <Button variant="contained"
-                        onClick={() => {
-                            navigate("/addnewregister");
-                            setActive(Dashboard);
-
-                        }}>
-                    Add New</Button>
+            <Box>
+                <AddNewItem />
             </Box>
+
         </Box>
     );
 }

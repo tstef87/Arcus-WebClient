@@ -27,7 +27,7 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
-import {collection, getDocs} from "firebase/firestore";
+import {collection, doc, getDoc, getDocs, setDoc, updateDoc} from "firebase/firestore";
 import {db} from "../../../../fs/firebaseConfig";
 import {useLocation, useNavigate} from "react-router-dom";
 import {useEffect} from "react";
@@ -160,56 +160,13 @@ EnhancedTableHead.propTypes = {
     rowCount: PropTypes.number.isRequired,
 };
 
-function EnhancedTableToolbar(props) {
-    const { numSelected } = props;
+async function updateArr(itemArr, newItems, rc){
 
-    return (
-        <Toolbar
-            sx={{
-                pl: { sm: 2 },
-                pr: { xs: 1, sm: 1 },
-                ...(numSelected > 0 && {
-                    bgcolor: (theme) =>
-                        alpha(theme.palette.primary.main, theme.palette.action.activatedOpacity),
-                }),
-            }}
-        >
-            {numSelected > 0 ? (
-                <Typography
-                    sx={{ flex: '1 1 100%' }}
-                    color="inherit"
-                    variant="subtitle1"
-                    component="div"
-                >
-                    {numSelected} selected
-                </Typography>
-            ) : (
-                <Typography
-                    sx={{ flex: '1 1 100%' }}
-                    variant="h6"
-                    id="tableTitle"
-                    component="div"
-                >
-                    Add Existing Item
-                </Typography>
-            )}
-
-            {numSelected > 0 ? (
-                <Tooltip title="Add Items">
-                    <IconButton>
-                        <DeleteIcon />
-                    </IconButton>
-                </Tooltip>
-            ) : (
-                <h1></h1>
-            )}
-        </Toolbar>
-    );
+    await updateDoc(doc(db, "RevenueCenter", rc), {
+        items: [...itemArr, ...newItems]
+    });
 }
 
-EnhancedTableToolbar.propTypes = {
-    numSelected: PropTypes.number.isRequired,
-};
 
 export default function ExistingItem() {
     const [order, setOrder] = React.useState('asc');
@@ -219,12 +176,31 @@ export default function ExistingItem() {
     const [dense, setDense] = React.useState(false);
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
     const [itemList, setItem] = React.useState([]);
+    const [currentItemList, setCurentItem] = React.useState([]);
+
     const itemCollectionRef = collection(db, "Items");
     const [loaded, setLoaded] = React.useState(false);
     const [rows, setR] = React.useState(rowStarter);
 
+    const {state} = useLocation();
+    const {rc} = state;
+
+    useEffect( () => {
+        const getCurentItems = async () => {
+            try {
+                const data = await getDoc(doc(db, "RevenueCenter", rc));
+                const itemArrTemp = data.get("items");
+                setCurentItem(itemArrTemp);
+            }
+            catch (e){
+                console.error(e);
+            }
+        };
+        getCurentItems()
+    })
+
     useEffect(() => {
-        const getSalesList = async () => {
+        const getItemList = async () => {
             try {
                 const data = await getDocs(itemCollectionRef);
                 const filteredData = data.docs.map((doc) => ({
@@ -238,7 +214,7 @@ export default function ExistingItem() {
                 console.error(e);
             }
         };
-        getSalesList().then(r => {
+        getItemList().then(r => {
             setLoaded(true);
         });
     }, []);
@@ -289,9 +265,7 @@ export default function ExistingItem() {
         setPage(0);
     };
 
-    const handleChangeDense = (event) => {
-        setDense(event.target.checked);
-    };
+
 
     const isSelected = (name) => selected.indexOf(name) !== -1;
 
@@ -318,6 +292,8 @@ export default function ExistingItem() {
     };
 
 
+
+
     return (
 
         <Box>
@@ -342,7 +318,50 @@ export default function ExistingItem() {
                     <DialogContent>
                         {loaded ?
                             (<Paper >
-                                <EnhancedTableToolbar numSelected={selected.length} />
+
+                                <Toolbar
+                                    sx={{
+                                        pl: { sm: 2 },
+                                        pr: { xs: 1, sm: 1 },
+                                        ...(selected.length > 0 && {
+                                            bgcolor: (theme) =>
+                                                alpha(theme.palette.primary.main, theme.palette.action.activatedOpacity),
+                                        }),
+                                    }}
+                                >
+                                    {selected.length > 0 ? (
+                                        <Typography
+                                            sx={{ flex: '1 1 100%' }}
+                                            color="inherit"
+                                            variant="subtitle1"
+                                            component="div"
+                                        >
+                                            {selected.length} selected
+                                        </Typography>
+                                    ) : (
+                                        <Typography
+                                            sx={{ flex: '1 1 100%' }}
+                                            variant="h6"
+                                            id="tableTitle"
+                                            component="div"
+                                        >
+                                            Add Existing Item
+                                        </Typography>
+                                    )}
+
+                                    {selected.length > 0 ? (
+                                        <Tooltip title="Add Items">
+                                            <IconButton onClick={ () =>{
+                                                updateArr(currentItemList, selected, rc).then(r => console.log("Added"));
+                                            }}>
+                                                <DeleteIcon />
+                                            </IconButton>
+                                        </Tooltip>
+                                    ) : (
+                                        <h1></h1>
+                                    )}
+                                </Toolbar>
+
                                 <TableContainer>
                                     <Table
                                         sx={{ minWidth: 750 }}
@@ -351,6 +370,7 @@ export default function ExistingItem() {
                                     >
                                         <EnhancedTableHead
                                             numSelected={selected.length}
+                                            itemSelected={selected}
                                             order={order}
                                             orderBy={orderBy}
                                             onSelectAllClick={handleSelectAllClick}
@@ -359,13 +379,13 @@ export default function ExistingItem() {
                                         />
                                         <TableBody>
                                             {visibleRows.map((row, index) => {
-                                                const isItemSelected = isSelected(row.name);
+                                                const isItemSelected = isSelected(row.id);
                                                 const labelId = `enhanced-table-checkbox-${index}`;
 
                                                 return (
                                                     <TableRow
                                                         hover
-                                                        onClick={(event) => handleClick(event, row.name)}
+                                                        onClick={(event) => handleClick(event, row.id)}
                                                         role="checkbox"
                                                         aria-checked={isItemSelected}
                                                         tabIndex={-1}

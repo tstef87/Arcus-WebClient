@@ -195,8 +195,6 @@ export default function EnhancedSalesTable() {
             setSales( salesList.map((sales) => (
                 createData(sales.id, sales.Price, sales.Tip, sales.rc, sales.Time, sales.emp)
             )));
-
-            setLoaded(true);
         });
     }, []);
 
@@ -208,14 +206,7 @@ export default function EnhancedSalesTable() {
         setOrderBy(property);
     };
 
-    const handleSelectAllClick = (event) => {
-        if (event.target.checked) {
-            const newSelected = salesList.map((n) => n.name);
-            setSelected(newSelected);
-            return;
-        }
-        setSelected([]);
-    };
+
 
     const handleClick = (event, name) => {
         const selectedIndex = selected.indexOf(name);
@@ -246,10 +237,6 @@ export default function EnhancedSalesTable() {
         setPage(0);
     };
 
-    const handleChangeDense = (event) => {
-        setDense(event.target.checked);
-    };
-
 
     // Avoid a layout jump when reaching the last page with empty rows.
     const emptyRows =
@@ -266,9 +253,8 @@ export default function EnhancedSalesTable() {
 
     return (
         <Box sx={{ width: '100%' }}>
-            {loaded ?
-                (<Paper sx={{ width: '100%', mb: 2 }}>
-                    {/*<EnhancedTableToolbar numSelected={selected.length} />*/}
+
+                <Paper sx={{ width: '100%', mb: 2 }}>
                     <TableContainer>
                         <Table
                             sx={{ minWidth: 750 }}
@@ -332,9 +318,8 @@ export default function EnhancedSalesTable() {
                         onPageChange={handleChangePage}
                         onRowsPerPageChange={handleChangeRowsPerPage}
                     />
-                </Paper>) : (<Skeleton variant="rectangular" width={210} height={118} />)
+                </Paper>
 
-            }
         </Box>
     );
 }

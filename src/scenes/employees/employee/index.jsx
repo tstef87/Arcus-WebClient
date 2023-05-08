@@ -57,10 +57,10 @@ const Employee = () =>{
     return(
         <Box paddingY="40px" paddingX="70px"  >
             <h1>Account Information:</h1>
-            <Box paddingX="15px" paddingY="10px" sx={{ bgcolor: 'background.paper', borderRadius: '16px' }}>
+            <Box paddingX="15px" paddingY="10px" sx={{ bgcolor: '#252525', borderRadius: '16px' }}>
                 <h3>General Info:</h3>
                 <Divider/>
-                <nav aria-label="personal info">
+                <nav aria-label="personal info" >
                     <List>
                         <ListItem>
                             <ListItemText primary={emp.fname + " " + emp.lname} secondary="Name"/>
@@ -76,7 +76,7 @@ const Employee = () =>{
 
             <Box padding="5px"/>
 
-            <Box paddingX="15px" paddingY="10px" sx={{ bgcolor: 'background.paper', borderRadius: '16px' }}>
+            <Box paddingX="15px" paddingY="10px" sx={{ bgcolor: '#252525', borderRadius: '16px' }}>
                 <h3>Sales Info:</h3>
                 <Divider/>
                 <nav aria-label="Sales info">
@@ -89,20 +89,13 @@ const Employee = () =>{
                             <ListItemText primary={"$ " + emp.tips} secondary="Gratuity"/>
                         </ListItem>
                         <Divider/>
-
-                        <Button onClick={ () => {
-                            // TODO
-                        }
-                        }>
-                            View Sales
-                        </Button>
                     </List>
                 </nav>
             </Box>
 
             <Box padding="5px"/>
 
-            <Box paddingX="15px" paddingY="10px" sx={{ bgcolor: 'background.paper', borderRadius: '16px' }}>
+            <Box paddingX="15px" paddingY="10px" sx={{ bgcolor: '#252525', borderRadius: '16px' }}>
                 <h3>Contact Info:</h3>
                 <Divider/>
                 <nav aria-label="Contact info">
@@ -121,7 +114,7 @@ const Employee = () =>{
 
             <Box padding="5px"/>
 
-            <Box paddingX="15px" paddingY="10px" sx={{ bgcolor: 'background.paper', borderRadius: '16px' }}>
+            <Box paddingX="15px" paddingY="10px" sx={{ bgcolor: '#252525', borderRadius: '16px' }}>
                 <h3>Login Info:</h3>
                 <Divider/>
                 <nav aria-label="Login info">
