@@ -1,74 +1,126 @@
-import React, { PureComponent } from 'react';
-import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import React, {PureComponent, useEffect, useState} from 'react';
+import {AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar} from 'recharts';
+import Box from "@mui/material/Box";
+import {Legend} from "chart.js";
+import {collection, doc, getDoc, getDocs} from "firebase/firestore";
+import {db} from "../../fs/firebaseConfig";
+import {width} from "@mui/system";
+import FlexBetween from "../../components/FlexBetween";
+import {Typography} from "@mui/material";
+import CountUp, { useCountUp } from 'react-countup';
 
 
 const Dashboard = () => {
-    const data = [
-        {
-            name: 'Page A',
-            uv: 4000,
-            pv: 2400,
-            amt: 2400,
-        },
-        {
-            name: 'Page B',
-            uv: 3000,
-            pv: 1398,
-            amt: 2210,
-        },
-        {
-            name: 'Page C',
-            uv: 2000,
-            pv: 9800,
-            amt: 2290,
-        },
-        {
-            name: 'Page D',
-            uv: 2780,
-            pv: 3908,
-            amt: 2000,
-        },
-        {
-            name: 'Page E',
-            uv: 1890,
-            pv: 4800,
-            amt: 2181,
-        },
-        {
-            name: 'Page F',
-            uv: 2390,
-            pv: 3800,
-            amt: 2500,
-        },
-        {
-            name: 'Page G',
-            uv: 3490,
-            pv: 4300,
-            amt: 2100,
-        },
-    ];
+
+    const [rc, setRC] = useState([]);
+    const rcCollectionRef = collection(db, "RevenueCenter")
+    useEffect(() => {
+        const getRCList = async () => {
+            try {
+                const data = await getDocs(rcCollectionRef);
+                const filteredData = data.docs.map((doc) => ({
+                    rcName: doc.id,
+                    revenue: doc.get("revenue"),
+                    sales: doc.get("sales")
+                }));
+
+                setRC(filteredData);
+                console.log(filteredData);
+            }catch (e) {
+                console.error(e);
+            }
+        };
+        getRCList().then(r => console.log("done"));
+    }, []);
+
+
+    const [rev, setRev] = useState();
+    const [sales, setSales] = useState();
+
+    const numsColectionRef = doc(db, "Nums", "num");
+
+    useEffect(() => {
+        const getRegistersList = async () => {
+            try {
+                const docSnap = await getDoc(numsColectionRef);
+                setRev(docSnap.get("revenue"));
+                setSales(docSnap.get("sales"));
+            }catch (e) {
+                console.error(e);
+            }
+        };
+        getRegistersList().then(r => console.log("Got Register List"));
+    }, []);
+
 
 
     return (
-        <ResponsiveContainer width="100%" height="100%">
-            <AreaChart
-                width={500}
-                height={400}
-                data={data}
-                margin={{
-                    top: 10,
-                    right: 30,
-                    left: 0,
-                    bottom: 0,
-                }}
-            >
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="name" />
-                <YAxis />
-                <Tooltip />
-                <Area type="monotone" dataKey="uv" stroke="#8884d8" fill="#8884d8" />
-            </AreaChart>
-        </ResponsiveContainer>
+        <FlexBetween sx={{width: "100%", height: "90%"}}>
+            <Box sx={{width: "50%", height: "90%"}}>
+                <Typography fontSize={75} marginLeft={5}>
+                    Welcome
+                </Typography>
+
+                <CountUp
+                    marginLeft={10}
+                    start={0}
+                    end={sales}
+                    duration={1}
+                    separator=""
+                    decimals={0}
+                    prefix="Total Sales: "
+                    sx={{fontsize: "40dp", marginLeft: "10px"}}
+                >
+                    {({ countUpRef}) => (
+                        <div>
+                            <Typography fontSize={30} marginLeft={10} ref={countUpRef} />
+                        </div>
+                    )}
+                </CountUp>
+
+                <CountUp
+                    marginLeft={10}
+                    start={0}
+                    end={rev}
+                    duration={1}
+                    separator=""
+                    decimals={2}
+                    decimal="."
+                    prefix="Total Revenue: $"
+                    sx={{fontsize: "40dp", marginLeft: "10px"}}
+                >
+                    {({ countUpRef }) => (
+                        <div>
+                            <Typography fontSize={30} marginLeft={10} ref={countUpRef} />
+                        </div>
+                    )}
+                </CountUp>
+
+            </Box>
+            <Box sx={{width: "50%", height: "90%"}}>
+                <ResponsiveContainer width="100%" height="100%">
+                    <BarChart
+                        width={500}
+                        height={300}
+                        data={rc}
+                        margin={{
+                            top: 20,
+                            right: 30,
+                            left: 20,
+                            bottom: 5,
+                        }}
+                    >
+                        <CartesianGrid strokeDasharray="3 3" />
+                        <XAxis dataKey="rcName" />
+                        <YAxis yAxisId="left" orientation="left" stroke="#8884d8" />
+                        <YAxis yAxisId="right" orientation="right" stroke="#82ca9d" />
+                        <Tooltip />
+                        <Bar yAxisId="left" dataKey="revenue" fill="#8884d8" />
+                        <Bar yAxisId="right" dataKey="sales" fill="#82ca9d" />
+                    </BarChart>
+                </ResponsiveContainer>
+            </Box>
+        </FlexBetween>
     );
 }
 

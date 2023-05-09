@@ -1,6 +1,5 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { alpha } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -10,35 +9,15 @@ import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import TableSortLabel from '@mui/material/TableSortLabel';
-import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
-import Checkbox from '@mui/material/Checkbox';
-import IconButton from '@mui/material/IconButton';
-import Tooltip from '@mui/material/Tooltip';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Switch from '@mui/material/Switch';
-import DeleteIcon from '@mui/icons-material/Delete';
-import FilterListIcon from '@mui/icons-material/FilterList';
+
 import { visuallyHidden } from '@mui/utils';
 import {collection, getDocs} from "firebase/firestore";
 import {db} from "../../fs/firebaseConfig";
 import {useEffect, useState} from "react";
 import {useLocation, useNavigate} from "react-router-dom";
 import Dashboard from "../dashboard";
-import {Skeleton} from "@mui/material";
-
-function createData(id, stot, tip, rc, time, emp) {
-    return {
-        id,
-        stot,
-        tip,
-        rc,
-        time,
-        emp
-    };
-}
-
 
 
 function descendingComparator(a, b, orderBy) {
@@ -78,16 +57,17 @@ const headCells = [
         id: 'id',
         numeric: false,
         disablePadding: true,
+
         label: 'Sale ID ',
     },
     {
-        id: 'stot',
+        id: 'Subtotal',
         numeric: true,
         disablePadding: false,
         label: 'Subtotal',
     },
     {
-        id: 'tip',
+        id: 'Tip',
         numeric: true,
         disablePadding: false,
         label: 'Tip ',
@@ -99,7 +79,7 @@ const headCells = [
         label: 'Revenue Center ',
     },
     {
-        id: 'time',
+        id: 'Time',
         numeric: false,
         disablePadding: false,
         label: 'Transaction Time ',
@@ -122,7 +102,7 @@ function EnhancedTableHead(props) {
                 {headCells.map((headCell) => (
                     <TableCell
                         key={headCell.id}
-                        align={'right'}
+                        align={headCell.id === 'id' ? 'center' : "right"}
                         padding={headCell.disablePadding ? 'none' : 'normal'}
                         sortDirection={orderBy === headCell.id ? order : false}
                     >
@@ -158,13 +138,12 @@ EnhancedTableHead.propTypes = {
 export default function EnhancedSalesTable() {
     const [order, setOrder] = React.useState('asc');
     const [orderBy, setOrderBy] = React.useState('price');
-    const [selected, setSelected] = React.useState([]);
     const [page, setPage] = React.useState(0);
-    const [dense, setDense] = React.useState(false);
-    const [rowsPerPage, setRowsPerPage] = React.useState(10);
+    const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
 
     const [salesList, setSales] = React.useState([]);
+    const [rows, setRows] = React.useState([]);
     const salesCollectionRef = collection(db, "Sales");
 
     const [active, setActive] = useState("");
@@ -177,56 +156,12 @@ export default function EnhancedSalesTable() {
 
     const [loaded, setLoaded] = React.useState(false);
 
-    useEffect(() => {
-        const getSalesList = async () => {
-            try {
-                const data = await getDocs(salesCollectionRef);
-                const filteredData = data.docs.map((doc) => ({
-                    ...doc.data(),
-                    id: doc.id
-                }));
-
-                setSales(filteredData);
-            }catch (e) {
-                console.error(e);
-            }
-        };
-        getSalesList().then(r => {
-            setSales( salesList.map((sales) => (
-                createData(sales.id, sales.Price, sales.Tip, sales.rc, sales.Time, sales.emp)
-            )));
-        });
-    }, []);
-
-
-
     const handleRequestSort = (event, property) => {
         const isAsc = orderBy === property && order === 'asc';
         setOrder(isAsc ? 'desc' : 'asc');
         setOrderBy(property);
     };
 
-
-
-    const handleClick = (event, name) => {
-        const selectedIndex = selected.indexOf(name);
-        let newSelected = [];
-
-        if (selectedIndex === -1) {
-            newSelected = newSelected.concat(selected, name);
-        } else if (selectedIndex === 0) {
-            newSelected = newSelected.concat(selected.slice(1));
-        } else if (selectedIndex === selected.length - 1) {
-            newSelected = newSelected.concat(selected.slice(0, -1));
-        } else if (selectedIndex > 0) {
-            newSelected = newSelected.concat(
-                selected.slice(0, selectedIndex),
-                selected.slice(selectedIndex + 1),
-            );
-        }
-
-        setSelected(newSelected);
-    };
 
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
@@ -238,36 +173,60 @@ export default function EnhancedSalesTable() {
     };
 
 
-    // Avoid a layout jump when reaching the last page with empty rows.
-    const emptyRows =
-        page > 0 ? Math.max(0, (1 + page) * rowsPerPage - salesList.length) : 0;
-
     const visibleRows = React.useMemo(
         () =>
-            stableSort(salesList, getComparator(order, orderBy)).slice(
+            stableSort(rows, getComparator(order, orderBy)).slice(
                 page * rowsPerPage,
                 page * rowsPerPage + rowsPerPage,
             ),
-        [order, orderBy, page, rowsPerPage],
+        [order, orderBy, page, rowsPerPage, rows],
     );
+
+    useEffect(() => {
+        const getSalesList = async () => {
+            try {
+                const data = await getDocs(salesCollectionRef);
+                const filteredData = data.docs.map((doc) => ({
+                    ...doc.data(),
+                    id: doc.id
+                }));
+
+                setSales(filteredData);
+                setRows(filteredData);
+                setLoaded(true);
+            }catch (e) {
+                console.error(e);
+            }
+        };
+        getSalesList().then(r => visibleRows(rows));
+
+
+    }, []);
 
     return (
         <Box sx={{ width: '100%' }}>
-
-                <Paper sx={{ width: '100%', mb: 2 }}>
+            {visibleRows.length > 0 ?
+                (<Paper sx={{ width: '100%', mb: 2 }}>
                     <TableContainer>
+                        <Typography
+                            sx={{ flex: '1 1 100%'}}
+                            paddingTop="10px"
+                            paddingLeft="10px"
+                            variant="h3"
+                            id="tableTitle"
+                        >
+                            Sales:
+                        </Typography>
                         <Table
                             sx={{ minWidth: 750 }}
                             aria-labelledby="tableTitle"
-                            size={dense ? 'small' : 'medium'}
                         >
                             <EnhancedTableHead
-                                numSelected={selected.length}
                                 order={order}
                                 orderBy={orderBy}
                                 onRequestSort={handleRequestSort}
                                 rowCount={salesList.length}
-                            />
+                                numSelected={0}/>
                             <TableBody>
                                 {visibleRows.map((row, index) => {
                                     const labelId = `enhanced-table-checkbox-${index}`;
@@ -275,7 +234,7 @@ export default function EnhancedSalesTable() {
                                     return (
 
                                         <TableRow
-                                            key={salesList.id}
+                                            key={row.id}
                                             onClick={ () => {
                                             navigate("/sales/viewsale", {state: {id: row.id, emp: row.emp}});
                                             setActive(Dashboard);
@@ -285,27 +244,19 @@ export default function EnhancedSalesTable() {
                                                 component="th"
                                                 id={labelId}
                                                 scope="row"
-                                                align="left"
+                                                align="center"
                                             >
                                                 {row.id}
                                             </TableCell>
-                                            <TableCell align="right">{row.stot}</TableCell>
-                                            <TableCell align="right">{row.tip}</TableCell>
+                                            <TableCell align="right">${row.Subtotal?.toFixed(2)}</TableCell>
+                                            <TableCell align="right">${row.Tip?.toFixed(2)}</TableCell>
                                             <TableCell align="right">{row.rc}</TableCell>
-                                            <TableCell align="right">{row.time}</TableCell>
+                                            <TableCell align="right">{row.Time}</TableCell>
 
                                         </TableRow>
                                     );
                                 })}
-                                {emptyRows > 0 && (
-                                    <TableRow
-                                        style={{
-                                            height: (dense ? 33 : 53) * emptyRows,
-                                        }}
-                                    >
-                                        <TableCell colSpan={6} />
-                                    </TableRow>
-                                )}
+
                             </TableBody>
                         </Table>
                     </TableContainer>
@@ -318,8 +269,9 @@ export default function EnhancedSalesTable() {
                         onPageChange={handleChangePage}
                         onRowsPerPageChange={handleChangeRowsPerPage}
                     />
-                </Paper>
-
+                </Paper>):
+                (<h1>hi</h1>)
+            }
         </Box>
     );
 }

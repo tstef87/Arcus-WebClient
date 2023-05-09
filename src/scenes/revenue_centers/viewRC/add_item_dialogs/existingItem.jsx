@@ -32,19 +32,6 @@ import {db} from "../../../../fs/firebaseConfig";
 import {useLocation, useNavigate} from "react-router-dom";
 import {useEffect} from "react";
 
-function createData(id, name, price, type) {
-    return {
-        id,
-        name,
-        price,
-        type
-    };
-}
-
-const rowStarter = [
-    createData('test', 'test5', 9.99, 'test'),
-];
-
 function descendingComparator(a, b, orderBy) {
     if (b[orderBy] < a[orderBy]) {
         return -1;
@@ -180,7 +167,7 @@ export default function ExistingItem() {
 
     const itemCollectionRef = collection(db, "Items");
     const [loaded, setLoaded] = React.useState(false);
-    const [rows, setR] = React.useState(rowStarter);
+    const [rows, setR] = React.useState([]);
 
     const {state} = useLocation();
     const {rc} = state;
