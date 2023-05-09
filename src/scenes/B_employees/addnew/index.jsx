@@ -29,6 +29,11 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogActions from "@mui/material/DialogActions";
 
+
+const handleRefresh = () => {
+    window.location.reload();
+}
+
 //Adding new employee to database
 function addEmployee(fname, lname, email, pword, ramp, phone, status, pin) {
     if(ramp)
@@ -44,7 +49,10 @@ function addEmployee(fname, lname, email, pword, ramp, phone, status, pin) {
             pin: pin,
             totalSales: 0,
             tips: 0.00
-        }).then(() => alert("added"));
+        }).then(() => {
+            alert("added");
+            handleRefresh();
+        });
     else{
         setDoc(doc(db, "Employee", pin), {
             fname: fname,
@@ -57,7 +65,10 @@ function addEmployee(fname, lname, email, pword, ramp, phone, status, pin) {
             pin: pin,
             totalSales: 0,
             tips: 0.00
-        }).then(() => alert("added"));
+        }).then(() => {
+            alert("added");
+            handleRefresh();
+        });
     }
 }
 
@@ -290,8 +301,6 @@ const AddNewEmployee = () => {
                             pin.length >= 4){
 
                             addEmployee(fName, lName, email, password, ramp, phone, status, pin);
-                            navigate("/employees");
-                            setActive(Dashboard);
                         }
                         else{
                             alert("One or more Empty Entries")

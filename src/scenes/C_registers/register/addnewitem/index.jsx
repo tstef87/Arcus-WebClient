@@ -170,7 +170,7 @@ const Addnewitem = () => {
                     </Button>
                     <Button
                         onClick={ () => {
-                            navigate("/C_registers/register", {state: {id: id, rc: rc}});
+                            navigate("/registers/register", {state: {id: id, rc: rc}});
                             setActive(Dashboard);
                         }}
                     >

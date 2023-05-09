@@ -256,9 +256,6 @@ const RegisterInfo = () =>{
                                         </ListItem>
                                         <Divider/>
 
-                                        <Button >
-                                            View Sales
-                                        </Button>
                                     </List>
                                 </nav>
                             </Box>
@@ -288,17 +285,13 @@ const RegisterInfo = () =>{
                                 <Button variant="contained" align="center"
                                         onClick= { () => {
                                             del(id).then(r => alert("Deleted"))
-                                            navigate("/C_registers");
+                                            navigate("/registers");
                                             setActive(Dashboard);
                                         }}
                                 >
                                     Delete
                                 </Button>
 
-                                <Button variant="contained" align="center"
-                                >
-                                    Edit
-                                </Button>
                             </FlexBetween>
 
                         </Box>
@@ -366,16 +359,13 @@ const RegisterInfo = () =>{
                                 </TableBody>
                             </Table>
                         </TableContainer>
-
-
-
                     </TabPanel>
                 </SwipeableViews>
             </Box>
             <Box paddingTop="10px">
                 <Button variant="contained"
                         onClick={() => {
-                            navigate("/C_registers");
+                            navigate("/registers");
                             setActive(Dashboard);
                         }}>
                     Back

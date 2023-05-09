@@ -78,7 +78,7 @@ const Register = () => {
                         {registers.map((register) => (
                             <TableRow
                                 onClick={ () => {
-                                    navigate("/C_registers/register", {state: {
+                                    navigate("/registers/register", {state: {
                                         id: register.id,
                                         rc: register.revenueCenter
                                     }});
