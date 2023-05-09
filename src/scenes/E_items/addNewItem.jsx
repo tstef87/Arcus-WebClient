@@ -15,7 +15,7 @@ import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 
 import {db} from "../../fs/firebaseConfig";
-import Dashboard from "../dashboard";
+import Dashboard from "../A_dashboard";
 
 
 

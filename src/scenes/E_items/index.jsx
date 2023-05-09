@@ -5,7 +5,7 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import TableCell from "@mui/material/TableCell";
 import TableBody from "@mui/material/TableBody";
-import Dashboard from "../dashboard";
+import Dashboard from "../A_dashboard";
 import Box from "@mui/material/Box";
 import {Button} from "@mui/material";
 import * as React from "react";
@@ -13,7 +13,7 @@ import {useEffect, useState} from "react";
 import {useLocation, useNavigate} from "react-router-dom";
 import {collection, getDocs} from "firebase/firestore";
 import {db} from "../../fs/firebaseConfig";
-import Addnewitem from "../registers/register/addnewitem";
+import Addnewitem from "../C_registers/register/addnewitem";
 import AddNewItem from "./addNewItem";
 
 const Items = () => {

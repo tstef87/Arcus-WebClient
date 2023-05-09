@@ -4,24 +4,24 @@ import {themeSettings} from "./theme";
 import { useSelector } from "react-redux";
 import {useMemo} from "react";
 import {BrowserRouter, Navigate, Route, Routes} from "react-router-dom";
-import Dashboard from "scenes/dashboard";
+import Dashboard from "scenes/A_dashboard";
 import Layout from "scenes/layout"
-import Registers from "scenes/registers";
-import AddNew from "./scenes/registers/addnew";
+import Registers from "scenes/C_registers";
+import AddNew from "./scenes/C_registers/addnew";
 import Login from "./scenes/login";
-import AddNewRegister from "./scenes/registers/addnew";
-import AddNewEmployee from "./scenes/employees/addnew";
-import Employees from "./scenes/employees";
-import RegisterInfo from "./scenes/registers/register";
-import Employee from "./scenes/employees/employee";
-import Addnewitem from "./scenes/registers/register/addnewitem";
-import Items from "./scenes/items";
-import Sales from "./scenes/sales";
-import Viewsale from "./scenes/sales/viewsale";
-import ViewSale from "./scenes/sales/viewsale";
-import RevenueCenter from "./scenes/revenue_centers";
-import ViewRC from "./scenes/revenue_centers/viewRC";
-import ViewRCNew from "./scenes/revenue_centers/viewRC/add_item_dialogs/itemTab";
+import AddNewRegister from "./scenes/C_registers/addnew";
+import AddNewEmployee from "./scenes/B_employees/addnew";
+import Employees from "./scenes/B_employees";
+import RegisterInfo from "./scenes/C_registers/register";
+import Employee from "./scenes/B_employees/employee";
+import Addnewitem from "./scenes/C_registers/register/addnewitem";
+import Items from "./scenes/E_items";
+import Sales from "./scenes/F_sales";
+import Viewsale from "./scenes/F_sales/viewsale";
+import ViewSale from "./scenes/F_sales/viewsale";
+import RevenueCenter from "./scenes/D_revenue_centers";
+import ViewRC from "./scenes/D_revenue_centers/viewRC";
+import ViewRCNew from "./scenes/D_revenue_centers/viewRC/add_item_dialogs/itemTab";
 
 
 function App() {

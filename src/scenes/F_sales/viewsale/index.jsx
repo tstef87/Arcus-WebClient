@@ -5,7 +5,7 @@ import {useLocation, useNavigate} from "react-router-dom";
 import {deleteDoc, doc, getDoc} from "firebase/firestore";
 import {db} from "../../../fs/firebaseConfig";
 import FlexBetween from "../../../components/FlexBetween";
-import Dashboard from "../../dashboard";
+import Dashboard from "../../A_dashboard";
 import * as React from "react";
 import {ExpandLess, ExpandMore} from "@mui/icons-material";
 import Dialog from "@mui/material/Dialog";
@@ -279,7 +279,7 @@ const ViewSale = () =>{
                 <nav aria-label="Other info">
                     <List>
                         <ListItemButton onClick={ () => {
-                            navigate("/employees/employee", { state: empl.pin });
+                            navigate("/B_employees/employee", { state: empl.pin });
                             setActive(Dashboard);
                         }}>
                             <ListItemText primary= {empl.fname + " " + empl.lname} secondary="Cashier"/>
@@ -294,7 +294,7 @@ const ViewSale = () =>{
                         <Divider/>
 
                         <ListItemButton onClick={ () => {
-                            navigate("/registers/register", {
+                            navigate("/C_registers/register", {
                                 state: {
                                     id: sales.reg,
                                     rc: sales.rc
@@ -318,7 +318,7 @@ const ViewSale = () =>{
                 <Box>
                     <Button variant="contained"
                             onClick={() => {
-                                navigate("/sales");
+                                navigate("/F_sales");
                                 setActive(Dashboard);
                             }}>
                         Back
@@ -329,7 +329,7 @@ const ViewSale = () =>{
                     <Button  variant="contained"
                              onClick={ () =>{
                                  del(id);
-                                 navigate("/sales");
+                                 navigate("/F_sales");
                                  setActive(Dashboard);
                              }}
                     >

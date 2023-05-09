@@ -16,7 +16,7 @@ import InputLabel from "@mui/material/InputLabel";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import FlexBetween from "../../../../components/FlexBetween";
-import Dashboard from "../../../dashboard";
+import Dashboard from "../../../A_dashboard";
 
 
 function addItem(name, p, t, itemArr, rc, pid) {

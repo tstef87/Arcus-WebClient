@@ -8,7 +8,7 @@ import {
     List, ListItem, ListItemText
 } from "@mui/material";
 import FlexBetween from "../../../components/FlexBetween";
-import Dashboard from "../../dashboard";
+import Dashboard from "../../A_dashboard";
 import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
 import TableHead from "@mui/material/TableHead";
@@ -288,7 +288,7 @@ const RegisterInfo = () =>{
                                 <Button variant="contained" align="center"
                                         onClick= { () => {
                                             del(id).then(r => alert("Deleted"))
-                                            navigate("/registers");
+                                            navigate("/C_registers");
                                             setActive(Dashboard);
                                         }}
                                 >
@@ -375,7 +375,7 @@ const RegisterInfo = () =>{
             <Box paddingTop="10px">
                 <Button variant="contained"
                         onClick={() => {
-                            navigate("/registers");
+                            navigate("/C_registers");
                             setActive(Dashboard);
                         }}>
                     Back

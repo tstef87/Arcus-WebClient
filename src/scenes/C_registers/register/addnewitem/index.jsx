@@ -1,7 +1,7 @@
 import {useLocation, useNavigate} from "react-router-dom";
 import {useEffect, useState} from "react";
 import {Autocomplete, Box, Button, Icon, InputAdornment, TextField} from "@mui/material";
-import Dashboard from "../../../dashboard";
+import Dashboard from "../../../A_dashboard";
 import {addDoc, collection, doc, getDoc, setDoc, updateDoc} from "firebase/firestore";
 import {db} from "../../../../fs/firebaseConfig";
 import FlexBetween from "../../../../components/FlexBetween";
@@ -64,7 +64,7 @@ const Addnewitem = () => {
 
 
     const [registers, setRegisters] = useState([]);
-    const registersCollectionRef = doc(db, "registers", id);
+    const registersCollectionRef = doc(db, "C_registers", id);
 
     useEffect(() => {
         const getItemList = async () => {
@@ -157,7 +157,7 @@ const Addnewitem = () => {
                                 price !== 0.00){
 
                                 addItem(itemName, price, type, rc);
-                                navigate("/registers/register", {state: {id: id, rc: rc}});
+                                navigate("/C_registers/register", {state: {id: id, rc: rc}});
                                 setActive(Dashboard);
 
                             }
@@ -170,7 +170,7 @@ const Addnewitem = () => {
                     </Button>
                     <Button
                         onClick={ () => {
-                            navigate("/registers/register", {state: {id: id, rc: rc}});
+                            navigate("/C_registers/register", {state: {id: id, rc: rc}});
                             setActive(Dashboard);
                         }}
                     >

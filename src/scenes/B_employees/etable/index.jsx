@@ -14,10 +14,11 @@ import Paper from '@mui/material/Paper';
 
 import { visuallyHidden } from '@mui/utils';
 import {collection, getDocs} from "firebase/firestore";
-import {db} from "../../fs/firebaseConfig";
 import {useEffect, useState} from "react";
 import {useLocation, useNavigate} from "react-router-dom";
-import Dashboard from "../dashboard";
+import Dashboard from "../../A_dashboard";
+import {Skeleton} from "@mui/material";
+import {db} from "../../../fs/firebaseConfig";
 
 
 function descendingComparator(a, b, orderBy) {
@@ -55,35 +56,30 @@ function stableSort(array, comparator) {
 const headCells = [
     {
         id: 'id',
-        numeric: false,
+        numeric: true,
         disablePadding: true,
 
-        label: 'Sale ID ',
+        label: 'Employee ID',
     },
     {
-        id: 'Subtotal',
-        numeric: true,
-        disablePadding: false,
-        label: 'Subtotal',
-    },
-    {
-        id: 'Tip',
-        numeric: true,
-        disablePadding: false,
-        label: 'Tip ',
-    },
-    {
-        id: 'rc',
+        id: 'fname',
         numeric: false,
         disablePadding: false,
-        label: 'Revenue Center ',
+        label: 'First Name',
     },
     {
-        id: 'Time',
+        id: 'lname',
         numeric: false,
         disablePadding: false,
-        label: 'Transaction Time ',
+        label: 'Last Name',
     },
+    {
+        id: 'email',
+        numeric: false,
+        disablePadding: false,
+        label: 'Email Address',
+    },
+
 ];
 
 function EnhancedTableHead(props) {
@@ -128,24 +124,19 @@ function EnhancedTableHead(props) {
 EnhancedTableHead.propTypes = {
     numSelected: PropTypes.number.isRequired,
     onRequestSort: PropTypes.func.isRequired,
-    //onSelectAllClick: PropTypes.func.isRequired,
     order: PropTypes.oneOf(['asc', 'desc']).isRequired,
     orderBy: PropTypes.string.isRequired,
     rowCount: PropTypes.number.isRequired,
 };
 
 
-export default function EnhancedSalesTable() {
+export default function EnhancedEmployeeTable() {
     const [order, setOrder] = React.useState('asc');
     const [orderBy, setOrderBy] = React.useState('price');
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
-
-
-    const [salesList, setSales] = React.useState([]);
     const [rows, setRows] = React.useState([]);
-    const salesCollectionRef = collection(db, "Sales");
-
+    const salesCollectionRef = collection(db, "Employee");
     const [active, setActive] = useState("");
     const { pathname } = useLocation();
     const navigate = useNavigate();
@@ -154,14 +145,11 @@ export default function EnhancedSalesTable() {
         setActive(pathname.substring(1));
     }, [pathname]);
 
-    const [loaded, setLoaded] = React.useState(false);
-
     const handleRequestSort = (event, property) => {
         const isAsc = orderBy === property && order === 'asc';
         setOrder(isAsc ? 'desc' : 'asc');
         setOrderBy(property);
     };
-
 
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
@@ -171,7 +159,6 @@ export default function EnhancedSalesTable() {
         setRowsPerPage(parseInt(event.target.value, 10));
         setPage(0);
     };
-
 
     const visibleRows = React.useMemo(
         () =>
@@ -191,9 +178,7 @@ export default function EnhancedSalesTable() {
                     id: doc.id
                 }));
 
-                setSales(filteredData);
                 setRows(filteredData);
-                setLoaded(true);
             }catch (e) {
                 console.error(e);
             }
@@ -209,23 +194,24 @@ export default function EnhancedSalesTable() {
                 (<Paper sx={{ width: '100%', mb: 2 }}>
                     <TableContainer>
                         <Typography
-                            sx={{ flex: '1 1 100%'}}
+                            sx={{ flex: '1 1 100%', m: 1}}
                             paddingTop="10px"
                             paddingLeft="10px"
                             variant="h3"
                             id="tableTitle"
                         >
-                            Sales:
+                            Employees:
                         </Typography>
                         <Table
                             sx={{ minWidth: 750 }}
                             aria-labelledby="tableTitle"
+                            bgcolor={"#252525"}
                         >
                             <EnhancedTableHead
                                 order={order}
                                 orderBy={orderBy}
                                 onRequestSort={handleRequestSort}
-                                rowCount={salesList.length}
+                                rowCount={rows.length}
                                 numSelected={0}/>
                             <TableBody>
                                 {visibleRows.map((row, index) => {
@@ -236,10 +222,10 @@ export default function EnhancedSalesTable() {
                                         <TableRow
                                             key={row.id}
                                             onClick={ () => {
-                                            navigate("/sales/viewsale", {state: {id: row.id, emp: row.emp}});
-                                            setActive(Dashboard);
+                                                navigate("/employees/employee", {state: {id: row.id}});
+                                                setActive(Dashboard);
 
-                                        }}>
+                                            }}>
                                             <TableCell
                                                 component="th"
                                                 id={labelId}
@@ -248,11 +234,9 @@ export default function EnhancedSalesTable() {
                                             >
                                                 {row.id}
                                             </TableCell>
-                                            <TableCell align="right">${row.Subtotal?.toFixed(2)}</TableCell>
-                                            <TableCell align="right">${row.Tip?.toFixed(2)}</TableCell>
-                                            <TableCell align="right">{row.rc}</TableCell>
-                                            <TableCell align="right">{row.Time}</TableCell>
-
+                                            <TableCell align="right">{row.fname}</TableCell>
+                                            <TableCell align="right">{row.lname}</TableCell>
+                                            <TableCell align="right">{row.email}</TableCell>
                                         </TableRow>
                                     );
                                 })}
@@ -263,14 +247,18 @@ export default function EnhancedSalesTable() {
                     <TablePagination
                         rowsPerPageOptions={[5, 10, 25]}
                         component="div"
-                        count={salesList.length}
+                        count={rows.length}
                         rowsPerPage={rowsPerPage}
                         page={page}
                         onPageChange={handleChangePage}
                         onRowsPerPageChange={handleChangeRowsPerPage}
                     />
                 </Paper>):
-                (<h1>hi</h1>)
+                (
+                    <Box width={"100"} >
+                        <Skeleton variant="rectangular"  height={500} />
+                    </Box>
+                )
             }
         </Box>
     );

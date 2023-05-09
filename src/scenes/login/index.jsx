@@ -9,15 +9,21 @@ import {
     IconButton,
     InputAdornment,
     InputLabel,
-    OutlinedInput,
+    OutlinedInput, Snackbar,
     TextField,
     useTheme
 } from "@mui/material";
 import {useLocation, useNavigate} from "react-router-dom";
-import Dashboard from "../dashboard";
+import Dashboard from "../A_dashboard";
 import {Visibility, VisibilityOff} from "@mui/icons-material";
 import {collection, getDocs, query, where} from "firebase/firestore";
 import {db} from "../../fs/firebaseConfig";
+import {Stack} from "@mui/system";
+import MuiAlert from '@mui/material/Alert';
+import SimpleBackdrop from "./backdrop";
+
+
+
 
 
 const Login = () => {
@@ -47,6 +53,7 @@ const Login = () => {
     const [password, setPassword] = useState('');
 
     const [valid, setValid] = useState(false);
+    const [open, setOpen] = React.useState(false);
 
     const handleChangeEmail = (event) => {
         setEmail(event.target.value);
@@ -65,14 +72,29 @@ const Login = () => {
         const querySnapshot = await getDocs(q);
 
         let g =0;
-
         querySnapshot.forEach(() =>{
             g++;
-            navigate("/dashboard");
         });
 
+        if (g>0){
+            setValid(true);
+            setOpen(false);
+        }
+        else{
+            setValid(false);
+            setOpen(true);
+
+        }
 
     }
+
+    const handleClose = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+
+        setOpen(false);
+    };
 
 
     return (
@@ -139,16 +161,25 @@ const Login = () => {
                 <Button variant="elevated"
 
                         onClick={ () => {
-                            check(email, password).then(r => {
-                                if (valid) {
-                                    navigate("/dashboard");
-                                }
-                            });
+                            check(email, password).then(r => console.log("checking"));
+                            if(valid){
+                                navigate("/A_dashboard");
+                            }
                         }}>
                     Login
                 </Button>
 
             </Box>
+            {open?
+                (<Stack spacing={2} sx={{ width: '100%' }}>
+                    <Snackbar open={true} autoHideDuration={6000} onClose={handleClose}>
+                        <Alert severity="error" sx={{ width: '100%' }}>
+                            Invalid Login Credentials!
+                        </Alert>
+                    </Snackbar>
+                </Stack>):
+                (<a></a>)
+            }
         </Box>
     )
 }

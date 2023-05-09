@@ -14,7 +14,7 @@ import {
     useTheme
 } from "@mui/material";
 import {useLocation, useNavigate} from "react-router-dom";
-import Dashboard from "../scenes/dashboard";
+import Dashboard from "../scenes/A_dashboard";
 import Login from "../scenes/login";
 
 const Navbar = ({

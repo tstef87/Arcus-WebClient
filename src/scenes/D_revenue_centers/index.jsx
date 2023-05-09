@@ -1,24 +1,20 @@
-import * as React from 'react';
-import PropTypes from 'prop-types';
-import { alpha } from '@mui/material/styles';
-import Box from '@mui/material/Box';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
-import {Button, Typography, useTheme} from "@mui/material";
 import {useLocation, useNavigate} from "react-router-dom";
-import {useEffect, useState} from "react";
 import {collection, getDocs} from "firebase/firestore";
 import {db} from "../../fs/firebaseConfig";
-import Dashboard from "../dashboard";
+import Box from "@mui/material/Box";
+import TableContainer from "@mui/material/TableContainer";
+import Paper from "@mui/material/Paper";
+import {Button, Typography} from "@mui/material";
+import Table from "@mui/material/Table";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
+import TableCell from "@mui/material/TableCell";
+import TableBody from "@mui/material/TableBody";
+import Dashboard from "../A_dashboard";
+import {useEffect, useState} from "react";
 
 
-const Employees = () => {
-
+const RevenueCenter = () => {
     const [active, setActive] = useState("");
     const { pathname } = useLocation();
     const navigate = useNavigate();
@@ -27,26 +23,25 @@ const Employees = () => {
         setActive(pathname.substring(1));
     }, [pathname]);
 
-    const [users, setUsers] = useState([]);
-    const userCollectionRef = collection(db, "Employee")
+    const [rc, setRC] = useState([]);
+    const rcCollectionRef = collection(db, "RevenueCenter")
     useEffect(() => {
-        const getUserList = async () => {
+        const getRCList = async () => {
             try {
-                const data = await getDocs(userCollectionRef);
+                const data = await getDocs(rcCollectionRef);
                 const filteredData = data.docs.map((doc) => ({
                     ...doc.data(),
                     id: doc.id
                 }));
-                setUsers(filteredData);
+
+                setRC(filteredData);
                 console.log(filteredData);
             }catch (e) {
                 console.error(e);
             }
         };
-        getUserList().then(r => console.log("done"));
+        getRCList().then(r => console.log("done"));
     }, []);
-
-
 
 
     return (
@@ -59,50 +54,48 @@ const Employees = () => {
                     variant="h3"
                     id="tableTitle"
                 >
-                    Employees
+                    Revenue Centers:
                 </Typography>
-                <Table sx={{ minWidth: 650 }} aria-label="simple table">
-
+                <Table sx={{ minWidth: 650 }} aria-label="simple table" bgcolor="#252525">
                     <TableHead>
-                        <TableRow >
+                        <TableRow>
                             <TableCell>ID</TableCell>
-                            <TableCell align="right">First Name</TableCell>
-                            <TableCell align="right">Last Name</TableCell>
-                            <TableCell align="right">Email</TableCell>
+                            <TableCell>IddD</TableCell>
+
+
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {users.map((user) => (
+                        {rc.map((revcen) => (
                             <TableRow
                                 onClick={ () => {
-                                    navigate("/employees/employee", { state: user.id });
+                                    navigate("/revenuecenters/revenuecenter", {state: {
+                                            rc: revcen.id,
+                                        }});
                                     setActive(Dashboard);
                                 }}
-                                key={user.id}
+                                key={revcen.id}
                                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                             >
-                                <TableCell component="th" scope="row">{user.id}</TableCell>
-                                <TableCell align="right">{user.fname}</TableCell>
-                                <TableCell align="right">{user.lname}</TableCell>
-                                <TableCell align="right">{user.email}</TableCell>
+                                <TableCell component="th" scope="row">{revcen.id}</TableCell>
+                                <TableCell align="right">{revcen.id}</TableCell>
+
+
                             </TableRow>
                         ))}
                     </TableBody>
                 </Table>
             </TableContainer>
-
             <Box paddingY="20px">
                 <Button variant="contained"
                         onClick={() => {
-                            navigate("/newemployee");
+                            navigate("/addnewregister");
                             setActive(Dashboard);
 
                         }}>
                     Add New</Button>
             </Box>
-
         </Box>
     );
 }
-
-export default Employees;
+export default RevenueCenter;

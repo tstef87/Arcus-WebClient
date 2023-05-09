@@ -15,7 +15,7 @@ import {useLocation, useNavigate} from "react-router-dom";
 import {useEffect, useState} from "react";
 import {collection,getDocs} from "firebase/firestore";
 import {db} from "../../fs/firebaseConfig";
-import Dashboard from "../dashboard";
+import Dashboard from "../A_dashboard";
 import state from "../../state";
 import AddNewRegister from "./addnew";
 
@@ -78,7 +78,7 @@ const Register = () => {
                         {registers.map((register) => (
                             <TableRow
                                 onClick={ () => {
-                                    navigate("/registers/register", {state: {
+                                    navigate("/C_registers/register", {state: {
                                         id: register.id,
                                         rc: register.revenueCenter
                                     }});

@@ -4,7 +4,7 @@ import {Button, Divider, List, ListItem, ListItemButton, ListItemIcon, ListItemT
 import {deleteDoc, doc, getDoc} from "firebase/firestore";
 import {db} from "../../../fs/firebaseConfig";
 import {useEffect, useState} from "react";
-import Dashboard from "../../dashboard";
+import Dashboard from "../../A_dashboard";
 import * as React from "react";
 import FlexBetween from "../../../components/FlexBetween";
 
@@ -13,13 +13,6 @@ async function del(id) {
 }
 
 
-function InboxIcon() {
-    return null;
-}
-
-function DraftsIcon() {
-    return null;
-}
 
 const Employee = () =>{
 

@@ -12,7 +12,7 @@ import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import {Button, Divider, Icon, InputAdornment, List, ListItem, ListItemText, TextField} from "@mui/material";
 import FlexBetween from "../../../components/FlexBetween";
-import Dashboard from "../../dashboard";
+import Dashboard from "../../A_dashboard";
 import TableContainer from "@mui/material/TableContainer";
 import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";

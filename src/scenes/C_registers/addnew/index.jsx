@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react'
 import {Box, Button, CircularProgress, Icon, InputAdornment, TextField} from "@mui/material";
 import MailOutlineIcon from "@mui/icons-material/MailOutline";
-import Dashboard from "../../dashboard";
+import Dashboard from "../../A_dashboard";
 import {collection, doc, getDoc, setDoc} from "firebase/firestore";
 import {db} from "../../../fs/firebaseConfig";
 import {useLocation, useNavigate} from "react-router-dom";
