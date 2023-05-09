@@ -17,7 +17,7 @@ async function del(id) {
 const Employee = () =>{
 
     const {state} = useLocation();
-    const id = state; // Read values passed on state
+    const {id} = state; // Read values passed on state
 
     const [emp, setEmp] = useState([]);
 

@@ -18,6 +18,7 @@ import {db} from "../../fs/firebaseConfig";
 import Dashboard from "../A_dashboard";
 import state from "../../state";
 import AddNewRegister from "./addnew";
+import EnhancedRegisterTable from "./etable";
 
 
 const Register = () => {
@@ -53,51 +54,7 @@ const Register = () => {
 
     return (
         <Box paddingY="40px" paddingX="70px">
-            <TableContainer component={Paper}>
-                <Typography
-                    sx={{ flex: '1 1 100%'}}
-                    paddingTop="10px"
-                    paddingLeft="10px"
-                    variant="h3"
-                    id="tableTitle"
-                >
-                    Registers
-                </Typography>
-                <Table sx={{ minWidth: 650 }} aria-label="simple table" bgcolor="#252525">
-                    <TableHead>
-                        <TableRow>
-                            <TableCell>ID</TableCell>
-                            <TableCell align="right">Stand Name</TableCell>
-                            <TableCell align="right">Stand Number</TableCell>
-                            <TableCell align="right">Register Number</TableCell>
-                            <TableCell align="right">RevenueCenter</TableCell>
-
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {registers.map((register) => (
-                            <TableRow
-                                onClick={ () => {
-                                    navigate("/registers/register", {state: {
-                                        id: register.id,
-                                        rc: register.revenueCenter
-                                    }});
-                                    setActive(Dashboard);
-                                }}
-                                key={register.id}
-                                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                            >
-                                <TableCell component="th" scope="row">{register.id}</TableCell>
-                                <TableCell align="right">{register.name}</TableCell>
-                                <TableCell align="right">{register.number}</TableCell>
-                                <TableCell align="right">{register.registerNumber}</TableCell>
-                                <TableCell align="right">{register.revenueCenter}</TableCell>
-
-                            </TableRow>
-                        ))}
-                    </TableBody>
-                </Table>
-            </TableContainer>
+            <EnhancedRegisterTable />
             <Box paddingY="20px">
                 <AddNewRegister />
             </Box>
