@@ -266,7 +266,7 @@ export default function ExistingItem() {
                 page * rowsPerPage,
                 page * rowsPerPage + rowsPerPage,
             ),
-        [order, orderBy, page, rowsPerPage],
+        [order, orderBy, page, rowsPerPage, rows],
     );
 
     const [open, setOpen] = React.useState(false);
@@ -277,6 +277,41 @@ export default function ExistingItem() {
     const handleClose = () => {
         setOpen(false);
     };
+
+
+    useEffect( () => {
+        const getCurentItems = async () => {
+            try {
+                const data = await getDoc(doc(db, "RevenueCenter", rc));
+                const itemArrTemp = data.get("items");
+                setCurentItem(itemArrTemp);
+            }
+            catch (e){
+                console.error(e);
+            }
+        };
+        getCurentItems()
+    })
+
+    useEffect(() => {
+        const getItemList = async () => {
+            try {
+                const data = await getDocs(itemCollectionRef);
+                const filteredData = data.docs.map((doc) => ({
+                    ...doc.data(),
+                    id: doc.id
+                }));
+
+                setItem(filteredData);
+                setR(filteredData);
+            }catch (e) {
+                console.error(e);
+            }
+        };
+        getItemList().then(r => {
+            setLoaded(true);
+        });
+    }, []);
 
 
 

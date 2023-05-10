@@ -149,7 +149,6 @@ function ScrollDialog() {
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleClose}>Cancel</Button>
-                    <Button onClick={handleClose}>Refund</Button>
                 </DialogActions>
             </Dialog>
         </Box>
@@ -232,19 +231,19 @@ const ViewSale = () =>{
                 <nav aria-label="sale info">
                     <List>
                         <ListItem>
-                            <ListItemText primary={sales.Subtotal} secondary="Subtotal"/>
+                            <ListItemText primary={"$" + sales.Subtotal?.toFixed(2)} secondary="Subtotal"/>
                         </ListItem>
                         <Divider/>
                         <ListItem>
-                            <ListItemText primary={sales.Price} secondary="Total Before Tax and Tip"/>
+                            <ListItemText primary={"$" + sales.Price?.toFixed(2)} secondary="Total Before Tax and Tip"/>
                         </ListItem>
                         <Divider />
                         <ListItem>
-                            <ListItemText primary={sales.Tip} secondary="Tip"/>
+                            <ListItemText primary={"$"+sales.Tip?.toFixed(2)} secondary="Tip"/>
                         </ListItem>
                         <Divider />
                         <ListItem>
-                            <ListItemText primary={sales.Tax} secondary="Tax"/>
+                            <ListItemText primary={"$"+sales.Tax?.toFixed(2)} secondary="Tax"/>
                         </ListItem>
                         <Divider />
 
@@ -318,7 +317,7 @@ const ViewSale = () =>{
                 <Box>
                     <Button variant="contained"
                             onClick={() => {
-                                navigate("/F_sales");
+                                navigate("/sales");
                                 setActive(Dashboard);
                             }}>
                         Back
@@ -329,7 +328,7 @@ const ViewSale = () =>{
                     <Button  variant="contained"
                              onClick={ () =>{
                                  del(id);
-                                 navigate("/F_sales");
+                                 navigate("/sales");
                                  setActive(Dashboard);
                              }}
                     >

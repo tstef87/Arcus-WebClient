@@ -13,12 +13,12 @@ import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
 
 import { visuallyHidden } from '@mui/utils';
-import {collection, getDocs} from "firebase/firestore";
-import {db} from "../../fs/firebaseConfig";
+import {collection, doc, getDoc, getDocs, query, where} from "firebase/firestore";
 import {useEffect, useState} from "react";
 import {useLocation, useNavigate} from "react-router-dom";
-import Dashboard from "../A_dashboard";
 import {Skeleton} from "@mui/material";
+import {Dashboard} from "@mui/icons-material";
+import {db} from "../../../fs/firebaseConfig";
 
 
 function descendingComparator(a, b, orderBy) {
@@ -58,33 +58,27 @@ const headCells = [
         id: 'id',
         numeric: false,
         disablePadding: true,
+        label: 'Item ID',
+    },
+    {
+        id: 'name',
+        numeric: false,
+        disablePadding: false,
+        label: 'Item Name',
+    },
+    {
+        id: 'price',
+        numeric: true,
+        disablePadding: false,
+        label: 'Item Price',
+    },
+    {
+        id: 'type',
+        numeric: false,
+        disablePadding: false,
+        label: 'Item Type:',
+    },
 
-        label: 'Sale ID ',
-    },
-    {
-        id: 'Subtotal',
-        numeric: true,
-        disablePadding: false,
-        label: 'Subtotal',
-    },
-    {
-        id: 'Tip',
-        numeric: true,
-        disablePadding: false,
-        label: 'Tip ',
-    },
-    {
-        id: 'rc',
-        numeric: false,
-        disablePadding: false,
-        label: 'Revenue Center ',
-    },
-    {
-        id: 'Time',
-        numeric: false,
-        disablePadding: false,
-        label: 'Transaction Time ',
-    },
 ];
 
 function EnhancedTableHead(props) {
@@ -136,14 +130,13 @@ EnhancedTableHead.propTypes = {
 };
 
 
-export default function EnhancedSalesTable() {
+export default function EnhancedItemsTable() {
     const [order, setOrder] = React.useState('asc');
     const [orderBy, setOrderBy] = React.useState('price');
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
 
-    const [salesList, setSales] = React.useState([]);
     const [rows, setRows] = React.useState([]);
     const salesCollectionRef = collection(db, "Sales");
 
@@ -156,6 +149,7 @@ export default function EnhancedSalesTable() {
     }, [pathname]);
 
     const [loaded, setLoaded] = React.useState(false);
+
 
     const handleRequestSort = (event, property) => {
         const isAsc = orderBy === property && order === 'asc';
@@ -183,26 +177,29 @@ export default function EnhancedSalesTable() {
         [order, orderBy, page, rowsPerPage, rows],
     );
 
+
+    const itemsCollectionRef = collection(db, "Items");
+
+
     useEffect(() => {
-        const getSalesList = async () => {
+        const getItemList = async () => {
             try {
-                const data = await getDocs(salesCollectionRef);
+                const data = await getDocs(itemsCollectionRef);
                 const filteredData = data.docs.map((doc) => ({
                     ...doc.data(),
                     id: doc.id
                 }));
 
-                setSales(filteredData);
                 setRows(filteredData);
-                setLoaded(true);
-            }catch (e) {
+
+            } catch (e) {
                 console.error(e);
             }
         };
-        getSalesList().then(r => visibleRows(rows));
-
-
+        getItemList().then(r => console.log("Got Item List"));
     }, []);
+
+
 
     return (
         <Box sx={{ width: '100%' }}>
@@ -216,17 +213,18 @@ export default function EnhancedSalesTable() {
                             variant="h3"
                             id="tableTitle"
                         >
-                            Sales:
+                            Items:
                         </Typography>
                         <Table
                             sx={{ minWidth: 750 }}
                             aria-labelledby="tableTitle"
+                            bgcolor={"#252525"}
                         >
                             <EnhancedTableHead
                                 order={order}
                                 orderBy={orderBy}
                                 onRequestSort={handleRequestSort}
-                                rowCount={salesList.length}
+                                rowCount={rows.length}
                                 numSelected={0}/>
                             <TableBody>
                                 {visibleRows.map((row, index) => {
@@ -237,10 +235,10 @@ export default function EnhancedSalesTable() {
                                         <TableRow
                                             key={row.id}
                                             onClick={ () => {
-                                            navigate("/sales/viewsale", {state: {id: row.id, emp: row.emp}});
-                                            setActive(Dashboard);
+                                                navigate("sales/viewsale", {state: {id: row.id, emp: row.emp}});
+                                                setActive(Dashboard);
 
-                                        }}>
+                                            }}>
                                             <TableCell
                                                 component="th"
                                                 id={labelId}
@@ -249,11 +247,9 @@ export default function EnhancedSalesTable() {
                                             >
                                                 {row.id}
                                             </TableCell>
-                                            <TableCell align="right">${row.Subtotal?.toFixed(2)}</TableCell>
-                                            <TableCell align="right">${row.Tip?.toFixed(2)}</TableCell>
-                                            <TableCell align="right">{row.rc}</TableCell>
-                                            <TableCell align="right">{row.Time}</TableCell>
-
+                                            <TableCell align="right">{row.name}</TableCell>
+                                            <TableCell align="right">${row.price?.toFixed(2)}</TableCell>
+                                            <TableCell align="right">{row.type}</TableCell>
                                         </TableRow>
                                     );
                                 })}
@@ -264,7 +260,7 @@ export default function EnhancedSalesTable() {
                     <TablePagination
                         rowsPerPageOptions={[5, 10, 25]}
                         component="div"
-                        count={salesList.length}
+                        count={rows.length}
                         rowsPerPage={rowsPerPage}
                         page={page}
                         onPageChange={handleChangePage}

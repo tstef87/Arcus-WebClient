@@ -25,6 +25,9 @@ import SwipeableViews from 'react-swipeable-views';
 import ItemList from "./add_item_dialogs/itemTab";
 import SalesTab from "./add_item_dialogs/salesTab";
 import ExistingItems from "./add_item_dialogs/existingItem";
+import EnhancedRegisterRCTable from "./etable/registers";
+import EnhancedRCSalesTable from "./etable/sales";
+import ItemETable from "./etable/items";
 
 
 function TabPanel(props) {
@@ -82,6 +85,14 @@ const ViewRC = () =>{
     const {state} = useLocation();
     const {rc} = state;
 
+    const [active, setActive] = useState("");
+    const { pathname } = useLocation();
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        setActive(pathname.substring(1));
+    }, [pathname]);
+
     return(
         <Box paddingY="40px" paddingX="70px">
 
@@ -106,27 +117,28 @@ const ViewRC = () =>{
                     onChangeIndex={handleChangeIndex}
                 >
                     <TabPanel value={value} index={0} dir={theme.direction}>
-                       <ExistingItems />
+                        <EnhancedRegisterRCTable />
                     </TabPanel>
 
                     <TabPanel value={value} index={1} dir={theme.direction}>
+                        <ItemETable />
                         <ItemList />
                     </TabPanel>
 
                     <TabPanel value={value} index={2} dir={theme.direction}>
-                        <SalesTab />
+                        <EnhancedRCSalesTable />
                     </TabPanel>
                 </SwipeableViews>
             </Box>
-            {/*<Box paddingTop="10px">*/}
-            {/*    <Button variant="contained"*/}
-            {/*            onClick={() => {*/}
-            {/*                navigate("/revenuecenters");*/}
-            {/*                setActive(Dashboard);*/}
-            {/*            }}>*/}
-            {/*        Back*/}
-            {/*    </Button>*/}
-            {/*</Box>*/}
+            <Box paddingTop="10px">
+                <Button variant="contained"
+                        onClick={() => {
+                            navigate("/revenuecenters");
+                            setActive(Dashboard);
+                        }}>
+                    Back
+                </Button>
+            </Box>
         </Box>
     )
 }

@@ -15,6 +15,7 @@ import {collection, getDocs} from "firebase/firestore";
 import {db} from "../../fs/firebaseConfig";
 import Addnewitem from "../C_registers/register/addnewitem";
 import AddNewItem from "./addNewItem";
+import EnhancedItemsTable from "./etable";
 
 const Items = () => {
 
@@ -53,36 +54,7 @@ const Items = () => {
 
     return (
         <Box paddingY="40px" paddingX="70px">
-
-            <TableContainer component={Paper}>
-                <Table sx={{ minWidth: 650 }} aria-label="simple table">
-                    <TableHead>
-                        <TableRow>
-                            <TableCell>ID</TableCell>
-                            <TableCell align="right">Item Name</TableCell>
-                            <TableCell align="right">Item Price</TableCell>
-                            <TableCell align="right">Item Type</TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        { itemList.map((item) => (
-                            <TableRow
-                                key={item.id}
-                                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                            >
-                                <TableCell component="th" scope="row">{ item.id}</TableCell>
-                                <TableCell align="right">{item.name}</TableCell>
-                                <TableCell align="right">{ formatter.format(parseFloat(item.price))}</TableCell>
-                                <TableCell align="right">{item.type}</TableCell>
-                            </TableRow>
-                        ))}
-                    </TableBody>
-                </Table>
-            </TableContainer>
-            <Box>
-                <AddNewItem />
-            </Box>
-
+            <EnhancedItemsTable />
         </Box>
     );
 }

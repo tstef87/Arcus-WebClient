@@ -27,6 +27,8 @@ import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import * as React from "react";
 import {Diversity1} from "@mui/icons-material";
+import EnhancedRegisterSalesTable from "./etables/sales";
+import EnhancedRegisterItemsTable from "./etables/items";
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -299,67 +301,13 @@ const RegisterInfo = () =>{
 
                     <TabPanel value={value} index={1} dir={theme.direction}>
 
-                        <h1>Register Items:</h1>
-                        <TableContainer component={Paper}>
-                            <Table sx={{ minWidth: 650 }} aria-label="simple table" bgcolor="#252525">
-                                <TableHead>
-                                    <TableRow>
-                                        <TableCell>ID</TableCell>
-                                        <TableCell align="right">Item Name</TableCell>
-                                        <TableCell align="right">Item Price</TableCell>
-                                        <TableCell align="right">Item Type</TableCell>
-                                    </TableRow>
-                                </TableHead>
-                                <TableBody>
-                                    { itemList.map((item) => (
-                                        <TableRow
-                                            key={item.id}
-                                            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                                        >
-                                            <TableCell component="th" scope="row">{ item.id}</TableCell>
-                                            <TableCell align="right">{item.name}</TableCell>
-                                            <TableCell align="right">{"$ "+item.price?.toFixed(2)}</TableCell>
-                                            <TableCell align="right">{item.type}</TableCell>
-                                        </TableRow>
-                                    ))}
-                                </TableBody>
-                            </Table>
-                        </TableContainer>
+                        <EnhancedRegisterItemsTable />
                     </TabPanel>
 
                     <TabPanel value={value} index={2} dir={theme.direction}>
 
                         <Box>
-                            <h1>Sales:</h1>
-                            <TableContainer component={Paper}>
-                                <Table sx={{ minWidth: 650 }} aria-label="simple table" bgcolor="#252525">
-                                    <TableHead>
-                                        <TableRow>
-                                            <TableCell>ID</TableCell>
-                                            <TableCell align="right">Price</TableCell>
-                                            <TableCell align="right">Tax</TableCell>
-                                            <TableCell align="right">gratuity</TableCell>
-                                            <TableCell align="right">Subtotal</TableCell>
-                                            <TableCell align="right">Time of Transaction</TableCell>
-                                        </TableRow>
-                                    </TableHead>
-                                    <TableBody>
-                                        {  sales.map((sale) => (
-                                            <TableRow
-                                                key={sale.id}
-                                                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                                            >
-                                                <TableCell component="th" scope="row">{ sale.id}</TableCell>
-                                                <TableCell align="right">{"$" + sale.Price}</TableCell>
-                                                <TableCell align="right">{"$" + sale.Tax}</TableCell>
-                                                <TableCell align="right">{"$" + sale.Tip}</TableCell>
-                                                <TableCell align="right">{"$" + sale.Subtotal}</TableCell>
-                                                <TableCell align="right">{sale.Time}</TableCell>
-                                            </TableRow>
-                                        ))}
-                                    </TableBody>
-                                </Table>
-                            </TableContainer>
+                            <EnhancedRegisterSalesTable />
                         </Box>
                     </TabPanel>
                 </SwipeableViews>

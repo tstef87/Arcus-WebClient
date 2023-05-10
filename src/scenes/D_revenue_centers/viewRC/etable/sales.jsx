@@ -13,12 +13,12 @@ import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
 
 import { visuallyHidden } from '@mui/utils';
-import {collection, getDocs} from "firebase/firestore";
-import {db} from "../../fs/firebaseConfig";
+import {collection, getDocs, query, where} from "firebase/firestore";
 import {useEffect, useState} from "react";
 import {useLocation, useNavigate} from "react-router-dom";
-import Dashboard from "../A_dashboard";
 import {Skeleton} from "@mui/material";
+import {db} from "../../../../fs/firebaseConfig";
+import {Dashboard} from "@mui/icons-material";
 
 
 function descendingComparator(a, b, orderBy) {
@@ -136,17 +136,12 @@ EnhancedTableHead.propTypes = {
 };
 
 
-export default function EnhancedSalesTable() {
+export default function EnhancedRCSalesTable() {
     const [order, setOrder] = React.useState('asc');
     const [orderBy, setOrderBy] = React.useState('price');
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
-
-
-    const [salesList, setSales] = React.useState([]);
     const [rows, setRows] = React.useState([]);
-    const salesCollectionRef = collection(db, "Sales");
-
     const [active, setActive] = useState("");
     const { pathname } = useLocation();
     const navigate = useNavigate();
@@ -156,6 +151,9 @@ export default function EnhancedSalesTable() {
     }, [pathname]);
 
     const [loaded, setLoaded] = React.useState(false);
+
+    const {state} = useLocation();
+    const {rc} = state;
 
     const handleRequestSort = (event, property) => {
         const isAsc = orderBy === property && order === 'asc';
@@ -183,25 +181,27 @@ export default function EnhancedSalesTable() {
         [order, orderBy, page, rowsPerPage, rows],
     );
 
+
     useEffect(() => {
-        const getSalesList = async () => {
+        const getSales = async () => {
             try {
-                const data = await getDocs(salesCollectionRef);
-                const filteredData = data.docs.map((doc) => ({
+                const salesCollectionRef = collection(db, "Sales");
+                const q = query(salesCollectionRef, where("rc", "==", rc));
+
+                const querySnapshot = await getDocs(q);
+
+                const filteredData = querySnapshot.docs.map((doc) => ({
                     ...doc.data(),
-                    id: doc.id
+                    id: doc.id,
                 }));
 
-                setSales(filteredData);
                 setRows(filteredData);
-                setLoaded(true);
+                console.log(filteredData);
             }catch (e) {
                 console.error(e);
             }
         };
-        getSalesList().then(r => visibleRows(rows));
-
-
+        getSales().then(r => console.log("Got Sales"));
     }, []);
 
     return (
@@ -226,7 +226,7 @@ export default function EnhancedSalesTable() {
                                 order={order}
                                 orderBy={orderBy}
                                 onRequestSort={handleRequestSort}
-                                rowCount={salesList.length}
+                                rowCount={rows.length}
                                 numSelected={0}/>
                             <TableBody>
                                 {visibleRows.map((row, index) => {
@@ -237,10 +237,9 @@ export default function EnhancedSalesTable() {
                                         <TableRow
                                             key={row.id}
                                             onClick={ () => {
-                                            navigate("/sales/viewsale", {state: {id: row.id, emp: row.emp}});
-                                            setActive(Dashboard);
+                                                navigate("/sales/viewsale", {state: {id: row.id, emp: row.emp}});
 
-                                        }}>
+                                            }}>
                                             <TableCell
                                                 component="th"
                                                 id={labelId}
@@ -264,7 +263,7 @@ export default function EnhancedSalesTable() {
                     <TablePagination
                         rowsPerPageOptions={[5, 10, 25]}
                         component="div"
-                        count={salesList.length}
+                        count={rows.length}
                         rowsPerPage={rowsPerPage}
                         page={page}
                         onPageChange={handleChangePage}
