@@ -233,12 +233,7 @@ export default function EnhancedItemsTable() {
                                     return (
 
                                         <TableRow
-                                            key={row.id}
-                                            onClick={ () => {
-                                                navigate("sales/viewsale", {state: {id: row.id, emp: row.emp}});
-                                                setActive(Dashboard);
-
-                                            }}>
+                                            key={row.id}>
                                             <TableCell
                                                 component="th"
                                                 id={labelId}

@@ -151,6 +151,11 @@ async function updateArr(originalArray, itemsToRemove, rc) {
         items: [...newArray]
     });
 
+    const handleRefresh = () => {
+        window.location.reload();
+    }
+    handleRefresh();
+
 }
 
 
@@ -306,7 +311,7 @@ export default function ItemETable() {
                         )}
 
                         {selected.length > 0 ? (
-                            <Tooltip title="Add Items">
+                            <Tooltip title="Remove Items">
                                 <IconButton onClick={ () =>{
                                     updateArr(rows, selected, rc).then(r => console.log("done"));
                                 }}>

@@ -163,7 +163,7 @@ const Login = () => {
                         onClick={ () => {
                             check(email, password).then(r => console.log("checking"));
                             if(valid){
-                                navigate("/A_dashboard");
+                                navigate("/dashboard");
                             }
                         }}>
                     Login

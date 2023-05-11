@@ -225,10 +225,7 @@ const RegisterInfo = () =>{
                                         <ListItem>
                                             <ListItemText secondary="Revenue Center" primary={rc} />
                                         </ListItem>
-                                        <Divider/>
-                                        <ListItem>
-                                            <ListItemText primary={registers.number} secondary="Stand Number"/>
-                                        </ListItem>
+
                                         <Divider/>
                                         <ListItem>
                                             <ListItemText primary={registers.registerNumber} secondary="Register Number"/>

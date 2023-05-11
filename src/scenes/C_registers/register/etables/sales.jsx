@@ -274,7 +274,7 @@ export default function EnhancedRegisterSalesTable() {
                 </Paper>):
                 (
                     <Box width={"100"} >
-                        <Skeleton variant="rectangular"  height={500} />
+                        <h1>No Sales yet!</h1>
                     </Box>
                 )
             }

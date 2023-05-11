@@ -27,11 +27,7 @@ async function addRegister(name,  pword, rnum, rc) {
 
 
         if(docSnap.exists()){
-            const ph = docRef.get("registers");
 
-            await updateDoc(docRef, {
-                registers: ph+1
-            })
 
             setDoc(doc(db, "Registers", pid.toLowerCase()), {
                 name: name,

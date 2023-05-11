@@ -20,7 +20,7 @@ const Dashboard = () => {
                 const data = await getDocs(rcCollectionRef);
                 const filteredData = data.docs.map((doc) => ({
                     rcName: doc.id,
-                    revenue: doc.get("revenue"),
+                    revenue: doc.get("revenue")?.toFixed(2),
                     sales: doc.get("sales")
                 }));
 
@@ -115,6 +115,9 @@ const Dashboard = () => {
                         <YAxis yAxisId="left" orientation="left" stroke="#8884d8" />
                         <YAxis yAxisId="right" orientation="right" stroke="#82ca9d" />
                         <Tooltip />
+
+
+
                         <Bar yAxisId="left" dataKey="revenue" fill="#8884d8" />
                         <Bar yAxisId="right" dataKey="sales" fill="#82ca9d" />
                     </BarChart>

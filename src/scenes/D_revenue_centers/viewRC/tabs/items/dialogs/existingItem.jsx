@@ -16,21 +16,17 @@ import Paper from '@mui/material/Paper';
 import Checkbox from '@mui/material/Checkbox';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Switch from '@mui/material/Switch';
 import DeleteIcon from '@mui/icons-material/Delete';
-import FilterListIcon from '@mui/icons-material/FilterList';
 import { visuallyHidden } from '@mui/utils';
 import {Button} from "@mui/material";
 import Dialog from "@mui/material/Dialog";
-import DialogContentText from "@mui/material/DialogContentText";
-import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import {collection, doc, getDoc, getDocs, query, setDoc, updateDoc, where} from "firebase/firestore";
 import {db} from "../../../../../../fs/firebaseConfig";
 import {useLocation, useNavigate} from "react-router-dom";
 import {useEffect} from "react";
+import AddIcon from '@mui/icons-material/Add';
 
 function descendingComparator(a, b, orderBy) {
     if (b[orderBy] < a[orderBy]) {
@@ -151,7 +147,6 @@ async function updateArr(itemArr, newItems, rc){
     const handleRefresh = () => {
         window.location.reload();
     }
-    handleRefresh();
 
     updateDoc(doc(db, "RevenueCenter", rc), {
         items: [...itemArr, ...newItems]
@@ -387,7 +382,7 @@ export default function ExistingItem() {
                                             <IconButton onClick={ () =>{
                                                 updateArr(currentItemList, selected, rc).then(r => console.log("Added"));
                                             }}>
-                                                <DeleteIcon />
+                                                <AddIcon />
                                             </IconButton>
                                         </Tooltip>
                                     ) : (
