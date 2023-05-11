@@ -16,29 +16,13 @@ import Paper from '@mui/material/Paper';
 import Checkbox from '@mui/material/Checkbox';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Switch from '@mui/material/Switch';
 import DeleteIcon from '@mui/icons-material/Delete';
-import FilterListIcon from '@mui/icons-material/FilterList';
 import { visuallyHidden } from '@mui/utils';
-import {Button, Icon, InputAdornment, TextField} from "@mui/material";
-import Dialog from "@mui/material/Dialog";
-import DialogContentText from "@mui/material/DialogContentText";
-import DialogActions from "@mui/material/DialogActions";
-import DialogContent from "@mui/material/DialogContent";
-import DialogTitle from "@mui/material/DialogTitle";
 import {collection, doc, getDoc, getDocs, query, setDoc, updateDoc, where} from "firebase/firestore";
-import {db} from "../../../../fs/firebaseConfig";
-import {useLocation, useNavigate} from "react-router-dom";
+import {db} from "../../../../../fs/firebaseConfig";
+import {useLocation} from "react-router-dom";
 import {useEffect, useState} from "react";
-import FlexBetween from "../../../../components/FlexBetween";
-import MailOutlineIcon from "@mui/icons-material/MailOutline";
-import FormControl from "@mui/material/FormControl";
-import InputLabel from "@mui/material/InputLabel";
-import Select from "@mui/material/Select";
-import MenuItem from "@mui/material/MenuItem";
-import Dashboard from "../../../A_dashboard";
-import ExistingItems from "../add_item_dialogs/existingItem";
+
 
 function descendingComparator(a, b, orderBy) {
     if (b[orderBy] < a[orderBy]) {
@@ -93,7 +77,7 @@ const headCells = [
     },
     {
         id: 'type',
-        numeric: true,
+        numeric: false,
         disablePadding: false,
         label: 'Item Type',
     }
@@ -123,7 +107,7 @@ function EnhancedTableHead(props) {
                 {headCells.map((headCell) => (
                     <TableCell
                         key={headCell.id}
-                        align={headCell.numeric ? 'right' : 'left'}
+                        align={headCell.id === "id" ?  'left': 'right'}
                         padding={headCell.disablePadding ? 'none' : 'normal'}
                         sortDirection={orderBy === headCell.id ? order : false}
                     >
@@ -155,11 +139,18 @@ EnhancedTableHead.propTypes = {
     rowCount: PropTypes.number.isRequired,
 };
 
-async function updateArr(itemArr, newItems, rc){
+async function updateArr(originalArray, itemsToRemove, rc) {
+    const keep = originalArray.map((i) => (
+        i.id
+    ));
 
+    const newArray = keep.filter(item => !itemsToRemove.includes(item));
+    console.log(itemsToRemove);
+    console.log(newArray);
     await updateDoc(doc(db, "RevenueCenter", rc), {
-        items: [...itemArr, ...newItems]
+        items: [...newArray]
     });
+
 }
 
 
@@ -170,16 +161,9 @@ export default function ItemETable() {
     const [page, setPage] = React.useState(0);
     const [dense, setDense] = React.useState(false);
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
-    const [itemList, setItem] = React.useState([]);
-    const [currentItemList, setCurentItem] = React.useState([]);
-
-    const itemCollectionRef = collection(db, "Items");
-    const [loaded, setLoaded] = React.useState(false);
     const [rows, setR] = React.useState([]);
-
     const {state} = useLocation();
-    const {rc} = state;
-
+    const {rc, name} = state;
 
     const itemsCollectionRef = doc(db, "RevenueCenter", rc);
     const itemListRef = collection(db, "Items");
@@ -232,7 +216,7 @@ export default function ItemETable() {
 
     const handleSelectAllClick = (event) => {
         if (event.target.checked) {
-            const newSelected = rows.map((n) => n.name);
+            const newSelected = rows.map((n) => n.id);
             setSelected(newSelected);
             return;
         }
@@ -311,19 +295,20 @@ export default function ItemETable() {
                             </Typography>
                         ) : (
                             <Typography
-                                sx={{ flex: '1 1 100%' }}
-                                variant="h6"
+                                sx={{ flex: '1 1 100%', m: 1}}
+                                paddingTop="10px"
+                                paddingLeft="10px"
+                                variant="h3"
                                 id="tableTitle"
-                                component="div"
                             >
-                                Items
+                                Items:
                             </Typography>
                         )}
 
                         {selected.length > 0 ? (
                             <Tooltip title="Add Items">
                                 <IconButton onClick={ () =>{
-                                    console.log("TODO");
+                                    updateArr(rows, selected, rc).then(r => console.log("done"));
                                 }}>
                                     <DeleteIcon />
                                 </IconButton>
@@ -338,6 +323,7 @@ export default function ItemETable() {
                             sx={{ minWidth: 750 }}
                             aria-labelledby="tableTitle"
                             size={dense ? 'small' : 'medium'}
+                            bgcolor={"#252525"}
                         >
                             <EnhancedTableHead
                                 numSelected={selected.length}
@@ -382,7 +368,7 @@ export default function ItemETable() {
                                                 {row.id}
                                             </TableCell>
                                             <TableCell align="right">{row.name}</TableCell>
-                                            <TableCell align="right">{row.price}</TableCell>
+                                            <TableCell align="right">{"$" + row.price?.toFixed(2)}</TableCell>
                                             <TableCell align="right">{row.type}</TableCell>
                                         </TableRow>
                                     );
@@ -408,7 +394,7 @@ export default function ItemETable() {
                         onPageChange={handleChangePage}
                         onRowsPerPageChange={handleChangeRowsPerPage}
                     />
-                </Paper>): <h1>2</h1>}
+                </Paper>): <h1>No Items In list</h1>}
             </Box>
 
     );

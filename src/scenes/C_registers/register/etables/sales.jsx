@@ -221,6 +221,7 @@ export default function EnhancedRegisterSalesTable() {
                         <Table
                             sx={{ minWidth: 750 }}
                             aria-labelledby="tableTitle"
+                            bgcolor={"#252525"}
                         >
                             <EnhancedTableHead
                                 order={order}

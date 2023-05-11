@@ -90,7 +90,7 @@ const RegisterInfo = () =>{
     }, [pathname]);
 
     const {state} = useLocation();
-    const {id, rc} = state;
+    const {id, rc, name} = state;
 
     const [registers, setRegisters] = useState([]);
     const [itemList, setItemList] = useState([]);
@@ -227,10 +227,6 @@ const RegisterInfo = () =>{
                                         </ListItem>
                                         <Divider/>
                                         <ListItem>
-                                            <ListItemText primary={registers.name} secondary="Stand Name"/>
-                                        </ListItem>
-                                        <Divider/>
-                                        <ListItem>
                                             <ListItemText primary={registers.number} secondary="Stand Number"/>
                                         </ListItem>
                                         <Divider/>
@@ -254,7 +250,7 @@ const RegisterInfo = () =>{
                                         </ListItem>
                                         <Divider/>
                                         <ListItem>
-                                            <ListItemText primary={registers.revenue} secondary="Total Revenue"/>
+                                            <ListItemText primary={"$" + registers.revenue?.toFixed(2)} secondary="Total Revenue"/>
                                         </ListItem>
                                         <Divider/>
 
@@ -287,7 +283,7 @@ const RegisterInfo = () =>{
                                 <Button variant="contained" align="center"
                                         onClick= { () => {
                                             del(id).then(r => alert("Deleted"))
-                                            navigate("/registers");
+                                            navigate("/revenuecenters");
                                             setActive(Dashboard);
                                         }}
                                 >
@@ -315,7 +311,7 @@ const RegisterInfo = () =>{
             <Box paddingTop="10px">
                 <Button variant="contained"
                         onClick={() => {
-                            navigate("/registers");
+                            navigate("/revenuecenters/revenuecenter", {state: {id: id, rc: rc, name: name}});
                             setActive(Dashboard);
                         }}>
                     Back

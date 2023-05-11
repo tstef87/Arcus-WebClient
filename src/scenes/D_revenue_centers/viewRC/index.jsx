@@ -22,12 +22,12 @@ import TableCell from "@mui/material/TableCell";
 import TableBody from "@mui/material/TableBody";
 import SwipeableViews from 'react-swipeable-views';
 
-import ItemList from "./add_item_dialogs/itemTab";
+import ItemList from "./tabs/items/dialogs/itemTab";
 import SalesTab from "./add_item_dialogs/salesTab";
-import ExistingItems from "./add_item_dialogs/existingItem";
-import EnhancedRegisterRCTable from "./etable/registers";
-import EnhancedRCSalesTable from "./etable/sales";
-import ItemETable from "./etable/items";
+import ExistingItems from "./tabs/items/dialogs/existingItem";
+import EnhancedRegisterRCTable from "./tabs/registers/registers";
+import EnhancedRCSalesTable from "./tabs/sales";
+import ItemETable from "./tabs/items/items";
 
 
 function TabPanel(props) {
@@ -83,7 +83,7 @@ const ViewRC = () =>{
 
 
     const {state} = useLocation();
-    const {rc} = state;
+    const {rc, name} = state;
 
     const [active, setActive] = useState("");
     const { pathname } = useLocation();
@@ -95,7 +95,8 @@ const ViewRC = () =>{
 
     return(
         <Box paddingY="40px" paddingX="70px">
-
+            <h1>Revenue Center: {name}</h1>
+            <h3>{rc}</h3>
             <Box sx={{ bgcolor: '#383838'}}>
                 <AppBar position="static">
                     <Tabs
@@ -106,9 +107,9 @@ const ViewRC = () =>{
                         variant="fullWidth"
                         aria-label="full width tabs example"
                     >
-                        <Tab label="Register Info" {...a11yProps(0)} />
-                        <Tab label="Register Items" {...a11yProps(1)} />
-                        <Tab label="Register Sales" {...a11yProps(2)} />
+                        <Tab label="Registers" {...a11yProps(0)} />
+                        <Tab label="Items" {...a11yProps(1)} />
+                        <Tab label="Sales" {...a11yProps(2)} />
                     </Tabs>
                 </AppBar>
                 <SwipeableViews

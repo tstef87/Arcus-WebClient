@@ -13,7 +13,6 @@ import {useEffect, useState} from "react";
 import {useLocation, useNavigate} from "react-router-dom";
 import {collection, getDocs} from "firebase/firestore";
 import {db} from "../../fs/firebaseConfig";
-import Addnewitem from "../C_registers/register/addnewitem";
 import AddNewItem from "./addNewItem";
 import EnhancedItemsTable from "./etable";
 

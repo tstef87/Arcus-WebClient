@@ -17,8 +17,9 @@ import {collection, getDocs, query, where} from "firebase/firestore";
 import {useEffect, useState} from "react";
 import {useLocation, useNavigate} from "react-router-dom";
 import {Skeleton} from "@mui/material";
-import {db} from "../../../../fs/firebaseConfig";
-import {Dashboard} from "@mui/icons-material";
+import Dashboard from "../../../../A_dashboard";
+import {db} from "../../../../../fs/firebaseConfig";
+import AddNewRegisterRC from "./addNew";
 
 
 function descendingComparator(a, b, orderBy) {
@@ -58,33 +59,28 @@ const headCells = [
         id: 'id',
         numeric: false,
         disablePadding: true,
+        label: 'Register ID',
+    },
 
-        label: 'Sale ID ',
-    },
     {
-        id: 'Subtotal',
+        id: 'registerNumber',
         numeric: true,
         disablePadding: false,
-        label: 'Subtotal',
+        label: 'Register Number',
     },
     {
-        id: 'Tip',
+        id: 'salesTotal',
         numeric: true,
         disablePadding: false,
-        label: 'Tip ',
+        label: 'Total Sales',
     },
     {
-        id: 'rc',
-        numeric: false,
+        id: 'revenue',
+        numeric: true,
         disablePadding: false,
-        label: 'Revenue Center ',
+        label: 'Total Revenue',
     },
-    {
-        id: 'Time',
-        numeric: false,
-        disablePadding: false,
-        label: 'Transaction Time ',
-    },
+
 ];
 
 function EnhancedTableHead(props) {
@@ -129,38 +125,35 @@ function EnhancedTableHead(props) {
 EnhancedTableHead.propTypes = {
     numSelected: PropTypes.number.isRequired,
     onRequestSort: PropTypes.func.isRequired,
-    //onSelectAllClick: PropTypes.func.isRequired,
     order: PropTypes.oneOf(['asc', 'desc']).isRequired,
     orderBy: PropTypes.string.isRequired,
     rowCount: PropTypes.number.isRequired,
 };
 
 
-export default function EnhancedRCSalesTable() {
+export default function EnhancedRegisterRCTable() {
     const [order, setOrder] = React.useState('asc');
     const [orderBy, setOrderBy] = React.useState('price');
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
     const [rows, setRows] = React.useState([]);
+    const regCollectionRef = collection(db, "Registers");
     const [active, setActive] = useState("");
     const { pathname } = useLocation();
     const navigate = useNavigate();
 
+    const {state} = useLocation();
+    const {rc, name} = state;
+
     useEffect(() => {
         setActive(pathname.substring(1));
     }, [pathname]);
-
-    const [loaded, setLoaded] = React.useState(false);
-
-    const {state} = useLocation();
-    const {rc} = state;
 
     const handleRequestSort = (event, property) => {
         const isAsc = orderBy === property && order === 'asc';
         setOrder(isAsc ? 'desc' : 'asc');
         setOrderBy(property);
     };
-
 
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
@@ -171,7 +164,6 @@ export default function EnhancedRCSalesTable() {
         setPage(0);
     };
 
-
     const visibleRows = React.useMemo(
         () =>
             stableSort(rows, getComparator(order, orderBy)).slice(
@@ -181,12 +173,11 @@ export default function EnhancedRCSalesTable() {
         [order, orderBy, page, rowsPerPage, rows],
     );
 
-
     useEffect(() => {
-        const getSales = async () => {
+        const getRegList = async () => {
             try {
-                const salesCollectionRef = collection(db, "Sales");
-                const q = query(salesCollectionRef, where("rc", "==", rc));
+
+                const q = query(regCollectionRef, where("revenueCenter", "==", rc));
 
                 const querySnapshot = await getDocs(q);
 
@@ -196,12 +187,13 @@ export default function EnhancedRCSalesTable() {
                 }));
 
                 setRows(filteredData);
-                console.log(filteredData);
             }catch (e) {
                 console.error(e);
             }
         };
-        getSales().then(r => console.log("Got Sales"));
+        getRegList().then(r => console.log("t"));
+
+
     }, []);
 
     return (
@@ -210,17 +202,18 @@ export default function EnhancedRCSalesTable() {
                 (<Paper sx={{ width: '100%', mb: 2 }}>
                     <TableContainer>
                         <Typography
-                            sx={{ flex: '1 1 100%'}}
+                            sx={{ flex: '1 1 100%', m: 1}}
                             paddingTop="10px"
                             paddingLeft="10px"
                             variant="h3"
                             id="tableTitle"
-                        >
-                            Sales:
+                            >
+                            Registers:
                         </Typography>
                         <Table
                             sx={{ minWidth: 750 }}
                             aria-labelledby="tableTitle"
+                            bgcolor={"#252525"}
                         >
                             <EnhancedTableHead
                                 order={order}
@@ -237,7 +230,8 @@ export default function EnhancedRCSalesTable() {
                                         <TableRow
                                             key={row.id}
                                             onClick={ () => {
-                                                navigate("/sales/viewsale", {state: {id: row.id, emp: row.emp}});
+                                                navigate("/registers/register", {state: {rc: row.revenueCenter, id: row.id, name: name}});
+                                                setActive(Dashboard);
 
                                             }}>
                                             <TableCell
@@ -248,11 +242,9 @@ export default function EnhancedRCSalesTable() {
                                             >
                                                 {row.id}
                                             </TableCell>
-                                            <TableCell align="right">${row.Subtotal?.toFixed(2)}</TableCell>
-                                            <TableCell align="right">${row.Tip?.toFixed(2)}</TableCell>
-                                            <TableCell align="right">{row.rc}</TableCell>
-                                            <TableCell align="right">{row.Time}</TableCell>
-
+                                            <TableCell align="right">{row.registerNumber}</TableCell>
+                                            <TableCell align="right">{row.salesTotal}</TableCell>
+                                            <TableCell align="right">{"$"+row.revenue?.toFixed(2)}</TableCell>
                                         </TableRow>
                                     );
                                 })}
@@ -276,6 +268,7 @@ export default function EnhancedRCSalesTable() {
                     </Box>
                 )
             }
+            <AddNewRegisterRC />
         </Box>
     );
 }

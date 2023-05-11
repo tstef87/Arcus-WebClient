@@ -1,31 +1,20 @@
 import {collection, deleteDoc, doc, getDoc, getDocs, query, setDoc, updateDoc, where} from "firebase/firestore";
-import {db} from "../../../../fs/firebaseConfig";
+import {db} from "../../../../../../fs/firebaseConfig";
 import {useEffect, useRef, useState} from "react";
 import {useLocation, useNavigate} from "react-router-dom";
-import TableContainer from "@mui/material/TableContainer";
-import Paper from "@mui/material/Paper";
-import Table from "@mui/material/Table";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
-import TableCell from "@mui/material/TableCell";
-import TableBody from "@mui/material/TableBody";
 import * as React from "react";
 import Box from "@mui/material/Box";
 import {Button, Icon, InputAdornment, TextField} from "@mui/material";
 import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
 import MailOutlineIcon from "@mui/icons-material/MailOutline";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
-import Dashboard from "../../../A_dashboard";
-import DialogActions from "@mui/material/DialogActions";
-import SwipeableViews from 'react-swipeable-views';
 import ExistingItems from "./existingItem";
-import FlexBetween from "../../../../components/FlexBetween";
+import FlexBetween from "../../../../../../components/FlexBetween";
 
 
 async function del(id, rc, itemArr) {
@@ -42,6 +31,9 @@ async function addItem(name, p, t, itemArr, rc, pid) {
     const ph = pid;
     const itemColectionref = doc(db, "Items", ph)
 
+    const handleRefresh = () => {
+        window.location.reload();
+    }
 
     setDoc(itemColectionref, {
         idCall: pid,
@@ -50,9 +42,11 @@ async function addItem(name, p, t, itemArr, rc, pid) {
         type: t
     }).then(r => console.log("added"));
 
-    await updateDoc(doc(db, "RevenueCenter", rc), {
+    updateDoc(doc(db, "RevenueCenter", rc), {
         items: [...itemArr, pid]
-    });
+    }).then(r=> {
+        handleRefresh()
+    })
 
 }
 
@@ -166,13 +160,7 @@ export default function AddItems(){
                                     value={itemName}
 
                                     sx={{ m: 1, width: '25ch' }}
-                                    InputProps={{
-                                        endAdornment: <InputAdornment position="end">
-                                            <Icon>
-                                                <MailOutlineIcon />
-                                            </Icon>
-                                        </InputAdornment>,
-                                    }}
+
                                     label="Item Name"
                                 />
                             </Box>
@@ -184,13 +172,7 @@ export default function AddItems(){
                                     value={price}
 
                                     sx={{ m: 1, width: '25ch' }}
-                                    InputProps={{
-                                        endAdornment: <InputAdornment position="end">
-                                            <Icon>
-                                                <MailOutlineIcon />
-                                            </Icon>
-                                        </InputAdornment>,
-                                    }}
+
                                     label="Item Price"
                                 />
                             </Box>
@@ -221,8 +203,7 @@ export default function AddItems(){
                                     itemName !== "" &&
                                     price !== 0.00){
                                     addItem(itemName, price, type, itemArr, rc, itemName.toLowerCase().replace(/\s/g, '')).then(r => console.error("Done"));
-                                    navigate("/revenuecenters");
-                                    setActive(Dashboard);
+
 
 
                                 }

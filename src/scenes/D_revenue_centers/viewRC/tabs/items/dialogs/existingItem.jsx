@@ -27,8 +27,8 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
-import {collection, doc, getDoc, getDocs, setDoc, updateDoc} from "firebase/firestore";
-import {db} from "../../../../fs/firebaseConfig";
+import {collection, doc, getDoc, getDocs, query, setDoc, updateDoc, where} from "firebase/firestore";
+import {db} from "../../../../../../fs/firebaseConfig";
 import {useLocation, useNavigate} from "react-router-dom";
 import {useEffect} from "react";
 
@@ -85,7 +85,7 @@ const headCells = [
     },
     {
         id: 'type',
-        numeric: true,
+        numeric: false,
         disablePadding: false,
         label: 'Item Type',
     }
@@ -115,7 +115,7 @@ function EnhancedTableHead(props) {
                 {headCells.map((headCell) => (
                     <TableCell
                         key={headCell.id}
-                        align={headCell.numeric ? 'right' : 'left'}
+                        align={headCell.id === 'id' ? 'left' : 'right'}
                         padding={headCell.disablePadding ? 'none' : 'normal'}
                         sortDirection={orderBy === headCell.id ? order : false}
                     >
@@ -148,10 +148,18 @@ EnhancedTableHead.propTypes = {
 };
 
 async function updateArr(itemArr, newItems, rc){
+    const handleRefresh = () => {
+        window.location.reload();
+    }
+    handleRefresh();
 
-    await updateDoc(doc(db, "RevenueCenter", rc), {
+    updateDoc(doc(db, "RevenueCenter", rc), {
         items: [...itemArr, ...newItems]
+    }).then(r => {
+        handleRefresh();
     });
+
+
 }
 
 
@@ -216,7 +224,7 @@ export default function ExistingItem() {
 
     const handleSelectAllClick = (event) => {
         if (event.target.checked) {
-            const newSelected = rows.map((n) => n.name);
+            const newSelected = rows.map((n) => n.id);
             setSelected(newSelected);
             return;
         }
@@ -278,39 +286,42 @@ export default function ExistingItem() {
         setOpen(false);
     };
 
-
-    useEffect( () => {
-        const getCurentItems = async () => {
-            try {
-                const data = await getDoc(doc(db, "RevenueCenter", rc));
-                const itemArrTemp = data.get("items");
-                setCurentItem(itemArrTemp);
-            }
-            catch (e){
-                console.error(e);
-            }
-        };
-        getCurentItems()
-    })
+    const itemsCollectionRef = doc(db, "RevenueCenter", rc);
+    const itemListRef = collection(db, "Items");
 
     useEffect(() => {
-        const getItemList = async () => {
+        const getItemListLeft = async () => {
             try {
-                const data = await getDocs(itemCollectionRef);
-                const filteredData = data.docs.map((doc) => ({
-                    ...doc.data(),
-                    id: doc.id
-                }));
+                const docSnap = await getDoc(itemsCollectionRef)
+                const itemArr = docSnap.get("items");
 
-                setItem(filteredData);
-                setR(filteredData);
-            }catch (e) {
+                // Chunk the itemArr into arrays of 10 or less items
+                const chunks = [];
+                for (let i = 0; i < itemArr.length; i += 10) {
+                    chunks.push(itemArr.slice(i, i + 10));
+                }
+
+                // Query each chunk separately and merge the results
+                const promises = chunks.map(async (chunk) => {
+                    const q = query(itemListRef, where('idCall', 'not-in', chunk));
+                    const querySnapshot = await getDocs(q);
+                    return querySnapshot.docs.map((doc) => (
+                        { ... doc.data(),
+                            id: doc.id}
+                    ));
+                });
+
+                const results = await Promise.all(promises);
+                const mergedResults = results.flat();
+
+                setR(mergedResults);
+                console.log(mergedResults);
+
+            } catch (e) {
                 console.error(e);
             }
         };
-        getItemList().then(r => {
-            setLoaded(true);
-        });
+        getItemListLeft().then(r => console.log("Got Left"));
     }, []);
 
 
@@ -433,7 +444,7 @@ export default function ExistingItem() {
                                                             {row.id}
                                                         </TableCell>
                                                         <TableCell align="right">{row.name}</TableCell>
-                                                        <TableCell align="right">{row.price}</TableCell>
+                                                        <TableCell align="right">{"$"+row.price?.toFixed(2)}</TableCell>
                                                         <TableCell align="right">{row.type}</TableCell>
                                                     </TableRow>
                                                 );
@@ -459,7 +470,7 @@ export default function ExistingItem() {
                                     onPageChange={handleChangePage}
                                     onRowsPerPageChange={handleChangeRowsPerPage}
                                 />
-                            </Paper>): <h1>2</h1>
+                            </Paper>): <h1>No Items Created Yet</h1>
                         }
                     </DialogContent>
                 </Dialog>

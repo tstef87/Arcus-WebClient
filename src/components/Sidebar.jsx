@@ -41,13 +41,10 @@ const navItems = [
         text: "Employees",
         icon: <PersonOutlineOutlinedIcon />
     },
-    {
-        text: "Registers",
-        icon: <PointOfSaleOutlined />
-    },
+
     {
         text:"Revenue Centers",
-        icon: <FastfoodOutlinedIcon />
+        icon: <PointOfSaleOutlined />
     },
     {
         text: "Items",

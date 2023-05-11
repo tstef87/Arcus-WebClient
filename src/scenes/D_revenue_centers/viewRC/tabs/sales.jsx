@@ -17,8 +17,8 @@ import {collection, getDocs, query, where} from "firebase/firestore";
 import {useEffect, useState} from "react";
 import {useLocation, useNavigate} from "react-router-dom";
 import {Skeleton} from "@mui/material";
-import Dashboard from "../../../A_dashboard";
 import {db} from "../../../../fs/firebaseConfig";
+import {Dashboard} from "@mui/icons-material";
 
 
 function descendingComparator(a, b, orderBy) {
@@ -56,35 +56,35 @@ function stableSort(array, comparator) {
 const headCells = [
     {
         id: 'id',
-        numeric: true,
+        numeric: false,
         disablePadding: true,
-        label: 'Register ID',
-    },
-    {
-        id: 'name',
-        numeric: false,
-        disablePadding: false,
-        label: 'Stand Name',
-    },
-    {
-        id: 'number',
-        numeric: false,
-        disablePadding: false,
-        label: 'Stand Number',
-    },
-    {
-        id: 'registerNumber',
-        numeric: false,
-        disablePadding: false,
-        label: 'Register Number',
-    },
-    {
-        id: 'revenueCenter',
-        numeric: false,
-        disablePadding: false,
-        label: 'Revenue Center',
-    },
 
+        label: 'Sale ID ',
+    },
+    {
+        id: 'Subtotal',
+        numeric: true,
+        disablePadding: false,
+        label: 'Subtotal',
+    },
+    {
+        id: 'Tip',
+        numeric: true,
+        disablePadding: false,
+        label: 'Tip ',
+    },
+    {
+        id: 'rc',
+        numeric: false,
+        disablePadding: false,
+        label: 'Revenue Center ',
+    },
+    {
+        id: 'Time',
+        numeric: false,
+        disablePadding: false,
+        label: 'Transaction Time ',
+    },
 ];
 
 function EnhancedTableHead(props) {
@@ -129,35 +129,38 @@ function EnhancedTableHead(props) {
 EnhancedTableHead.propTypes = {
     numSelected: PropTypes.number.isRequired,
     onRequestSort: PropTypes.func.isRequired,
+    //onSelectAllClick: PropTypes.func.isRequired,
     order: PropTypes.oneOf(['asc', 'desc']).isRequired,
     orderBy: PropTypes.string.isRequired,
     rowCount: PropTypes.number.isRequired,
 };
 
 
-export default function EnhancedRegisterRCTable() {
+export default function EnhancedRCSalesTable() {
     const [order, setOrder] = React.useState('asc');
     const [orderBy, setOrderBy] = React.useState('price');
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
     const [rows, setRows] = React.useState([]);
-    const regCollectionRef = collection(db, "Registers");
     const [active, setActive] = useState("");
     const { pathname } = useLocation();
     const navigate = useNavigate();
 
-    const {state} = useLocation();
-    const {rc} = state;
-
     useEffect(() => {
         setActive(pathname.substring(1));
     }, [pathname]);
+
+    const [loaded, setLoaded] = React.useState(false);
+
+    const {state} = useLocation();
+    const {rc} = state;
 
     const handleRequestSort = (event, property) => {
         const isAsc = orderBy === property && order === 'asc';
         setOrder(isAsc ? 'desc' : 'asc');
         setOrderBy(property);
     };
+
 
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
@@ -168,6 +171,7 @@ export default function EnhancedRegisterRCTable() {
         setPage(0);
     };
 
+
     const visibleRows = React.useMemo(
         () =>
             stableSort(rows, getComparator(order, orderBy)).slice(
@@ -177,11 +181,12 @@ export default function EnhancedRegisterRCTable() {
         [order, orderBy, page, rowsPerPage, rows],
     );
 
-    useEffect(() => {
-        const getRegList = async () => {
-            try {
 
-                const q = query(regCollectionRef, where("revenueCenter", "==", rc));
+    useEffect(() => {
+        const getSales = async () => {
+            try {
+                const salesCollectionRef = collection(db, "Sales");
+                const q = query(salesCollectionRef, where("rc", "==", rc));
 
                 const querySnapshot = await getDocs(q);
 
@@ -191,13 +196,12 @@ export default function EnhancedRegisterRCTable() {
                 }));
 
                 setRows(filteredData);
+                console.log(filteredData);
             }catch (e) {
                 console.error(e);
             }
         };
-        getRegList().then(r => console.log("t"));
-
-
+        getSales().then(r => console.log("Got Sales"));
     }, []);
 
     return (
@@ -212,7 +216,7 @@ export default function EnhancedRegisterRCTable() {
                             variant="h3"
                             id="tableTitle"
                         >
-                            Registers:
+                            Sales:
                         </Typography>
                         <Table
                             sx={{ minWidth: 750 }}
@@ -234,8 +238,7 @@ export default function EnhancedRegisterRCTable() {
                                         <TableRow
                                             key={row.id}
                                             onClick={ () => {
-                                                navigate("/registers/register", {state: {rc: row.revenueCenter}});
-                                                setActive(Dashboard);
+                                                navigate("/sales/viewsale", {state: {id: row.id, emp: row.emp}});
 
                                             }}>
                                             <TableCell
@@ -246,10 +249,11 @@ export default function EnhancedRegisterRCTable() {
                                             >
                                                 {row.id}
                                             </TableCell>
-                                            <TableCell align="right">{row.name}</TableCell>
-                                            <TableCell align="right">{row.number}</TableCell>
-                                            <TableCell align="right">{row.registerNumber}</TableCell>
-                                            <TableCell align="right">{row.revenueCenter}</TableCell>
+                                            <TableCell align="right">${row.Subtotal?.toFixed(2)}</TableCell>
+                                            <TableCell align="right">${row.Tip?.toFixed(2)}</TableCell>
+                                            <TableCell align="right">{row.rc}</TableCell>
+                                            <TableCell align="right">{row.Time}</TableCell>
+
                                         </TableRow>
                                     );
                                 })}
@@ -269,7 +273,7 @@ export default function EnhancedRegisterRCTable() {
                 </Paper>):
                 (
                     <Box width={"100"} >
-                        <Skeleton variant="rectangular"  height={500} />
+                        <h1>No Sales Yet</h1>
                     </Box>
                 )
             }
